@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Onion.Application.Domain\Onion.Application.Domain.csproj" />
+    <ProjectReference Include="..\Onion.Application.Services\Onion.Application.Services.csproj" />
+    <ProjectReference Include="..\Onion.Core\Onion.Core.csproj" />
+  </ItemGroup>
+
+</Project>
