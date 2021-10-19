@@ -18,7 +18,7 @@ namespace Onion.Core.Utils
                 throw new ArgumentException("String value is null or empty", paramName);
         }
 
-        public static void CollectionNullOrEmpty<T>(ICollection<T> value, string paramName)
+        public static void CollectionNotNullOrEmpty<T>(ICollection<T> value, string paramName)
         {
             if (value == null || value.Count <= 0)
                 throw new ArgumentException("Collection is null or empty", paramName);

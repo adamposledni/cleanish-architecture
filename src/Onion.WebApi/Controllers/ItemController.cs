@@ -11,9 +11,7 @@ using System.Threading.Tasks;
 namespace Onion.WebApi.Controllers
 {
     [ApiController]
-    [ProducesResponseType(200)]
     [ProducesResponseType(400, Type = typeof(ErrorRes))]
-    [ProducesResponseType(404, Type = typeof(ErrorRes))]
     [ProducesResponseType(500, Type = typeof(ErrorRes))]
     [Produces("application/json")]
     [Route("api/items")]
@@ -26,30 +24,38 @@ namespace Onion.WebApi.Controllers
             _itemService = itemService;
         }
 
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404, Type = typeof(ErrorRes))]
         [HttpGet("{itemId}")]
         public async Task<ActionResult<ItemRes>> Get([FromRoute] int itemId)
         {
             return StatusCode(200, await _itemService.GetAsync(itemId));
         }
 
+        [ProducesResponseType(200)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemRes>>> List()
         {
             return StatusCode(200, await _itemService.ListAsync());
         }
 
+        [ProducesResponseType(201)]
         [HttpPost]
         public async Task<ActionResult<ItemRes>> Create([FromBody] ItemReq body)
         {
             return StatusCode(201, await _itemService.CreateAsync(body));
         }
 
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404, Type = typeof(ErrorRes))]
         [HttpDelete("{itemId}")]
         public async Task<ActionResult<ItemRes>> Delete([FromRoute] int itemId)
         {
             return StatusCode(200, await _itemService.DeleteAsync(itemId));
         }
 
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404, Type = typeof(ErrorRes))]
         [HttpPut("{itemId}")]
         public async Task<ActionResult<ItemRes>> Update([FromRoute] int itemId, [FromBody] ItemReq body)
         {

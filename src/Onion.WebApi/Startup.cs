@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,7 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Onion.Application.Domain;
+using Onion.Application.Domain.Configuration;
 using Onion.Application.Domain.Repositories;
 using Onion.Application.Services.Abstractions;
 using Onion.Application.Services.Implementations;
@@ -19,18 +23,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Onion.WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -47,6 +54,8 @@ namespace Onion.WebApi
                     //o.SuppressMapClientErrors = true;
                 });
 
+            ConfigureApplicationSettings(services);
+            ConfigureAuthentication(services);
             ConfigureSwagger(services);
             ConfigureCors(services);
             ConfigurePersistance(services);
@@ -55,8 +64,11 @@ namespace Onion.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
+            logger.LogInformation("Server is running");
+            if (_env.IsDevelopment()) logger.LogInformation("Running in development");
+
             app.UseExceptionHandler("/error");
 
             app.UseHttpsRedirection();
@@ -78,6 +90,8 @@ namespace Onion.WebApi
             {
                 endpoints.MapControllers();
             });
+
+            logger.LogInformation("HTTP pipeline configured");
         }
 
         private void ConfigureSwagger(IServiceCollection services)
@@ -101,6 +115,36 @@ namespace Onion.WebApi
                     builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
                 });
             });
+        }
+
+        private void ConfigureAuthentication(IServiceCollection services)
+        {
+            string key = Configuration.GetValue<string>($"{Constants.APPLICATION_SETTINGS_SECTION}:JwtSigningKey");
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+        }
+
+        private void ConfigureApplicationSettings(IServiceCollection services)
+        {
+            var appSettingsSection = Configuration.GetSection(Constants.APPLICATION_SETTINGS_SECTION);
+            services.Configure<ApplicationSettings>(appSettingsSection);
         }
 
         private void ConfigurePersistance(IServiceCollection services)

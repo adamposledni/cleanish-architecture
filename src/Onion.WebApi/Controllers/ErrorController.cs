@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Onion.Application.Domain.Exceptions;
 using Onion.WebApi.Models;
 using System;
@@ -14,6 +15,12 @@ namespace Onion.WebApi.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : ControllerBase
     {
+        private readonly ILogger<ErrorController> _logger;
+        public ErrorController(ILogger<ErrorController> logger)
+        {
+            _logger = logger;
+        }
+
         [Route("error")]
         public ErrorRes Error()
         {
@@ -36,6 +43,7 @@ namespace Onion.WebApi.Controllers
                 message = "Server error has occured";
             }
 
+            _logger.LogError(message);
             return new ErrorRes(message, null);
         }
     }
