@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Onion.Application.Services.Models.Item
+﻿namespace Onion.Application.Services.Models.Item
 {
     public class ItemReq
     {

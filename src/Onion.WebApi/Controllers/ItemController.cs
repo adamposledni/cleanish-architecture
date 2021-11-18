@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Onion.Application.Services.Abstractions;
 using Onion.Application.Services.Models.Item;
 using Onion.WebApi.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Onion.WebApi.Controllers
@@ -54,12 +51,19 @@ namespace Onion.WebApi.Controllers
             return StatusCode(200, await _itemService.DeleteAsync(itemId));
         }
 
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(404, Type = typeof(ErrorRes))]
+        //[HttpPut("{itemId}")]
+        //public async Task<ActionResult<ItemRes>> Update([FromRoute] int itemId, [FromBody] ItemReq body)
+        //{
+        //    return StatusCode(200, await _itemService.UpdateAsync(itemId, body));
+        //}
+
         [ProducesResponseType(200)]
-        [ProducesResponseType(404, Type = typeof(ErrorRes))]
-        [HttpPut("{itemId}")]
-        public async Task<ActionResult<ItemRes>> Update([FromRoute] int itemId, [FromBody] ItemReq body)
+        [HttpGet("foo")]
+        public async Task<ActionResult<bool>> Foo()
         {
-            return StatusCode(200, await _itemService.UpdateAsync(itemId, body));
+            return StatusCode(200, await _itemService.FooAsync());
         }
     }
 }

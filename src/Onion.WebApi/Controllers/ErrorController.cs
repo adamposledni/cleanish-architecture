@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Onion.Application.Domain.Exceptions;
+using Microsoft.Extensions.Localization;
+using Onion.Application.Services.Exceptions;
 using Onion.WebApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Onion.WebApi.Resources;
 
 namespace Onion.WebApi.Controllers
 {
@@ -15,10 +12,11 @@ namespace Onion.WebApi.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : ControllerBase
     {
-        private readonly ILogger<ErrorController> _logger;
-        public ErrorController(ILogger<ErrorController> logger)
+        private readonly IStringLocalizer<Resource> _localizer;
+
+        public ErrorController(IStringLocalizer<Resource> localizer)
         {
-            _logger = logger;
+            _localizer = localizer;
         }
 
         [Route("error")]
@@ -27,10 +25,10 @@ namespace Onion.WebApi.Controllers
             var exception = HttpContext.Features.Get<IExceptionHandlerFeature>().Error;
             string message;
 
-            if (exception is NotFoundException)
+            if (exception is NotFoundException notFoundException)
             {
                 Response.StatusCode = 404;
-                message = exception.Message;
+                message = _localizer[notFoundException.MessageKey, notFoundException.Id];
             }
             else if (exception is BadRequestException)
             {
@@ -40,11 +38,10 @@ namespace Onion.WebApi.Controllers
             else
             {
                 Response.StatusCode = 500;
-                message = "Server error has occured";
+                message = _localizer["ServerErrorMessage"];
             }
 
-            _logger.LogError(message);
-            return new ErrorRes(message, null);
+            return new ErrorRes(message);
         }
     }
 }

@@ -1,36 +1,34 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Onion.Application.Domain;
-using Onion.Application.Domain.Configuration;
-using Onion.Application.Domain.Repositories;
+using Onion.Application.DataAccess.Configuration;
+using Onion.Application.DataAccess.Database.Repositories;
 using Onion.Application.Services.Abstractions;
 using Onion.Application.Services.Implementations;
 using Onion.Core.Mapper;
 using Onion.Infrastructure.Mapper;
-using Onion.Infrastucture.Persistence;
-using Onion.Infrastucture.Persistence.Repositories;
+using Onion.Infrastucture.DataAccess.Sql;
+using Onion.Infrastucture.DataAccess.Sql.Repositories;
+using Onion.WebApi.Middlewares;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Onion.WebApi
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        private ApplicationSettings _applicationSettings;
         private readonly IWebHostEnvironment _env;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -49,16 +47,18 @@ namespace Onion.WebApi
                     opt.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 })
-                .ConfigureApiBehaviorOptions(o =>
+                .ConfigureApiBehaviorOptions(opt =>
                 {
-                    //o.SuppressMapClientErrors = true;
+                    //opt.SuppressMapClientErrors = true;
                 });
 
             ConfigureApplicationSettings(services);
+            ConfigureLocalization(services);
             ConfigureAuthentication(services);
+            ConfigureHealthChecks(services);
             ConfigureSwagger(services);
             ConfigureCors(services);
-            ConfigurePersistance(services);
+            ConfigureDataAccess(services);
             ConfigureLogic(services);
             ConfigureInfrastructure(services);
         }
@@ -66,10 +66,14 @@ namespace Onion.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
-            logger.LogInformation("Server is running");
-            if (_env.IsDevelopment()) logger.LogInformation("Running in development");
-
-            app.UseExceptionHandler("/error");
+            app.UseHttpLogging();
+            app.UseExceptionHandler(
+                new ExceptionHandlerOptions()
+                {
+                    AllowStatusCode404Response = true,
+                    ExceptionHandlingPath = "/error"
+                }
+            );
 
             app.UseHttpsRedirection();
 
@@ -77,6 +81,8 @@ namespace Onion.WebApi
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Onion.WebApi v1"));
 
             // app.UseStaticFiles();
+            var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(localizationOptions.Value);
 
             app.UseRouting();
             app.UseCors();
@@ -84,24 +90,42 @@ namespace Onion.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // app.UseCustomMiddleware();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             logger.LogInformation("HTTP pipeline configured");
+        }
+
+        private void ConfigureLocalization(IServiceCollection services)
+        {
+            var supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("en-US"),
+                new CultureInfo("cs-CZ")
+            };
+
+            services.Configure<RequestLocalizationOptions>(opt =>
+            {
+                opt.DefaultRequestCulture = new RequestCulture(supportedCultures[1]);
+                opt.SupportedCultures = supportedCultures;
+                opt.SupportedUICultures = supportedCultures;
+                opt.RequestCultureProviders = new[] { new AcceptLanguageHeaderRequestCultureProvider() };
+            });
+
+            services.AddLocalization();
         }
 
         private void ConfigureSwagger(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo 
-                { 
-                    Title = "Onion.WebApi", 
-                    Version = "v1" 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Onion.WebApi",
+                    Version = "v1"
                 });
             });
         }
@@ -119,13 +143,14 @@ namespace Onion.WebApi
 
         private void ConfigureAuthentication(IServiceCollection services)
         {
-            string key = Configuration.GetValue<string>($"{Constants.APPLICATION_SETTINGS_SECTION}:JwtSigningKey");
+            var key = Encoding.ASCII.GetBytes(_applicationSettings.JwtSigningKey);
 
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            services
+                .AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(x =>
                 {
                     x.RequireHttpsMetadata = false;
@@ -133,7 +158,7 @@ namespace Onion.WebApi
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ClockSkew = TimeSpan.Zero
@@ -143,13 +168,19 @@ namespace Onion.WebApi
 
         private void ConfigureApplicationSettings(IServiceCollection services)
         {
-            var appSettingsSection = Configuration.GetSection(Constants.APPLICATION_SETTINGS_SECTION);
+            var appSettingsSection = Configuration.GetSection("ApplicationSettings");
             services.Configure<ApplicationSettings>(appSettingsSection);
+            _applicationSettings = appSettingsSection.Get<ApplicationSettings>();
         }
 
-        private void ConfigurePersistance(IServiceCollection services)
+        private void ConfigureHealthChecks(IServiceCollection services)
         {
-            services.AddDbContext<OnionDbContext>(opt =>
+            services.AddHealthChecks();
+        }
+
+        private void ConfigureDataAccess(IServiceCollection services)
+        {
+            services.AddDbContext<SqlDbContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
@@ -166,5 +197,7 @@ namespace Onion.WebApi
         {
             services.AddScoped<IItemService, ItemService>();
         }
+
+
     }
 }

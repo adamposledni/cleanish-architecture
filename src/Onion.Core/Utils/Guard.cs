@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Onion.Core.Utils
 {
@@ -8,13 +7,13 @@ namespace Onion.Core.Utils
     {
         public static void NotNull<T>(T value, string paramName)
         {
-            if (value == null) 
+            if (value == null)
                 throw new ArgumentNullException(paramName);
         }
 
         public static void StringNotNullOrEmpty(string value, string paramName)
         {
-            if (string.IsNullOrEmpty(value)) 
+            if (string.IsNullOrEmpty(value))
                 throw new ArgumentException("String value is null or empty", paramName);
         }
 

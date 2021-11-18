@@ -11,15 +11,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{8C17B8A6-ED14-462A-BE1C-465078E532F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Application.Domain", "src\Onion.Application.Domain\Onion.Application.Domain.csproj", "{24838657-986B-49CB-B993-742483BD346F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Application.DataAccess", "src\Onion.Application.DataAccess\Onion.Application.DataAccess.csproj", "{24838657-986B-49CB-B993-742483BD346F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Application.Services", "src\Onion.Application.Services\Onion.Application.Services.csproj", "{6F803C5F-ECE0-477D-9E9E-26840C870D2E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Core", "src\Onion.Core\Onion.Core.csproj", "{94BBD9F9-19A1-4DF5-A221-865915996E3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastucture.Persistence", "src\Onion.Infrastucture.Persistence\Onion.Infrastucture.Persistence.csproj", "{20769C2C-1E9E-42F3-9554-7CF4F5BFA4AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastucture.DataAccess", "src\Onion.Infrastucture.DataAccess\Onion.Infrastucture.DataAccess.csproj", "{20769C2C-1E9E-42F3-9554-7CF4F5BFA4AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Onion.Infrastructure", "src\Onion.Infrastructure\Onion.Infrastructure.csproj", "{47FBAF32-6FE5-4A1A-A6B6-4E35D61DAC0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastructure", "src\Onion.Infrastructure\Onion.Infrastructure.csproj", "{47FBAF32-6FE5-4A1A-A6B6-4E35D61DAC0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61204C7F-E27B-4026-9A43-B92402D1C6D2}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

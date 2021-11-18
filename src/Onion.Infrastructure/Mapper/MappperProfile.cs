@@ -1,4 +1,4 @@
-﻿using Onion.Application.Domain.Entities;
+﻿using Onion.Application.DataAccess.Database.Entities;
 using Onion.Application.Services.Models.Item;
 using AM = AutoMapper;
 

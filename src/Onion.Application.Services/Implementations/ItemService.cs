@@ -1,14 +1,12 @@
-﻿using Onion.Application.Domain.Exceptions;
-using Onion.Application.Domain.Repositories;
+﻿using Onion.Application.DataAccess.Database.Entities;
+using Onion.Application.DataAccess.Database.Repositories;
 using Onion.Application.Services.Abstractions;
-using System;
+using Onion.Application.Services.Exceptions;
+using Onion.Application.Services.Models.Item;
+using Onion.Core.Mapper;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Onion.Core.Mapper;
-using Onion.Application.Domain.Entities;
-using Onion.Application.Services.Models.Item;
 
 namespace Onion.Application.Services.Implementations
 {
@@ -26,9 +24,8 @@ namespace Onion.Application.Services.Implementations
         public async Task<ItemRes> CreateAsync(ItemReq newItem)
         {
             Item newItemEntity = _mapper.Map<ItemReq, Item>(newItem);
-            newItemEntity = _repositoryManager.ItemRepository.Create(newItemEntity);
+            newItemEntity = await _repositoryManager.ItemRepository.CreateAsync(newItemEntity);
 
-            await _repositoryManager.SaveChangesAsync();
             return _mapper.Map<Item, ItemRes>(newItemEntity);
         }
 
@@ -37,8 +34,7 @@ namespace Onion.Application.Services.Implementations
             Item itemToDelete = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
             if (itemToDelete == null) throw new ItemNotFoundException(itemId);
 
-            itemToDelete = _repositoryManager.ItemRepository.Delete(itemToDelete);
-            await _repositoryManager.SaveChangesAsync();
+            itemToDelete = await _repositoryManager.ItemRepository.DeleteAsync(itemToDelete);
 
             return _mapper.Map<Item, ItemRes>(itemToDelete);
         }
@@ -64,8 +60,13 @@ namespace Onion.Application.Services.Implementations
             itemToUpdate.Title = updatedItem.Title;
             itemToUpdate.Description = updatedItem.Description;
 
-            await _repositoryManager.SaveChangesAsync();
+            await _repositoryManager.ItemRepository.UpdateAsync(itemToUpdate);
             return _mapper.Map<Item, ItemRes>(itemToUpdate);
+        }
+
+        public Task<bool> FooAsync()
+        {
+            return Task.FromResult(true);
         }
     }
 }
