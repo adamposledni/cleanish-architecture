@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-namespace Onion.Application.DataAccess.Database.Repositories
+namespace Onion.Application.DataAccess.Repositories
 {
     public interface IRepositoryManager
     {
         IItemRepository ItemRepository { get; }
-        Task SaveChangesAsync();
+        IUserRepository UserRepository { get; }
     }
 }

@@ -21,10 +21,9 @@ namespace Onion.Infrastucture.DataAccess.Sql.Migrations
 
             modelBuilder.Entity("Onion.Application.DataAccess.Database.Entities.Item", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");

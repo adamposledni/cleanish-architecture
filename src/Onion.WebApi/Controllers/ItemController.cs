@@ -2,6 +2,7 @@
 using Onion.Application.Services.Abstractions;
 using Onion.Application.Services.Models.Item;
 using Onion.WebApi.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,14 +25,14 @@ namespace Onion.WebApi.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404, Type = typeof(ErrorRes))]
         [HttpGet("{itemId}")]
-        public async Task<ActionResult<ItemRes>> Get([FromRoute] int itemId)
+        public async Task<ActionResult<ItemRes>> Get([FromRoute] Guid itemId)
         {
             return StatusCode(200, await _itemService.GetAsync(itemId));
         }
 
         [ProducesResponseType(200)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ItemRes>>> List()
+        public async Task<ActionResult<IList<ItemRes>>> List()
         {
             return StatusCode(200, await _itemService.ListAsync());
         }
@@ -46,18 +47,18 @@ namespace Onion.WebApi.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404, Type = typeof(ErrorRes))]
         [HttpDelete("{itemId}")]
-        public async Task<ActionResult<ItemRes>> Delete([FromRoute] int itemId)
+        public async Task<ActionResult<ItemRes>> Delete([FromRoute] Guid itemId)
         {
             return StatusCode(200, await _itemService.DeleteAsync(itemId));
         }
 
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(404, Type = typeof(ErrorRes))]
-        //[HttpPut("{itemId}")]
-        //public async Task<ActionResult<ItemRes>> Update([FromRoute] int itemId, [FromBody] ItemReq body)
-        //{
-        //    return StatusCode(200, await _itemService.UpdateAsync(itemId, body));
-        //}
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404, Type = typeof(ErrorRes))]
+        [HttpPut("{itemId}")]
+        public async Task<ActionResult<ItemRes>> Update([FromRoute] Guid itemId, [FromBody] ItemReq body)
+        {
+            return StatusCode(200, await _itemService.UpdateAsync(itemId, body));
+        }
 
         [ProducesResponseType(200)]
         [HttpGet("foo")]

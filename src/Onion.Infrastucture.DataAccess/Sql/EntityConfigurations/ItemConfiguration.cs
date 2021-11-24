@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Onion.Application.DataAccess.Database.Entities;
+using Onion.Application.DataAccess.Entities;
 
 namespace Onion.Infrastucture.DataAccess.Sql.EntityConfigurations
 {

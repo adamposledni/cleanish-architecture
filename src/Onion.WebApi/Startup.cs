@@ -10,11 +10,14 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Onion.Application.DataAccess.Configuration;
-using Onion.Application.DataAccess.Database.Repositories;
+using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Abstractions;
 using Onion.Application.Services.Implementations;
 using Onion.Core.Mapper;
 using Onion.Infrastructure.Mapper;
+using Onion.Infrastucture.DataAccess;
+using Onion.Infrastucture.DataAccess.MongoDb;
+using Onion.Infrastucture.DataAccess.MongoDb.Configuration;
 using Onion.Infrastucture.DataAccess.Sql;
 using Onion.Infrastucture.DataAccess.Sql.Repositories;
 using Onion.WebApi.Middlewares;
@@ -185,7 +188,15 @@ namespace Onion.WebApi
                 opt.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
 
+
+            services.AddScoped<IMongoDbContext, MongoDbContext>((services) =>
+            {
+                var mongoDbSettings = Configuration.GetSection("MongoDbSettings:Default").Get<MongoDbSettings>();
+                return new MongoDbContext(mongoDbSettings);
+            });
+
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+            //services.AddScoped<ITransactionalRepositoryManager, TransactionalRepositoryManager>();
         }
 
         private void ConfigureInfrastructure(IServiceCollection services)
@@ -196,6 +207,7 @@ namespace Onion.WebApi
         private void ConfigureLogic(IServiceCollection services)
         {
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
 

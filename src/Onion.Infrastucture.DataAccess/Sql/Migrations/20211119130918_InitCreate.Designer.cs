@@ -10,7 +10,7 @@ using Onion.Infrastucture.DataAccess.Sql;
 namespace Onion.Infrastucture.DataAccess.Sql.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20211118214732_InitCreate")]
+    [Migration("20211119130918_InitCreate")]
     partial class InitCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,10 +23,9 @@ namespace Onion.Infrastucture.DataAccess.Sql.Migrations
 
             modelBuilder.Entity("Onion.Application.DataAccess.Database.Entities.Item", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");

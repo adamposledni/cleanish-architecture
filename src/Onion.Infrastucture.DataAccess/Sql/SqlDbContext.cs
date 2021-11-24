@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Onion.Application.DataAccess.Database.Entities;
+using Onion.Application.DataAccess.Entities;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -26,7 +26,7 @@ namespace Onion.Infrastucture.DataAccess.Sql
 
             foreach (var entityEntry in entries)
             {
-                DatabaseEntity entity = (DatabaseEntity)entityEntry.Entity;
+                BaseEntity entity = (BaseEntity)entityEntry.Entity;
                 if (entityEntry.State == EntityState.Added)
                 {
                     entity.Created = DateTime.UtcNow;

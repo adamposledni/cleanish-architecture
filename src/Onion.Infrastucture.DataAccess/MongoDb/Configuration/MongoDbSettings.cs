@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Onion.Infrastucture.DataAccess.NoSql.Configuration
+namespace Onion.Infrastucture.DataAccess.MongoDb.Configuration
 {
     public class MongoDbSettings
     {

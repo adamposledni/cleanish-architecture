@@ -1,9 +1,10 @@
-﻿using Onion.Application.DataAccess.Database.Entities;
-using Onion.Application.DataAccess.Database.Repositories;
+﻿using Onion.Application.DataAccess.Entities;
+using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Abstractions;
 using Onion.Application.Services.Exceptions;
 using Onion.Application.Services.Models.Item;
 using Onion.Core.Mapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace Onion.Application.Services.Implementations
             return _mapper.Map<Item, ItemRes>(newItemEntity);
         }
 
-        public async Task<ItemRes> DeleteAsync(int itemId)
+        public async Task<ItemRes> DeleteAsync(Guid itemId)
         {
             Item itemToDelete = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
             if (itemToDelete == null) throw new ItemNotFoundException(itemId);
@@ -39,20 +40,20 @@ namespace Onion.Application.Services.Implementations
             return _mapper.Map<Item, ItemRes>(itemToDelete);
         }
 
-        public async Task<ItemRes> GetAsync(int itemId)
+        public async Task<ItemRes> GetAsync(Guid itemId)
         {
             var item = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
             if (item == null) throw new ItemNotFoundException(itemId);
             return _mapper.Map<Item, ItemRes>(item);
         }
 
-        public async Task<IEnumerable<ItemRes>> ListAsync()
+        public async Task<IList<ItemRes>> ListAsync()
         {
             var items = await _repositoryManager.ItemRepository.ListAsync();
-            return items.Select(i => _mapper.Map<Item, ItemRes>(i));
+            return items.Select(i => _mapper.Map<Item, ItemRes>(i)).ToList();
         }
 
-        public async Task<ItemRes> UpdateAsync(int itemId, ItemReq updatedItem)
+        public async Task<ItemRes> UpdateAsync(Guid itemId, ItemReq updatedItem)
         {
             var itemToUpdate = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
             if (itemToUpdate == null) throw new ItemNotFoundException(itemId);

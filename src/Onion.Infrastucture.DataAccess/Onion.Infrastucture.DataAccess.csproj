@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Onion.Application.DataAccess\Onion.Application.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Sql\Migrations\" />
-  </ItemGroup>
-
 </Project>

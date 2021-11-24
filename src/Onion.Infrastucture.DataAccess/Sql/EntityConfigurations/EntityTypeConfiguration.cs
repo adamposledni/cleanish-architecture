@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Onion.Application.DataAccess.Database.Entities;
+using Onion.Application.DataAccess.Entities;
 
 namespace Onion.Infrastucture.DataAccess.Sql.EntityConfigurations
 {
-    public abstract class EntityTypeConfiguration<T> : IEntityTypeConfiguration<T> where T : DatabaseEntity
+    public abstract class EntityTypeConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
     {
         public virtual void Configure(EntityTypeBuilder<T> builder)
         {
