@@ -9,5 +9,6 @@ namespace Onion.Application.DataAccess.Repositories
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        public Task<User> GetByEmailAsync(string email);
     }
 }

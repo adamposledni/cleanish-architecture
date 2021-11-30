@@ -123,4 +123,7 @@
   <data name="ServerErrorMessage" xml:space="preserve">
     <value>Objevila se chyba na serveru</value>
   </data>
+  <data name="UserNotFoundMessage" xml:space="preserve">
+    <value>Uživatel s ID {0} nebyl nalezen</value>
+  </data>
 </root>

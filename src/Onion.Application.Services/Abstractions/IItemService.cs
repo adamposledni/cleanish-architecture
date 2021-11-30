@@ -9,9 +9,9 @@ namespace Onion.Application.Services.Abstractions
     {
         Task<IList<ItemRes>> ListAsync();
         Task<ItemRes> GetAsync(Guid itemId);
-        Task<ItemRes> CreateAsync(ItemReq newItem);
+        Task<ItemRes> CreateAsync(ItemReq model);
         Task<ItemRes> DeleteAsync(Guid itemId);
-        Task<ItemRes> UpdateAsync(Guid itemId, ItemReq updatedItem);
+        Task<ItemRes> UpdateAsync(Guid itemId, ItemReq model);
 
         Task<bool> FooAsync();
     }

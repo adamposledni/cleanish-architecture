@@ -22,24 +22,6 @@ namespace Onion.Application.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<ItemRes> CreateAsync(ItemReq newItem)
-        {
-            Item newItemEntity = _mapper.Map<ItemReq, Item>(newItem);
-            newItemEntity = await _repositoryManager.ItemRepository.CreateAsync(newItemEntity);
-
-            return _mapper.Map<Item, ItemRes>(newItemEntity);
-        }
-
-        public async Task<ItemRes> DeleteAsync(Guid itemId)
-        {
-            Item itemToDelete = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
-            if (itemToDelete == null) throw new ItemNotFoundException(itemId);
-
-            itemToDelete = await _repositoryManager.ItemRepository.DeleteAsync(itemToDelete);
-
-            return _mapper.Map<Item, ItemRes>(itemToDelete);
-        }
-
         public async Task<ItemRes> GetAsync(Guid itemId)
         {
             var item = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
@@ -53,13 +35,31 @@ namespace Onion.Application.Services.Implementations
             return items.Select(i => _mapper.Map<Item, ItemRes>(i)).ToList();
         }
 
-        public async Task<ItemRes> UpdateAsync(Guid itemId, ItemReq updatedItem)
+        public async Task<ItemRes> CreateAsync(ItemReq model)
+        {
+            Item newItem = _mapper.Map<ItemReq, Item>(model);
+            newItem = await _repositoryManager.ItemRepository.CreateAsync(newItem);
+
+            return _mapper.Map<Item, ItemRes>(newItem);
+        }
+
+        public async Task<ItemRes> DeleteAsync(Guid itemId)
+        {
+            Item itemToDelete = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
+            if (itemToDelete == null) throw new ItemNotFoundException(itemId);
+
+            itemToDelete = await _repositoryManager.ItemRepository.DeleteAsync(itemToDelete);
+
+            return _mapper.Map<Item, ItemRes>(itemToDelete);
+        }
+
+        public async Task<ItemRes> UpdateAsync(Guid itemId, ItemReq model)
         {
             var itemToUpdate = await _repositoryManager.ItemRepository.GetByIdAsync(itemId);
             if (itemToUpdate == null) throw new ItemNotFoundException(itemId);
 
-            itemToUpdate.Title = updatedItem.Title;
-            itemToUpdate.Description = updatedItem.Description;
+            itemToUpdate.Title = model.Title;
+            itemToUpdate.Description = model.Description;
 
             await _repositoryManager.ItemRepository.UpdateAsync(itemToUpdate);
             return _mapper.Map<Item, ItemRes>(itemToUpdate);

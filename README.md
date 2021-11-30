@@ -1,8 +1,10 @@
 # Onion architecture
 
 ## Tasks
-- OAuth provider
-- better composition
+- OAuth service
+- identityContext
 - pagination, filters
-- email service
 - auto-migrate?
+- VS template
+
+- email service

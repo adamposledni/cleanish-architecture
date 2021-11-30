@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Onion.Application.DataAccess\Onion.Application.DataAccess.csproj" />
+    <ProjectReference Include="..\Onion.Core\Onion.Core.csproj" />
   </ItemGroup>
 
 </Project>

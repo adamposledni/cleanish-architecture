@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Onion.Application.Services.Abstractions;
 using Onion.Application.Services.Models.Item;
+using Onion.Application.Services.Models.User;
 using Onion.WebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -23,10 +24,26 @@ namespace Onion.WebApi.Controllers
         }
 
         [ProducesResponseType(200)]
-        [HttpGet("foo")]
-        public async Task<ActionResult<bool>> Foo()
+        [ProducesResponseType(404)]
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<UserRes>> Get([FromRoute] Guid userId)
         {
-            return StatusCode(200, await _userService.FooAsync());
+            return StatusCode(200, await _userService.GetAsync(userId));
         }
+
+        [ProducesResponseType(200)]
+        [HttpGet]
+        public async Task<ActionResult<IList<UserRes>>> List()
+        {
+            return StatusCode(200, await _userService.ListAsync());
+        }
+
+        [ProducesResponseType(201)]
+        [HttpPost]
+        public async Task<ActionResult<UserRes>> Create([FromBody] UserReq body)
+        {
+            return StatusCode(201, await _userService.CreateAsync(body));
+        }
+
     }
 }

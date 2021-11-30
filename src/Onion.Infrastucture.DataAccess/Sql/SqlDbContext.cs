@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Onion.Application.DataAccess.Entities;
+using Onion.Core.Clock;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -10,9 +11,14 @@ namespace Onion.Infrastucture.DataAccess.Sql
 {
     public class SqlDbContext : DbContext
     {
+        private readonly IClockProvider _clockProvider;
+
         public DbSet<Item> Items { get; set; }
 
-        public SqlDbContext(DbContextOptions<SqlDbContext> options) : base(options) { }
+        public SqlDbContext(DbContextOptions<SqlDbContext> options, IClockProvider clockProvider) : base(options) 
+        {
+            _clockProvider = clockProvider;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,12 +35,12 @@ namespace Onion.Infrastucture.DataAccess.Sql
                 BaseEntity entity = (BaseEntity)entityEntry.Entity;
                 if (entityEntry.State == EntityState.Added)
                 {
-                    entity.Created = DateTime.UtcNow;
-                    entity.Updated = DateTime.UtcNow;
+                    entity.Created = _clockProvider.Now;
+                    entity.Updated = _clockProvider.Now;
                 }
                 else if (entityEntry.State == EntityState.Modified)
                 {
-                    entity.Updated = DateTime.UtcNow;
+                    entity.Updated = _clockProvider.Now;
                 }
             }
 

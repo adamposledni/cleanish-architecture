@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Onion.Application.DataAccess.Configuration;
 using Onion.Core.Security;
 using System;
@@ -13,9 +14,9 @@ namespace Onion.Infrastructure.Security
     {
         private readonly ApplicationSettings _applicationSettings;
 
-        public JwtService(ApplicationSettings applicationSettings)
+        public JwtService(IOptions<ApplicationSettings> applicationSettings)
         {
-            _applicationSettings = applicationSettings;
+            _applicationSettings = applicationSettings.Value;
         }
 
         public string GenerateJwt(IEnumerable<Claim> claims)

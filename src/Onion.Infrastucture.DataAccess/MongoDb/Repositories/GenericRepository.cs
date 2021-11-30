@@ -7,22 +7,24 @@ using Onion.Infrastucture.DataAccess.MongoDb;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Onion.Core.Clock;
 
 namespace Onion.Infrastucture.DataAccess.MongoDb.Repositories
 {
     public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         protected readonly IMongoCollection<T> _dbSet;
+        protected readonly IMongoDbContext _mongoDbContext;
 
         public GenericRepository(IMongoDbContext mongoDbContext)
         {
             _dbSet = mongoDbContext.Collection<T>();
+            _mongoDbContext = mongoDbContext;
         }
 
         public async Task<T> CreateAsync(T newEntity)
         {
-            newEntity.Created = DateTime.UtcNow;
-            newEntity.Updated = DateTime.UtcNow;
+            _mongoDbContext.SetAuditDates(newEntity, true);
 
             await _dbSet.InsertOneAsync(newEntity);
             return newEntity;
@@ -30,7 +32,7 @@ namespace Onion.Infrastucture.DataAccess.MongoDb.Repositories
 
         public async Task<T> UpdateAsync(T updatedEntity)
         {
-            updatedEntity.Updated = DateTime.UtcNow;
+            _mongoDbContext.SetAuditDates(updatedEntity);
 
             var filter = Builders<T>.Filter.Eq(e => e.Id, updatedEntity.Id);
             await _dbSet.ReplaceOneAsync(filter, updatedEntity);

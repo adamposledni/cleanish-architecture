@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
+using Onion.Core.Clock;
 using Onion.Infrastucture.DataAccess.MongoDb.Configuration;
 using Onion.Infrastucture.DataAccess.MongoDb.EntityConfigurations;
 using System;
@@ -15,13 +16,13 @@ namespace Onion.Infrastucture.DataAccess.MongoDb
     {
         private readonly MongoClient _mongoClient;
         private readonly IMongoDatabase _mongoDatabase;
+        private readonly IClockProvider _clockProvider;
 
-        public MongoDbContext(MongoDbSettings mongoDbSettings)
+        public MongoDbContext(MongoDbSettings mongoDbSettings, IClockProvider clockProvider)
         {
             _mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
             _mongoDatabase = _mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
-
-            ApplyEntityConfigurations();
+            _clockProvider = clockProvider;
         }
 
         public IMongoCollection<T> Collection<T>()
@@ -29,7 +30,13 @@ namespace Onion.Infrastucture.DataAccess.MongoDb
             return _mongoDatabase.GetCollection<T>(typeof(T).Name);
         }
 
-        private void ApplyEntityConfigurations()
+        public void SetAuditDates(BaseEntity entity, bool created = false)
+        {
+            if (created) entity.Created = _clockProvider.Now;
+            entity.Updated = _clockProvider.Now;
+        }
+
+        public static void Configure()
         {
             UserConfiguration.Configure();
         }

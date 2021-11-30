@@ -2,11 +2,13 @@
 {
     public class ErrorRes
     {
-        public ErrorRes(string message)
+        public ErrorRes(int statusCode, string message)
         {
+            StatusCode = statusCode;
             Message = message;
         }
 
+        public int StatusCode { get; set; }
         public string Message { get; set; }
     }
 }
