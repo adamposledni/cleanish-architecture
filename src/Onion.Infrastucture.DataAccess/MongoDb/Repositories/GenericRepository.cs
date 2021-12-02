@@ -2,7 +2,6 @@
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
 using Onion.Application.DataAccess.Repositories;
-using Onion.Infrastucture.DataAccess.MongoDb.Configuration;
 using Onion.Infrastucture.DataAccess.MongoDb;
 using System;
 using System.Collections.Generic;

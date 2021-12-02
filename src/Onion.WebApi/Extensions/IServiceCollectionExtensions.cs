@@ -1,24 +1,29 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Onion.Application.DataAccess.Configuration;
 using Onion.Application.DataAccess.Repositories;
-using Onion.Application.Services.Abstractions;
-using Onion.Application.Services.Implementations;
+using Onion.Application.Services.Auth;
+using Onion.Application.Services.Common;
+using Onion.Application.Services.ItemManagement;
+using Onion.Application.Services.UserManagement;
 using Onion.Core.Clock;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
 using Onion.Infrastructure.Clock;
 using Onion.Infrastructure.Mapper;
-using Onion.Infrastructure.Security;
+using Onion.Infrastructure.Security.Google;
+using Onion.Infrastructure.Security.Jwt;
+using Onion.Infrastructure.Security.Password;
 using Onion.Infrastucture.DataAccess;
 using Onion.Infrastucture.DataAccess.MongoDb;
 using Onion.Infrastucture.DataAccess.Sql;
+using Onion.WebApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -28,13 +33,12 @@ namespace Onion.WebApi.Extensions
 {
     public static class IServiceCollectionExtensions
     {
-
+        #region Controllers
         public static void AddControllersSetup(this IServiceCollection services)
         {
             services.AddControllers()
                 .AddNewtonsoftJson(opt =>
                 {
-                    //opt.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                     opt.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 })
@@ -43,13 +47,17 @@ namespace Onion.WebApi.Extensions
                     //opt.SuppressMapClientErrors = true;
                 });
         }
+        #endregion
 
-        public static void AddApplicationSettings(this IServiceCollection services, IConfiguration configuration)
+        #region App settings
+        public static void AddAppSettings(this IServiceCollection services, IConfiguration configuration)
         {
-            var appSettingsSection = configuration.GetApplicationSettingsSection();
-            services.Configure<ApplicationSettings>(appSettingsSection);
+            //var appSettingsSection = configuration.GetApplicationSettingsSection();
+            //services.Configure<ApplicationSettings>(appSettingsSection);
         }
+        #endregion
 
+        #region Localization
         public static void AddLocalizationSetup(this IServiceCollection services)
         {
             var supportedCultures = new List<CultureInfo>
@@ -68,7 +76,9 @@ namespace Onion.WebApi.Extensions
 
             services.AddLocalization();
         }
+        #endregion
 
+        #region Authentication
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var key = Encoding.ASCII.GetBytes(configuration.GetJwtSigningKey());
@@ -93,19 +103,49 @@ namespace Onion.WebApi.Extensions
                     };
                 });
         }
+        #endregion
 
+        #region Swagger
         public static void AddSwaggerSetup(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
+                //c.IncludeXmlComments(string.Format(@"{0}\Onion.WebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory));
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Onion.WebApi",
                     Version = "v1"
                 });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    Description = "Input your Bearer token in this format - Bearer {your token here} to access this API",
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer",
+                            },
+                            Scheme = "Bearer",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        }, new List<string>()
+                    },
+                });
             });
         }
+        #endregion
 
+        #region CORS
         public static void AddCorsSetup(this IServiceCollection services)
         {
             services.AddCors(conf =>
@@ -116,13 +156,17 @@ namespace Onion.WebApi.Extensions
                 });
             });
         }
+        #endregion
 
+        #region Health checks
         public static void AddHealthChecksSetup(this IServiceCollection services)
         {
             services.AddHealthChecks();
         }
+        #endregion
 
-        public static void AddDataAccess(this IServiceCollection services, IConfiguration configuration)
+        #region Data access
+        public static void AddDataAccess(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
         {
             // SqlServer
             services.AddDbContext<SqlDbContext>(opt =>
@@ -131,31 +175,44 @@ namespace Onion.WebApi.Extensions
             });
 
             // MongoDb
+            var mongoDbSettingsSection = configuration.GetMongoDbSettingsSection();
+            services.Configure<MongoDbSettings>(mongoDbSettingsSection);
             MongoDbContext.Configure();
-            services.AddScoped<IMongoDbContext, MongoDbContext>((services) =>
-            {
-                var mongoDbSettings = configuration.GetMongoDbSettings("Default");
-                var clockProvider = services.GetRequiredService<IClockProvider>();
-                return new MongoDbContext(mongoDbSettings, clockProvider);
-            });
+            services.AddScoped<IMongoDbContext, MongoDbContext>();
 
             // UoW
             services.AddScoped<IRepositoryManager, RepositoryManager>();
             //services.AddScoped<ITransactionalRepositoryManager, TransactionalRepositoryManager>();
         }
+        #endregion
 
-        public static void AddCoreServices(this IServiceCollection services)
+        #region Core services
+        public static void AddCoreServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IMapper, Mapper>();
-            services.AddScoped<IJwtService, JwtService>();
-            services.AddTransient<IClockProvider, ClockProvider>();
-        }
 
+            var jwtSettingsSection = configuration.GetJwtSettingsSection();
+            services.Configure<JwtSettings>(jwtSettingsSection);
+            services.AddScoped<IJwtProvider, JwtProvider>();
+
+            services.AddScoped<IClockProvider, ClockProvider>();
+
+            var googleAuthSettingsSection = configuration.GetGoogleAuthSettingsSection();
+            services.Configure<GoogleAuthSettings>(googleAuthSettingsSection);
+            services.AddScoped<IGoogleAuthProvider, GoogleAuthProvider>();
+
+            services.AddScoped<IPasswordProvider, PasswordProvider>();
+        }
+        #endregion
+
+        #region Application service
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ISecurityContextProvider, SecurityContextProvider>();
         }
+        #endregion
     }
 }

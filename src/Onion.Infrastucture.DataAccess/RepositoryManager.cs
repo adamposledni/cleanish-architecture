@@ -19,10 +19,10 @@ namespace Onion.Infrastucture.DataAccess
         protected readonly SqlDbContext _sqlDbContext;
         protected bool _isTransactional = false;
 
-        private Lazy<IItemRepository> _itemRepository;
+        private readonly Lazy<IItemRepository> _itemRepository;
         public IItemRepository ItemRepository => _itemRepository.Value;
 
-        private Lazy<IUserRepository> _userRepository;
+        private readonly Lazy<IUserRepository> _userRepository;
         public IUserRepository UserRepository => _userRepository.Value;
 
         public RepositoryManager(IMongoDbContext mongoDbContext, SqlDbContext sqlDbContext)

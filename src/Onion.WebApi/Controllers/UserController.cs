@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Onion.Application.Services.Abstractions;
-using Onion.Application.Services.Models.Item;
-using Onion.Application.Services.Models.User;
+using Onion.Application.Services.Common;
+using Onion.Application.Services.UserManagement;
+using Onion.Application.Services.UserManagement.Models;
 using Onion.WebApi.Models;
 using System;
 using System.Collections.Generic;

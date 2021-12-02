@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using Onion.Application.DataAccess.Repositories;
+using System.Threading.Tasks;
 
-namespace Onion.Application.DataAccess.Repositories
+namespace Onion.Application.DataAccess.Repositoies
 {
     public interface IRepositoryManager
     {

@@ -2,7 +2,6 @@
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
 using Onion.Core.Clock;
-using Onion.Infrastucture.DataAccess.MongoDb.Configuration;
 using Onion.Infrastucture.DataAccess.MongoDb.EntityConfigurations;
 using System;
 using System.Collections.Generic;
@@ -18,10 +17,10 @@ namespace Onion.Infrastucture.DataAccess.MongoDb
         private readonly IMongoDatabase _mongoDatabase;
         private readonly IClockProvider _clockProvider;
 
-        public MongoDbContext(MongoDbSettings mongoDbSettings, IClockProvider clockProvider)
+        public MongoDbContext(IOptions<MongoDbSettings> mongoDbSettings, IClockProvider clockProvider)
         {
-            _mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
-            _mongoDatabase = _mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
+            _mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
+            _mongoDatabase = _mongoClient.GetDatabase(mongoDbSettings.Value.DatabaseName);
             _clockProvider = clockProvider;
         }
 

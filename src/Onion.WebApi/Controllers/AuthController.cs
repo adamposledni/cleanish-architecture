@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Onion.Application.Services.Abstractions;
-using Onion.Application.Services.Models.Auth;
-using Onion.Application.Services.Models.Item;
-using Onion.Application.Services.Models.User;
+using Onion.Application.Services.Auth;
+using Onion.Application.Services.Auth.Models;
+using Onion.Application.Services.Common;
 using Onion.WebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ namespace Onion.WebApi.Controllers
         {
             _authService = authService;
         }
-
+    
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [HttpPost("login")]

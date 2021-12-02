@@ -1,7 +1,7 @@
 ﻿using Onion.Application.DataAccess.Entities;
-using Onion.Application.Services.Models.Auth;
-using Onion.Application.Services.Models.Item;
-using Onion.Application.Services.Models.User;
+using Onion.Application.Services.Auth.Models;
+using Onion.Application.Services.ItemManagement.Models;
+using Onion.Application.Services.UserManagement.Models;
 using AM = AutoMapper;
 
 namespace Onion.Infrastructure.Mapper
