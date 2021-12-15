@@ -12,9 +12,9 @@ namespace Onion.Infrastucture.DataAccess.MongoDb.EntityConfigurations
     {
         public static void Configure()
         {
-            BsonClassMap.RegisterClassMap<User>((map) => 
+            BsonClassMap.RegisterClassMap<User>((map) =>
             {
-                Configure<User>()?.Invoke(map);
+                Configure(map);
             });
         }
     }

@@ -10,14 +10,10 @@ namespace Onion.Infrastucture.DataAccess.MongoDb.EntityConfigurations
 {
     public class EntityTypeConfiguration
     {
-        protected static Action<BsonClassMap<T>> Configure<T>() where T : BaseEntity
+        protected static void Configure<T>(BsonClassMap<T> map) where T : BaseEntity
         {
-            Action<BsonClassMap<T>> act = (map) =>
-            {
-                map.AutoMap();
-                map.SetIdMember(map.GetMemberMap(e => e.Id));
-            };
-            return act;
+            map.AutoMap();
+            map.SetIdMember(map.GetMemberMap(e => e.Id));
         }
     }
 }
