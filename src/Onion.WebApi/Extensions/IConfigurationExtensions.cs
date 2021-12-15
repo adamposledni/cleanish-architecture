@@ -25,6 +25,11 @@ namespace Onion.WebApi.Extensions
             return configuration.GetSection("GoogleAuthSettings");
         }
 
+        public static IConfigurationSection GetFacebookAuthSettingsSection(this IConfiguration configuration)
+        {
+            return configuration.GetSection("FacebookAuthSettings");
+        }
+
         public static string GetJwtSigningKey(this IConfiguration configuration)
         {
             return configuration.GetValue<string>("JwtSettings:JwtSigningKey");
