@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Onion.Application.Services.Exceptions;
+using Onion.Application.DataAccess.Exceptions;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
 using System;
@@ -27,31 +27,31 @@ namespace Onion.WebApi.Middlewares
             }
             catch (Exception ex)
             {
-                int statusCode;
-                string message;
+                ErrorRes error = new();
 
                 switch (ex)
                 {
                     case NotFoundException notFoundException:
-                        statusCode = 404;
-                        message = localizer[notFoundException.MessageKey, notFoundException.Id];
+                        error.StatusCode = 404;
+                        error.Message = localizer[notFoundException.MessageKey, notFoundException.Id];
                         break;
 
                     case BadRequestException badRequestException:
-                        statusCode = 400;
-                        message = badRequestException.Message;
+                        error.StatusCode = 400;
+                        error.Message = localizer[badRequestException.MessageKey];
+                        error.ServerDetails = badRequestException.Details;
                         break;
 
                     default:
-                        statusCode = 500;
-                        message = localizer["ServerErrorMessage"];
+                        error.StatusCode = 500;
+                        error.Message = localizer["ServerErrorMessage"];
                         logger.LogError(ex.ToString());
                         break;
                 }
 
-                httpContext.Response.StatusCode = statusCode;
+                httpContext.Response.StatusCode = error.StatusCode;
                 httpContext.Response.ContentType = "application/json";
-                await httpContext.Response.WriteAsJsonAsync(new ErrorRes(statusCode, message));
+                await httpContext.Response.WriteAsJsonAsync(error);
             }
         }
     }

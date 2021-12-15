@@ -17,6 +17,7 @@ using Onion.Core.Mapper;
 using Onion.Core.Security;
 using Onion.Infrastructure.Clock;
 using Onion.Infrastructure.Mapper;
+using Onion.Infrastructure.Security.Facebook;
 using Onion.Infrastructure.Security.Google;
 using Onion.Infrastructure.Security.Jwt;
 using Onion.Infrastructure.Security.Password;
@@ -45,6 +46,7 @@ namespace Onion.WebApi.Extensions
                 .ConfigureApiBehaviorOptions(opt =>
                 {
                     //opt.SuppressMapClientErrors = true;
+                    opt.InvalidModelStateResponseFactory = ctx => ctx.HandleModelValidationErrors();
                 });
         }
         #endregion
@@ -200,6 +202,10 @@ namespace Onion.WebApi.Extensions
             var googleAuthSettingsSection = configuration.GetGoogleAuthSettingsSection();
             services.Configure<GoogleAuthSettings>(googleAuthSettingsSection);
             services.AddScoped<IGoogleAuthProvider, GoogleAuthProvider>();
+
+            var facebookAuthSettingsSection = configuration.GetFacebookAuthSettingsSection();
+            services.Configure<FacebookAuthSettings>(facebookAuthSettingsSection);
+            services.AddScoped<IFacebookAuthProvider, FacebookAuthProvider>();
 
             services.AddScoped<IPasswordProvider, PasswordProvider>();
         }
