@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Onion.Application.Services.Common;
+using Onion.Application.Services.Common.Models;
 using Onion.Application.Services.ItemManagement;
 using Onion.Application.Services.ItemManagement.Models;
+using Onion.Core.Structures;
 using Onion.WebApi.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Onion.WebApi.Controllers
@@ -31,11 +34,20 @@ namespace Onion.WebApi.Controllers
             return StatusCode(200, await _itemService.GetAsync(itemId));
         }
 
+        //[ProducesResponseType(200)]
+        //[HttpGet]
+        //public async Task<ActionResult<IList<ItemRes>>> List()
+        //{
+        //    return StatusCode(200, await _itemService.ListAsync());
+        //}
+
         [ProducesResponseType(200)]
         [HttpGet]
-        public async Task<ActionResult<IList<ItemRes>>> List()
+        public async Task<ActionResult<PaginableList<ItemRes>>> Paginate(
+            [FromQuery][Range(1, 20)] int size, 
+            [FromQuery][Range(1, int.MaxValue)] int page)
         {
-            return StatusCode(200, await _itemService.ListAsync());
+            return StatusCode(200, await _itemService.PaginateAsync(size, page));
         }
 
         [ProducesResponseType(201)]

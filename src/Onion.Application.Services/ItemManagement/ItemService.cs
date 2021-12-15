@@ -1,10 +1,11 @@
 ﻿using Onion.Application.DataAccess.Entities;
+using Onion.Application.DataAccess.Exceptions;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Common;
 using Onion.Application.Services.Common.Models;
-using Onion.Application.Services.Exceptions;
 using Onion.Application.Services.ItemManagement.Models;
 using Onion.Core.Mapper;
+using Onion.Core.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,12 @@ namespace Onion.Application.Services.ItemManagement
         {
             var items = await _repositoryManager.ItemRepository.ListAsync();
             return items.Select(i => _mapper.Map<Item, ItemRes>(i)).ToList();
+        }
+
+        public async Task<PaginableList<ItemRes>> PaginateAsync(int size, int page)
+        {
+            var paginable = await _repositoryManager.ItemRepository.PaginateAsync(size, page);
+            return paginable.Transform(paginable.Data.Select(i => _mapper.Map<Item, ItemRes>(i)).ToList());
         }
 
         public async Task<ItemRes> CreateAsync(ItemReq model)
@@ -79,5 +86,7 @@ namespace Onion.Application.Services.ItemManagement
             }
             return Task.FromResult(true);
         }
+
+
     }
 }

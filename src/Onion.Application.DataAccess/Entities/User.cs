@@ -12,5 +12,6 @@ namespace Onion.Application.DataAccess.Entities
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public string GoogleSubjectId { get; set; }
+        public string FacebookSubjectId { get; set; }
     }
 }

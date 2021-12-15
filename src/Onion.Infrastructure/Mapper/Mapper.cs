@@ -8,7 +8,7 @@ namespace Onion.Infrastructure.Mapper
     {
         private readonly AM.Mapper _mapper;
 
-        public Mapper()
+        public Mapper() 
         {
             AM.MapperConfiguration configuration = new(MappperProfile.Configure);
             _mapper = new(configuration);

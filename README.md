@@ -2,7 +2,8 @@
 
 ## Tasks
 - VS template
-- pagination, filters
-- auto-migrate?
-
+- better composition
 - email service
+- refresh tokens
+- SPA
+- jobs (Hangfire vs. WebJobs)

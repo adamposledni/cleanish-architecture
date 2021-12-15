@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Onion.Application.Services.Exceptions
+namespace Onion.Application.DataAccess.Exceptions
 {
     public class ItemNotFoundException : NotFoundException
     {

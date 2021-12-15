@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Onion.WebApi.Extensions;
 using Onion.WebApi.Middlewares;
+using System.Reflection;
 
 namespace Onion.WebApi
 {
@@ -45,7 +46,7 @@ namespace Onion.WebApi
             app.UseHttpsRedirection();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Onion.WebApi v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{Assembly.GetExecutingAssembly().GetName().Name} v1"));
 
             // app.UseStaticFiles();
             var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();

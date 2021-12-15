@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Onion.Core.Clock;
+using Onion.Core.Structures;
 
 namespace Onion.Infrastucture.DataAccess.MongoDb.Repositories
 {
@@ -57,6 +58,17 @@ namespace Onion.Infrastucture.DataAccess.MongoDb.Repositories
         {
             var filter = Builders<T>.Filter.Empty;
             return await (await _dbSet.FindAsync(filter)).ToListAsync();
+        }
+
+        public async Task<PaginableList<T>> PaginateAsync(int pageSize, int page)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> CountAsync()
+        {
+            var filter = Builders<T>.Filter.Empty;
+            return (int)await _dbSet.CountDocumentsAsync(filter);
         }
     }
 }
