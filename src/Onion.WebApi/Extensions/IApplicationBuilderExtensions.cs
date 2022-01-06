@@ -9,5 +9,10 @@ namespace Onion.WebApi.Extensions
         {
             return builder.UseMiddleware<ErrorHandlerMiddleware>();
         }
+
+        public static IApplicationBuilder UseHttpRequestLogging(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<HttpLoggingMiddleware>();
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Onion.Infrastucture.DataAccess.MongoDb;
 
 namespace Onion.WebApi.Extensions
 {
@@ -23,11 +22,6 @@ namespace Onion.WebApi.Extensions
         public static IConfigurationSection GetGoogleAuthSettingsSection(this IConfiguration configuration)
         {
             return configuration.GetSection("GoogleAuthSettings");
-        }
-
-        public static IConfigurationSection GetFacebookAuthSettingsSection(this IConfiguration configuration)
-        {
-            return configuration.GetSection("FacebookAuthSettings");
         }
 
         public static string GetJwtSigningKey(this IConfiguration configuration)

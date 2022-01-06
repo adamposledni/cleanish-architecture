@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Onion.Application.DataAccess.Exceptions
+namespace Onion.Application.DataAccess.Exceptions.Common
 {
     public class BadRequestException : Exception
     {

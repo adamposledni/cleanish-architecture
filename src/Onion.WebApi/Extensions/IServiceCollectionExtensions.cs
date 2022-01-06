@@ -7,17 +7,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth;
-using Onion.Application.Services.Common;
 using Onion.Application.Services.ItemManagement;
+using Onion.Application.Services.Security;
 using Onion.Application.Services.UserManagement;
 using Onion.Core.Clock;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
 using Onion.Infrastructure.Clock;
 using Onion.Infrastructure.Mapper;
-using Onion.Infrastructure.Security.Facebook;
 using Onion.Infrastructure.Security.Google;
 using Onion.Infrastructure.Security.Jwt;
 using Onion.Infrastructure.Security.Password;
@@ -103,7 +103,13 @@ namespace Onion.WebApi.Extensions
                         ValidateAudience = false,
                         ClockSkew = TimeSpan.Zero
                     };
+                    x.Events = new JwtBearerEvents()
+                    {
+                        OnChallenge = c => throw new UnauthorizedException(),
+                        OnForbidden = c => throw new ForbiddenException()
+                    };
                 });
+
         }
         #endregion
 
@@ -203,15 +209,11 @@ namespace Onion.WebApi.Extensions
             services.Configure<GoogleAuthSettings>(googleAuthSettingsSection);
             services.AddScoped<IGoogleAuthProvider, GoogleAuthProvider>();
 
-            var facebookAuthSettingsSection = configuration.GetFacebookAuthSettingsSection();
-            services.Configure<FacebookAuthSettings>(facebookAuthSettingsSection);
-            services.AddScoped<IFacebookAuthProvider, FacebookAuthProvider>();
-
             services.AddScoped<IPasswordProvider, PasswordProvider>();
         }
         #endregion
 
-        #region Application service
+        #region Application services
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IItemService, ItemService>();

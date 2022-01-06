@@ -1,14 +1,10 @@
 ﻿using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions;
+using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Models;
+using Onion.Application.Services.Security;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Onion.Application.Services.Auth
@@ -18,7 +14,6 @@ namespace Onion.Application.Services.Auth
         private readonly IRepositoryManager _repositoryManager;
         private readonly IJwtProvider _jwtService;
         private readonly IGoogleAuthProvider _googleAuthProvider;
-        private readonly IFacebookAuthProvider _facebookAuthProvider;
         private readonly IMapper _mapper;
         private readonly IPasswordProvider _passwordProvider;
 
@@ -27,13 +22,11 @@ namespace Onion.Application.Services.Auth
             IJwtProvider jwtService,
             IGoogleAuthProvider googleAuthProvider,
             IMapper mapper,
-            IPasswordProvider passwordProvider, 
-            IFacebookAuthProvider facebookAuthProvider)
+            IPasswordProvider passwordProvider)
         {
             _repositoryManager = repositoryManager;
             _jwtService = jwtService;
             _googleAuthProvider = googleAuthProvider;
-            _facebookAuthProvider = facebookAuthProvider;
             _mapper = mapper;
             _passwordProvider = passwordProvider;
         }
@@ -44,7 +37,8 @@ namespace Onion.Application.Services.Auth
             if (user == null || !_passwordProvider.Verify(model.Password, user.PasswordHash, user.PasswordSalt))
                 throw new InvalidEmailPasswordException();
 
-            return _mapper.Map<User, AuthRes>(user, a => a.AccessToken = GenerateJwt(user));
+            var jwt = _jwtService.GenerateJwt(user);
+            return _mapper.Map<User, AuthRes>(user, a => a.AccessToken = jwt);
         }
 
         public async Task<AuthRes> GoogleLoginAsync(IdTokenAuthReq model)
@@ -52,61 +46,11 @@ namespace Onion.Application.Services.Auth
             var googleIdentity = await _googleAuthProvider.GetIdentityAsync(model.IdToken);
             if (googleIdentity == null) throw new InvalidGoogleIdTokenException();
 
-            var user = await _repositoryManager.UserRepository.GetByEmailAsync(googleIdentity.Email);
-            // new user
-            if (user == null)
-            {
-                user = new User()
-                {
-                    Email = googleIdentity.Email,
-                    GoogleSubjectId = googleIdentity.SubjectId
-                };
-                await _repositoryManager.UserRepository.CreateAsync(user);
-            }
-            // already existing without Google subject id
-            else if (string.IsNullOrWhiteSpace(user.GoogleSubjectId))
-            {
-                user.GoogleSubjectId = googleIdentity.SubjectId;
-                await _repositoryManager.UserRepository.UpdateAsync(user);
-            }
+            var user = await _repositoryManager.UserRepository.GetByGoogleIdAsync(googleIdentity.SubjectId);
+            if (user == null) throw new GoogleLinkMissingException();
 
-            return _mapper.Map<User, AuthRes>(user, a => a.AccessToken = GenerateJwt(user));
-        }
-
-        public async Task<AuthRes> FacebookLoginAsync(IdTokenAuthReq model)
-        {
-            var facebookIdentity = await _facebookAuthProvider.GetIdentityAsync(model.IdToken);
-            if (facebookIdentity == null) throw new InvalidFacebookIdTokenException();
-
-            var user = await _repositoryManager.UserRepository.GetByEmailAsync(facebookIdentity.Email);
-            // new user
-            if (user == null)
-            {
-                user = new User()
-                {
-                    Email = facebookIdentity.Email,
-                    FacebookSubjectId = facebookIdentity.SubjectId
-                };
-                await _repositoryManager.UserRepository.CreateAsync(user);
-            }
-            // already existing without Facebook subject id
-            else if (string.IsNullOrWhiteSpace(user.GoogleSubjectId))
-            {
-                user.FacebookSubjectId = facebookIdentity.SubjectId;
-                await _repositoryManager.UserRepository.UpdateAsync(user);
-            }
-
-            return _mapper.Map<User, AuthRes>(user, a => a.AccessToken = GenerateJwt(user));
-        }
-
-        private string GenerateJwt(User user)
-        {
-            List<Claim> claims = new()
-            {
-                new Claim(ClaimTypes.Upn, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
-            return _jwtService.GenerateJwt(claims);
+            var jwt = _jwtService.GenerateJwt(user);
+            return _mapper.Map<User, AuthRes>(user, a => a.AccessToken = jwt);
         }
     }
 }

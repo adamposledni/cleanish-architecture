@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Onion.Application.DataAccess.Exceptions;
+using Onion.Application.DataAccess.Exceptions.Auth;
+using Onion.Application.DataAccess.Exceptions.Common;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Onion.WebApi.Middlewares
 {
     public class ErrorHandlerMiddleware
-    {       
+    {
         private readonly RequestDelegate _next;
 
         public ErrorHandlerMiddleware(RequestDelegate next)
@@ -40,6 +40,16 @@ namespace Onion.WebApi.Middlewares
                         error.StatusCode = 400;
                         error.Message = localizer[badRequestException.MessageKey];
                         error.ServerDetails = badRequestException.Details;
+                        break;
+
+                    case UnauthorizedException unauthorizedException:
+                        error.StatusCode = 401;
+                        error.Message = localizer[unauthorizedException.MessageKey];
+                        break;
+
+                    case ForbiddenException forbiddenException:
+                        error.StatusCode = 403;
+                        error.Message = localizer[forbiddenException.MessageKey];
                         break;
 
                     default:

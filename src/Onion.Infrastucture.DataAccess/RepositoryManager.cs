@@ -1,15 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Repositories;
-using Onion.Core.Clock;
+﻿using Onion.Application.DataAccess.Repositories;
 using Onion.Infrastucture.DataAccess.MongoDb;
 using Onion.Infrastucture.DataAccess.MongoDb.Repositories;
 using Onion.Infrastucture.DataAccess.Sql;
 using Onion.Infrastucture.DataAccess.Sql.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Onion.Infrastucture.DataAccess
 {

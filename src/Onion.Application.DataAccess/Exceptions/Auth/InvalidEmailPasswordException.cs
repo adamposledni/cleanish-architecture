@@ -1,11 +1,6 @@
-﻿using Onion.Application.DataAccess.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Onion.Application.DataAccess.Exceptions.Common;
 
-namespace Onion.Application.DataAccess.Exceptions
+namespace Onion.Application.DataAccess.Exceptions.Auth
 {
     public class InvalidEmailPasswordException : BadRequestException
     {

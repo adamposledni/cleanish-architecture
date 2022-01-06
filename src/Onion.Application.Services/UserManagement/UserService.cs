@@ -1,5 +1,5 @@
 ﻿using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions;
+using Onion.Application.DataAccess.Exceptions.User;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.UserManagement.Models;
 using Onion.Core.Mapper;
@@ -7,7 +7,6 @@ using Onion.Core.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Onion.Application.Services.UserManagement

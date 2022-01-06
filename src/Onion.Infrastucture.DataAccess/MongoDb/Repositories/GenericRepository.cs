@@ -2,12 +2,10 @@
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
 using Onion.Application.DataAccess.Repositories;
-using Onion.Infrastucture.DataAccess.MongoDb;
+using Onion.Core.Structures;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Onion.Core.Clock;
-using Onion.Core.Structures;
 
 namespace Onion.Infrastucture.DataAccess.MongoDb.Repositories
 {

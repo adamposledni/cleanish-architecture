@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions;
+using Onion.Application.DataAccess.Exceptions.Common;
 using Onion.Application.DataAccess.Repositories;
-using Onion.Application.Services.Common.Models;
 using Onion.Core.Structures;
 using System;
 using System.Collections.Generic;
@@ -65,7 +63,7 @@ namespace Onion.Infrastucture.DataAccess.Sql.Repositories
             return await PaginateAsync(pageSize, page, e => true);
         }
 
-        protected async Task<PaginableList<T>> PaginateAsync (int pageSize, int page, Func<T, bool> filter)
+        protected async Task<PaginableList<T>> PaginateAsync(int pageSize, int page, Func<T, bool> filter)
         {
             int countOfEntities = await CountAsync();
             int countOfPages = (int)Math.Ceiling((double)countOfEntities / pageSize);

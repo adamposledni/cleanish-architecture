@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Onion.Core.Security;
+using Onion.Application.DataAccess.Entities;
+using Onion.Application.Services.Security;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,7 +19,7 @@ namespace Onion.Infrastructure.Security.Jwt
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GenerateJwt(IEnumerable<Claim> claims)
+        private string GenerateJwt(IEnumerable<Claim> claims)
         {
             JwtSecurityTokenHandler tokenHandler = new();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.JwtSigningKey);
@@ -30,6 +31,16 @@ namespace Onion.Infrastructure.Security.Jwt
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public string GenerateJwt(User user)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            };
+            return GenerateJwt(claims);
         }
     }
 }

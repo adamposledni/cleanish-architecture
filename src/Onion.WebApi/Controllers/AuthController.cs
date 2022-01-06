@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Onion.Application.Services.Auth;
 using Onion.Application.Services.Auth.Models;
-using Onion.Application.Services.Common;
 using Onion.WebApi.Models;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Onion.WebApi.Controllers
@@ -23,7 +20,7 @@ namespace Onion.WebApi.Controllers
         {
             _authService = authService;
         }
-    
+
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [HttpPost("login")]
@@ -38,14 +35,6 @@ namespace Onion.WebApi.Controllers
         public async Task<ActionResult<AuthRes>> GoogleLogin([FromBody] IdTokenAuthReq body)
         {
             return StatusCode(200, await _authService.GoogleLoginAsync(body));
-        }
-
-        [AllowAnonymous]
-        [ProducesResponseType(200)]
-        [HttpPost("facebook-login")]
-        public async Task<ActionResult<AuthRes>> FacebookLogin([FromBody] IdTokenAuthReq body)
-        {
-            return StatusCode(200, await _authService.FacebookLoginAsync(body));
         }
     }
 }

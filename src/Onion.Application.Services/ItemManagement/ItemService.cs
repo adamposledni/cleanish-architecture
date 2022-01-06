@@ -1,9 +1,9 @@
 ﻿using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions;
+using Onion.Application.DataAccess.Exceptions.Item;
 using Onion.Application.DataAccess.Repositories;
-using Onion.Application.Services.Common;
-using Onion.Application.Services.Common.Models;
 using Onion.Application.Services.ItemManagement.Models;
+using Onion.Application.Services.Security;
+using Onion.Application.Services.Security.Models;
 using Onion.Core.Mapper;
 using Onion.Core.Structures;
 using System;
@@ -20,7 +20,7 @@ namespace Onion.Application.Services.ItemManagement
         private readonly ISecurityContextProvider _securityContextProvider;
 
         public ItemService(
-            IRepositoryManager repositoryManager, 
+            IRepositoryManager repositoryManager,
             IMapper mapper,
             ISecurityContextProvider securityContextProvider)
         {

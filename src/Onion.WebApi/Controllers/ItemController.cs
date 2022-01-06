@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Onion.Application.Services.Common;
-using Onion.Application.Services.Common.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Onion.Application.Services.ItemManagement;
 using Onion.Application.Services.ItemManagement.Models;
 using Onion.Core.Structures;
 using Onion.WebApi.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
@@ -14,6 +12,7 @@ namespace Onion.WebApi.Controllers
 {
     [ApiController]
     [ProducesResponseType(400, Type = typeof(ErrorRes))]
+    [ProducesResponseType(401, Type = typeof(ErrorRes))]
     [ProducesResponseType(500, Type = typeof(ErrorRes))]
     [Produces("application/json")]
     [Route("api/items")]
@@ -44,7 +43,7 @@ namespace Onion.WebApi.Controllers
         [ProducesResponseType(200)]
         [HttpGet]
         public async Task<ActionResult<PaginableList<ItemRes>>> Paginate(
-            [FromQuery][Range(1, 20)] int size, 
+            [FromQuery][Range(1, 20)] int size,
             [FromQuery][Range(1, int.MaxValue)] int page)
         {
             return StatusCode(200, await _itemService.PaginateAsync(size, page));
@@ -73,6 +72,7 @@ namespace Onion.WebApi.Controllers
             return StatusCode(200, await _itemService.UpdateAsync(itemId, body));
         }
 
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(200)]
         [HttpGet("foo")]
         public async Task<ActionResult<bool>> Foo()

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Onion.Application.DataAccess.Entities;
 using Onion.Core.Clock;
-using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -15,7 +14,7 @@ namespace Onion.Infrastucture.DataAccess.Sql
 
         public DbSet<Item> Items { get; set; }
 
-        public SqlDbContext(DbContextOptions<SqlDbContext> options, IClockProvider clockProvider) : base(options) 
+        public SqlDbContext(DbContextOptions<SqlDbContext> options, IClockProvider clockProvider) : base(options)
         {
             _clockProvider = clockProvider;
         }

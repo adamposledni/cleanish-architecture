@@ -2,10 +2,6 @@
 using Microsoft.Extensions.Options;
 using Onion.Core.Security;
 using Onion.Core.Security.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Onion.Infrastructure.Security.Google

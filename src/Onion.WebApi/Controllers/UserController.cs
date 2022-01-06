@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Onion.Application.Services.Common;
 using Onion.Application.Services.UserManagement;
 using Onion.Application.Services.UserManagement.Models;
 using Onion.WebApi.Models;

@@ -2,8 +2,9 @@
 
 ## Tasks
 - VS template
-- better composition
-- email service
+- documentation
+
 - refresh tokens
+- email service
 - SPA
 - jobs (Hangfire vs. WebJobs)

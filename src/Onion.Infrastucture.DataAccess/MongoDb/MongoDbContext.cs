@@ -2,12 +2,9 @@
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
 using Onion.Core.Clock;
+using Onion.Core.Extensions;
 using Onion.Infrastucture.DataAccess.MongoDb.EntityConfigurations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Onion.Infrastucture.DataAccess.MongoDb
 {
@@ -37,7 +34,14 @@ namespace Onion.Infrastucture.DataAccess.MongoDb
 
         public static void Configure()
         {
-            UserConfiguration.Configure();
+            var assembly = typeof(MongoDbContext).Assembly;
+            var configurationTypes = assembly.GetDerivedTypes<EntityTypeConfiguration>();
+
+            foreach (var configurationType in configurationTypes)
+            {
+                var instance = (EntityTypeConfiguration)Activator.CreateInstance(configurationType);
+                instance.Configure();
+            }
         }
     }
 }

@@ -2,10 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Onion.WebApi.Extensions;
-using Onion.WebApi.Middlewares;
 using System.Reflection;
 
 namespace Onion.WebApi
@@ -38,9 +36,9 @@ namespace Onion.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app)
         {
-            app.UseHttpLogging();
+            app.UseHttpRequestLogging();
             app.UseErrorHandler();
 
             app.UseHttpsRedirection();
@@ -63,8 +61,6 @@ namespace Onion.WebApi
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
-
-            logger.LogInformation("HTTP pipeline configured");
         }
     }
 }

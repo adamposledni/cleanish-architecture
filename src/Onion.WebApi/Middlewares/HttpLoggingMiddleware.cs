@@ -1,19 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace Onion.WebApi.Middlewares
 {
-    public static class HttpLoggingMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseHttpLogging(
-            this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<HttpLoggingMiddleware>();
-        }
-    }
-
     public class HttpLoggingMiddleware
     {
         private readonly RequestDelegate _next;
