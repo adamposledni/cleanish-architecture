@@ -3,9 +3,12 @@ using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Security;
+using Onion.Application.Services.Security.Models;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
 using System.Threading.Tasks;
+using System;
+using Onion.Application.DataAccess.Exceptions.User;
 
 namespace Onion.Application.Services.Auth
 {
@@ -16,19 +19,22 @@ namespace Onion.Application.Services.Auth
         private readonly IGoogleAuthProvider _googleAuthProvider;
         private readonly IMapper _mapper;
         private readonly IPasswordProvider _passwordProvider;
+        private readonly ISecurityContextProvider _securityContextProvider;
 
         public AuthService(
             IRepositoryManager repositoryManager,
             IJwtProvider jwtService,
             IGoogleAuthProvider googleAuthProvider,
             IMapper mapper,
-            IPasswordProvider passwordProvider)
+            IPasswordProvider passwordProvider, 
+            ISecurityContextProvider contextProvider)
         {
             _repositoryManager = repositoryManager;
             _jwtService = jwtService;
             _googleAuthProvider = googleAuthProvider;
             _mapper = mapper;
             _passwordProvider = passwordProvider;
+            _securityContextProvider = contextProvider;
         }
 
         public async Task<AuthRes> LoginAsync(PasswordAuthReq model)

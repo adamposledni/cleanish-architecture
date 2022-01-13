@@ -12,7 +12,7 @@ namespace Onion.Infrastucture.DataAccess.Sql
     {
         private readonly IClockProvider _clockProvider;
 
-        public DbSet<Item> Items { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public SqlDbContext(DbContextOptions<SqlDbContext> options, IClockProvider clockProvider) : base(options)
         {

@@ -10,7 +10,6 @@ using Microsoft.OpenApi.Models;
 using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth;
-using Onion.Application.Services.ItemManagement;
 using Onion.Application.Services.Security;
 using Onion.Application.Services.UserManagement;
 using Onion.Core.Clock;
@@ -190,7 +189,7 @@ namespace Onion.WebApi.Extensions
 
             // UoW
             services.AddScoped<IRepositoryManager, RepositoryManager>();
-            //services.AddScoped<ITransactionalRepositoryManager, TransactionalRepositoryManager>();
+            services.AddScoped<ITransactionalRepositoryManager, TransactionalRepositoryManager>();
         }
         #endregion
 
@@ -204,22 +203,27 @@ namespace Onion.WebApi.Extensions
             services.AddScoped<IJwtProvider, JwtProvider>();
 
             services.AddScoped<IClockProvider, ClockProvider>();
-
+            services.AddScoped<IPasswordProvider, PasswordProvider>();
+            
             var googleAuthSettingsSection = configuration.GetGoogleAuthSettingsSection();
             services.Configure<GoogleAuthSettings>(googleAuthSettingsSection);
             services.AddScoped<IGoogleAuthProvider, GoogleAuthProvider>();
-
-            services.AddScoped<IPasswordProvider, PasswordProvider>();
         }
         #endregion
 
         #region Application services
         public static void AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ISecurityContextProvider, SecurityContextProvider>();
+        }
+        #endregion
+
+        #region SPA
+        public static void AddSpa(this IServiceCollection services)
+        {
+            services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
         }
         #endregion
     }

@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Onion.Core\Onion.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Sql\Migrations\" />
+  </ItemGroup>
+
 </Project>

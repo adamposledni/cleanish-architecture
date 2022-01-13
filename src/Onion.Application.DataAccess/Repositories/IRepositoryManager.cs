@@ -2,7 +2,6 @@
 {
     public interface IRepositoryManager
     {
-        IItemRepository ItemRepository { get; }
         IUserRepository UserRepository { get; }
     }
 }

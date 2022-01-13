@@ -1,39 +1,50 @@
 {
-  "$schema": "http://json.schemastore.org/template",
-  "identity": "Hroudaadam.OnionArchitecture.WebApi",
-  "shortName": "onion",
-  "name": "Onion architecture - Web API",
-  "description": "Web API solution.",
-  "sourceName": "Onion",
-  "author": "Adam Hrouda",
-  "classifications": [
-    "Common",
-    "Web"
-  ],
-  "tags": {
-    "language": "C#",
-    "type": "solution"
-  },
-  "preferNameDirectory": true,
-  "defaultName": "NewProject",
-  "primaryOutputs": [
-    {
-      "path": "Onion.sln "
-    }
-  ],
-  "guids": [
-    "{20769C2C-1E9E-42F3-9554-7CF4F5BFA4AE}",
-    "{2150E333-8FDC-42A3-9474-1A3956D46DE8}",
-    "{24838657-986B-49CB-B993-742483BD346F}",
-    "{47FBAF32-6FE5-4A1A-A6B6-4E35D61DAC0C}",
-    "{4A7CDBB7-32AF-4E18-A2BB-43DACA916B6C}",
-    "{61204C7F-E27B-4026-9A43-B92402D1C6D2}",
-    "{6F803C5F-ECE0-477D-9E9E-26840C870D2E}",
-    "{8C17B8A6-ED14-462A-BE1C-465078E532F3}",
-    "{94BBD9F9-19A1-4DF5-A221-865915996E3E}",
-    "{97C50CA1-E2EF-4F39-A572-FD397A97282E}",
-    "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}",
-    "{E901B1AF-14DB-4C8F-BC87-A717DB8910D6}",
-    "{E7A5B6B4-086A-415C-9623-C2D15BE747B3}"
-  ]
+    "$schema": "http://json.schemastore.org/template",
+    "identity": "Hroudaadam.OnionArchitecture.WebApi",
+    "shortName": "onion",
+    "name": "Onion architecture - Web API",
+    "description": "Web API solution.",
+    "sourceName": "Onion",
+    "author": "Adam Hrouda",
+    "classifications": [
+        "Common",
+        "Web"
+    ],
+    "tags": {
+        "language": "C#",
+        "type": "solution"
+    },
+    "preferNameDirectory": true,
+    "defaultName": "NewProject",
+    "symbols": {
+        "enableGoogleAuth": {
+            "type": "parameter",
+            "dataType": "bool",
+            "defaultValue": "false"
+        }
+    },
+    "sources": [ 
+        { 
+            "modifiers": [
+                { 
+                    "condition": "(!enableGoogleAuth)", 
+                    "exclude": [ 
+                        "src/Onion.Application.DataAccess/Exceptions/Auth/GoogleLinkMissingException.cs"
+                    ] 
+                },
+                {
+                    "exclude": [
+                        "**/[Bb]in/**",
+                        "**/[Oo]bj/**",
+                        ".template.config/**/*",
+                        "**/*.filelist",
+                        "**/*.user",
+                        "**/*.lock.json",
+                        ".git"
+                    ]
+                } 
+
+            ] 
+        } 
+    ]
 }

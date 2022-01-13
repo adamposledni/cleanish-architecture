@@ -7,12 +7,15 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.22" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="VueCliMiddleware" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +23,13 @@
     <ProjectReference Include="..\Onion.Core\Onion.Core.csproj" />
     <ProjectReference Include="..\Onion.Infrastructure\Onion.Infrastructure.csproj" />
     <ProjectReference Include="..\Onion.Infrastucture.DataAccess\Onion.Infrastucture.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\html\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

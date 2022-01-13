@@ -27,41 +27,32 @@ namespace Onion.WebApi.Middlewares
             }
             catch (Exception ex)
             {
-                ErrorRes error = new();
-
-                switch (ex)
-                {
-                    case NotFoundException notFoundException:
-                        error.StatusCode = 404;
-                        error.Message = localizer[notFoundException.MessageKey, notFoundException.Id];
-                        break;
-
-                    case BadRequestException badRequestException:
-                        error.StatusCode = 400;
-                        error.Message = localizer[badRequestException.MessageKey];
-                        error.ServerDetails = badRequestException.Details;
-                        break;
-
-                    case UnauthorizedException unauthorizedException:
-                        error.StatusCode = 401;
-                        error.Message = localizer[unauthorizedException.MessageKey];
-                        break;
-
-                    case ForbiddenException forbiddenException:
-                        error.StatusCode = 403;
-                        error.Message = localizer[forbiddenException.MessageKey];
-                        break;
-
-                    default:
-                        error.StatusCode = 500;
-                        error.Message = localizer["ServerErrorMessage"];
-                        logger.LogError(ex.ToString());
-                        break;
-                }
-
+                var error = HandleException(ex, localizer, logger);
                 httpContext.Response.StatusCode = error.StatusCode;
                 httpContext.Response.ContentType = "application/json";
                 await httpContext.Response.WriteAsJsonAsync(error);
+            }
+        }
+
+        public ErrorRes HandleException(Exception ex, IStringLocalizer<Resource> localizer, ILogger<ErrorHandlerMiddleware> logger)
+        {
+            switch (ex)
+            {
+                case NotFoundException notFoundException:
+                    return new ErrorRes(404, localizer[notFoundException.MessageKey, notFoundException.Id]);
+
+                case BadRequestException badRequestException:
+                    return new ErrorRes(400, localizer[badRequestException.MessageKey], badRequestException.Details);
+
+                case UnauthorizedException unauthorizedException:
+                    return new ErrorRes(401, localizer[unauthorizedException.MessageKey]);
+
+                case ForbiddenException forbiddenException:
+                    return new ErrorRes(403, localizer[forbiddenException.MessageKey]);
+
+                default:
+                    logger.LogError(ex.ToString());
+                    return new ErrorRes(500, localizer["ServerErrorMessage"]);
             }
         }
     }

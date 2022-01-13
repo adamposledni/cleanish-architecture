@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Onion.WebApi.Extensions;
 using System.Reflection;
+using VueCliMiddleware;
 
 namespace Onion.WebApi
 {
@@ -33,6 +35,8 @@ namespace Onion.WebApi
             services.AddDataAccess(Configuration, _env);
             services.AddApplicationServices();
             services.AddCoreServices(Configuration);
+            services.AddSpa();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,7 +50,13 @@ namespace Onion.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{Assembly.GetExecutingAssembly().GetName().Name} v1"));
 
-            // app.UseStaticFiles();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UseSpa(c =>
+            {
+                c.Options.SourcePath = "ClientApp/dist";
+            });
+
             var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(localizationOptions.Value);
 

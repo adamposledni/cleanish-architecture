@@ -1,10 +1,12 @@
 # Onion architecture
 
 ## Tasks
-- VS template
-- documentation
-
 - refresh tokens
+- documentation
+- .NET 6
+- tests
+
+
+- VS template (optional parts)
 - email service
-- SPA
 - jobs (Hangfire vs. WebJobs)
