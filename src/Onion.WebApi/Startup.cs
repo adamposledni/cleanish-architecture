@@ -52,10 +52,6 @@ namespace Onion.WebApi
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseSpa(c =>
-            {
-                c.Options.SourcePath = "ClientApp/dist";
-            });
 
             var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(localizationOptions.Value);
@@ -70,6 +66,11 @@ namespace Onion.WebApi
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
+            });
+
+            app.UseSpa(c =>
+            {
+                c.Options.SourcePath = "ClientApp/dist";
             });
         }
     }
