@@ -8,7 +8,7 @@ namespace Onion.Infrastucture.DataAccess.Sql.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        public UserRepository(SqlDbContext dbContext, bool isTransactional) : base(dbContext, isTransactional)
+        public UserRepository(SqlDbContext dbContext) : base(dbContext)
         {
         }
 

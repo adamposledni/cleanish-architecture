@@ -8,12 +8,13 @@ namespace Onion.Infrastructure.Security.Password
 {
     public class PasswordProvider : IPasswordProvider
     {
-        public void Hash(string password, out byte[] hash, out byte[] salt)
+        public (byte[] hash, byte[] salt) Hash(string password)
         {
             using HMACSHA256 hmac = new();
 
-            salt = hmac.Key;
-            hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            byte[] salt = hmac.Key;
+            byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return (hash, salt);
         }
 
         public string Random(int length)

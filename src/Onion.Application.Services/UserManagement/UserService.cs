@@ -53,12 +53,12 @@ namespace Onion.Application.Services.UserManagement
 
         public async Task<UserRes> CreateAsync(UserReq model)
         {
-            var newUser = _mapper.Map<UserReq, User>(model, (u =>
+            var newUser = _mapper.Map<UserReq, User>(model, u =>
             {
-                _passwordProvider.Hash(model.Password, out byte[] hash, out byte[] salt);
+                (byte[] hash, byte[] salt) = _passwordProvider.Hash(model.Password);
                 u.PasswordHash = hash;
                 u.PasswordSalt = salt;
-            }));
+            });
             var user = await _repositoryManager.UserRepository.CreateAsync(newUser);
 
             return _mapper.Map<User, UserRes>(user);

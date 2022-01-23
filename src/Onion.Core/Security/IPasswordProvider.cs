@@ -2,7 +2,7 @@
 {
     public interface IPasswordProvider
     {
-        void Hash(string password, out byte[] hash, out byte[] salt);
+        (byte[] hash, byte[] salt) Hash(string password);
         string Random(int length);
         bool Verify(string password, byte[] hash, byte[] salt);
     }

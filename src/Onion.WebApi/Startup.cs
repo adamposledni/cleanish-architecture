@@ -70,7 +70,7 @@ namespace Onion.WebApi
 
             app.UseSpa(c =>
             {
-                c.Options.SourcePath = "ClientApp/dist";
+                c.Options.SourcePath = "wwwroot";
             });
         }
     }

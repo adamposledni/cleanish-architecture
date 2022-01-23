@@ -14,32 +14,30 @@ namespace Onion.Infrastucture.DataAccess.Sql.Repositories
     {
         protected readonly SqlDbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
-        protected readonly bool _isTransactional;
 
-        public GenericRepository(SqlDbContext dbContext, bool isTransactional)
+        public GenericRepository(SqlDbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<T>();
-            _isTransactional = isTransactional;
         }
 
         public async Task<T> CreateAsync(T newEntity)
         {
             T createdEntity = _dbSet.Add(newEntity).Entity;
-            await TrySaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return createdEntity;
         }
 
         public async Task<T> UpdateAsync(T updatedEntity)
         {
-            await TrySaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return updatedEntity;
         }
 
         public async Task<T> DeleteAsync(T entityToDelete)
         {
             T deletedEntity = _dbSet.Remove(entityToDelete).Entity;
-            await TrySaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return deletedEntity;
         }
 
@@ -75,14 +73,6 @@ namespace Onion.Infrastucture.DataAccess.Sql.Repositories
                 .ToListAsync();
 
             return new PaginableList<T>(entities, countOfEntities, pageSize, page, countOfPages);
-        }
-
-        protected async Task TrySaveChangesAsync()
-        {
-            if (!_isTransactional)
-            {
-                await _dbContext.SaveChangesAsync();
-            }
         }
     }
 }

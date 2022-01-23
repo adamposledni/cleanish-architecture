@@ -189,7 +189,6 @@ namespace Onion.WebApi.Extensions
 
             // UoW
             services.AddScoped<IRepositoryManager, RepositoryManager>();
-            services.AddScoped<ITransactionalRepositoryManager, TransactionalRepositoryManager>();
         }
         #endregion
 
@@ -199,8 +198,8 @@ namespace Onion.WebApi.Extensions
             services.AddScoped<IMapper, Mapper>();
 
             var jwtSettingsSection = configuration.GetJwtSettingsSection();
-            services.Configure<JwtSettings>(jwtSettingsSection);
-            services.AddScoped<IJwtProvider, JwtProvider>();
+            services.Configure<TokenProviderSettings>(jwtSettingsSection);
+            services.AddScoped<ITokenProvider, TokenProvider>();
 
             services.AddScoped<IClockProvider, ClockProvider>();
             services.AddScoped<IPasswordProvider, PasswordProvider>();
@@ -223,7 +222,7 @@ namespace Onion.WebApi.Extensions
         #region SPA
         public static void AddSpa(this IServiceCollection services)
         {
-            services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
+            services.AddSpaStaticFiles(opt => opt.RootPath = "wwwroot");
         }
         #endregion
     }

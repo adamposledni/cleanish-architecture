@@ -11,7 +11,6 @@ namespace Onion.Infrastucture.DataAccess
     {
         protected readonly IMongoDbContext _mongoDbContext;
         protected readonly SqlDbContext _sqlDbContext;
-        protected bool _isTransactional = false;
 
         private readonly Lazy<IUserRepository> _userRepository;
         public IUserRepository UserRepository => _userRepository.Value;
@@ -21,7 +20,7 @@ namespace Onion.Infrastucture.DataAccess
             _mongoDbContext = mongoDbContext;
             _sqlDbContext = sqlDbContext;
 
-            //_userRepository = new Lazy<IUserRepository>(() => new Sql.Repositories.UserRepository(_sqlDbContext, _isTransactional));
+            //_userRepository = new Lazy<IUserRepository>(() => new Sql.Repositories.UserRepository(_sqlDbContext));
             _userRepository = new Lazy<IUserRepository>(() => new MongoDb.Repositories.UserRepository(_mongoDbContext));
         }
     }
