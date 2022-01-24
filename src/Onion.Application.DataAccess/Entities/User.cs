@@ -1,4 +1,6 @@
-﻿namespace Onion.Application.DataAccess.Entities
+﻿using System.Collections.Generic;
+
+namespace Onion.Application.DataAccess.Entities
 {
     public class User : BaseEntity
     {
@@ -6,5 +8,6 @@
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public string GoogleSubjectId { get; set; }
+        public IEnumerable<RefreshToken> RefreshTokens { get; set; }
     }
 }

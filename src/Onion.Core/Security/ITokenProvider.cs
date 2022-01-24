@@ -5,6 +5,7 @@ namespace Onion.Core.Security
 {
     public interface ITokenProvider
     {
-        string GenerateAccessToken(IEnumerable<Claim> claims);
+        string GenerateJwt(IEnumerable<Claim> claims, int expiresIn);
+        string GenerateRefreshToken();
     }
 }

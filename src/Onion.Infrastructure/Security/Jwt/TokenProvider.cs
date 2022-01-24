@@ -25,15 +25,14 @@ namespace Onion.Infrastructure.Security.Jwt
             _clockProvider = clockProvider;
         }
 
-        // TODO: expiration parameter
-        public string GenerateAccessToken(IEnumerable<Claim> claims)
+        public string GenerateJwt(IEnumerable<Claim> claims, int expiresIn)
         {
             JwtSecurityTokenHandler tokenHandler = new();
             var key = Encoding.ASCII.GetBytes(_tokenSettings.JwtSigningKey);
             SecurityTokenDescriptor tokenDescriptor = new()
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = _clockProvider.Now.AddMinutes(_tokenSettings.ExpirationTime),
+                Expires = _clockProvider.Now.AddMinutes(expiresIn),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

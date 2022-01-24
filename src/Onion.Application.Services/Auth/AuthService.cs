@@ -12,6 +12,7 @@ using Onion.Application.DataAccess.Exceptions.User;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Onion.Core.Clock;
 
 namespace Onion.Application.Services.Auth
 {
@@ -23,6 +24,7 @@ namespace Onion.Application.Services.Auth
         private readonly IMapper _mapper;
         private readonly IPasswordProvider _passwordProvider;
         private readonly ISecurityContextProvider _securityContextProvider;
+        private readonly IClockProvider _clockProvider;
 
         public AuthService(
             IRepositoryManager repositoryManager,
@@ -30,7 +32,8 @@ namespace Onion.Application.Services.Auth
             IGoogleAuthProvider googleAuthProvider,
             IMapper mapper,
             IPasswordProvider passwordProvider, 
-            ISecurityContextProvider contextProvider)
+            ISecurityContextProvider contextProvider,
+            IClockProvider clockProvider)
         {
             _repositoryManager = repositoryManager;
             _tokenProvider = tokenProvider;
@@ -38,6 +41,7 @@ namespace Onion.Application.Services.Auth
             _mapper = mapper;
             _passwordProvider = passwordProvider;
             _securityContextProvider = contextProvider;
+            _clockProvider = clockProvider;
         }
 
         public async Task<AuthRes> LoginAsync(PasswordAuthReq model)
@@ -46,8 +50,7 @@ namespace Onion.Application.Services.Auth
             if (user == null || !_passwordProvider.Verify(model.Password, user.PasswordHash, user.PasswordSalt))
                 throw new InvalidEmailPasswordException();
 
-            var jwt = GenerateAccessToken(user);
-            return _mapper.Map<User, AuthRes>(user, a => a.AccessToken = jwt);
+            return IssueAccess(user);
         }
 
         public async Task<AuthRes> GoogleLoginAsync(IdTokenAuthReq model)
@@ -58,8 +61,31 @@ namespace Onion.Application.Services.Auth
             var user = await _repositoryManager.UserRepository.GetByGoogleIdAsync(googleIdentity.SubjectId);
             if (user == null) throw new GoogleLinkMissingException();
 
-            var jwt = GenerateAccessToken(user);
-            return _mapper.Map<User, AuthRes>(user, a => a.AccessToken = jwt);
+            return IssueAccess(user);
+        }
+
+        public async Task<bool> RevokeTokenAsync(object model)
+        {
+            return true;
+        }
+
+        public async Task<bool> RefreshTokenAsync(object model)
+        {
+            return true;
+        }
+
+        private AuthRes IssueAccess(User user)
+        {
+            var accessToken = GenerateAccessToken(user);
+            var refreshToken = GenerateRefeshToken(user);
+            // TODO: save refresh token
+
+            return _mapper.Map<User, AuthRes>(
+                user,
+                a => {
+                    a.AccessToken = accessToken;
+                    a.RefreshToken = refreshToken.Token;
+                });
         }
 
         private string GenerateAccessToken(User user)
@@ -69,7 +95,19 @@ namespace Onion.Application.Services.Auth
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
             };
-            return _tokenProvider.GenerateAccessToken(claims);
+            return _tokenProvider.GenerateJwt(claims, 60);
+        }
+
+        private RefreshToken GenerateRefeshToken(User user)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            };
+            int expiration = 10080; // 7 days
+            return new RefreshToken(
+                _tokenProvider.GenerateJwt(claims, expiration),
+                user.Id);
         }
     }
 }
