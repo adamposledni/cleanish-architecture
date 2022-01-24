@@ -1,14 +1,3 @@
-# Onion architecture
+## Onion architecture
 
-## Tasks
-- refresh tokens
-- documentation
-- .NET 6
-- tests
-- caching
-
-- HTTP client
-- VS template (optional parts)
-- email service
-- jobs (Hangfire vs. WebJobs)
-- configuration access
+**Tasks:** [https://github.com/hroudaadam/onion-architecture/projects/1](https://github.com/hroudaadam/onion-architecture/projects/1)
