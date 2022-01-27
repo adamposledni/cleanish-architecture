@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Onion.Core.Mapper;
 
-namespace Onion.Core.Mapper
+public interface IMapper
 {
-    public interface IMapper
-    {
-        TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null);
-    }
+    TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null);
 }

@@ -1,6 +1,5 @@
-﻿namespace Onion.WebApi.Resources
+﻿namespace Onion.WebApi.Resources;
+
+public class Resource
 {
-    public class Resource
-    {
-    }
 }

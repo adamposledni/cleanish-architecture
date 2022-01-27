@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Onion.Application.Services.Auth.Models
+namespace Onion.Application.Services.Auth.Models;
+
+public class IdTokenAuthReq
 {
-    public class IdTokenAuthReq
-    {
-        [Required]
-        public string IdToken { get; set; }
-    }
+    [Required]
+    public string IdToken { get; set; }
 }

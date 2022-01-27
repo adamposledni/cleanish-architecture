@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace Onion.Application.Services.Auth.Models;
 
-namespace Onion.Application.Services.Auth.Models
+public class AuthRes
 {
-    public class AuthRes
-    {
-        public Guid Id { get; set; }
-        public string Email { get; set; }
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
+    public Guid Id { get; set; }
+    public string Email { get; set; }
+    public string AccessToken { get; set; }
+    public string RefreshToken { get; set; }
 
-        // TODO: roles, refresh token, user name
-    }
+    // TODO: roles, refresh token, user name
 }

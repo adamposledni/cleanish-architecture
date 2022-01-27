@@ -1,10 +1,8 @@
 ﻿using Onion.Core.Security.Models;
-using System.Threading.Tasks;
 
-namespace Onion.Core.Security
+namespace Onion.Core.Security;
+
+public interface IGoogleAuthProvider
 {
-    public interface IGoogleAuthProvider
-    {
-        Task<GoogleIdentity> GetIdentityAsync(string idToken);
-    }
+    Task<GoogleIdentity> GetIdentityAsync(string idToken);
 }

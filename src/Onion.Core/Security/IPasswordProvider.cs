@@ -1,9 +1,8 @@
-﻿namespace Onion.Core.Security
+﻿namespace Onion.Core.Security;
+
+public interface IPasswordProvider
 {
-    public interface IPasswordProvider
-    {
-        (byte[] hash, byte[] salt) Hash(string password);
-        string Random(int length);
-        bool Verify(string password, byte[] hash, byte[] salt);
-    }
+    (byte[] hash, byte[] salt) Hash(string password);
+    string Random(int length);
+    bool Verify(string password, byte[] hash, byte[] salt);
 }

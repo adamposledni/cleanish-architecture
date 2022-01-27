@@ -5,55 +5,52 @@ using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Exceptions.Common;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
-using System;
-using System.Threading.Tasks;
 
-namespace Onion.WebApi.Middlewares
+namespace Onion.WebApi.Middlewares;
+
+public class ErrorHandlerMiddleware
 {
-    public class ErrorHandlerMiddleware
+    private readonly RequestDelegate _next;
+
+    public ErrorHandlerMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+    public async Task InvokeAsync(HttpContext httpContext, IStringLocalizer<Resource> localizer, ILogger<ErrorHandlerMiddleware> logger)
+    {
+        try
         {
-            _next = next;
+            await _next(httpContext);
         }
-
-        public async Task InvokeAsync(HttpContext httpContext, IStringLocalizer<Resource> localizer, ILogger<ErrorHandlerMiddleware> logger)
+        catch (Exception ex)
         {
-            try
-            {
-                await _next(httpContext);
-            }
-            catch (Exception ex)
-            {
-                var error = HandleException(ex, localizer, logger);
-                httpContext.Response.StatusCode = error.StatusCode;
-                httpContext.Response.ContentType = "application/json";
-                await httpContext.Response.WriteAsJsonAsync(error);
-            }
+            var error = HandleException(ex, localizer, logger);
+            httpContext.Response.StatusCode = error.StatusCode;
+            httpContext.Response.ContentType = "application/json";
+            await httpContext.Response.WriteAsJsonAsync(error);
         }
+    }
 
-        public ErrorRes HandleException(Exception ex, IStringLocalizer<Resource> localizer, ILogger<ErrorHandlerMiddleware> logger)
+    public ErrorRes HandleException(Exception ex, IStringLocalizer<Resource> localizer, ILogger<ErrorHandlerMiddleware> logger)
+    {
+        switch (ex)
         {
-            switch (ex)
-            {
-                case NotFoundException notFoundException:
-                    return new ErrorRes(404, localizer[notFoundException.MessageKey, notFoundException.Id]);
+            case NotFoundException notFoundException:
+                return new ErrorRes(404, localizer[notFoundException.MessageKey, notFoundException]);
 
-                case BadRequestException badRequestException:
-                    return new ErrorRes(400, localizer[badRequestException.MessageKey], badRequestException.Details);
+            case BadRequestException badRequestException:
+                return new ErrorRes(400, localizer[badRequestException.MessageKey], badRequestException.Details);
 
-                case UnauthorizedException unauthorizedException:
-                    return new ErrorRes(401, localizer[unauthorizedException.MessageKey]);
+            case UnauthorizedException unauthorizedException:
+                return new ErrorRes(401, localizer[unauthorizedException.MessageKey]);
 
-                case ForbiddenException forbiddenException:
-                    return new ErrorRes(403, localizer[forbiddenException.MessageKey]);
+            case ForbiddenException forbiddenException:
+                return new ErrorRes(403, localizer[forbiddenException.MessageKey]);
 
-                default:
-                    logger.LogError(ex.ToString());
-                    return new ErrorRes(500, localizer["ServerErrorMessage"]);
-            }
+            default:
+                logger.LogError("{ex}", ex);
+                return new ErrorRes(500, localizer["ServerErrorMessage"]);
         }
     }
 }

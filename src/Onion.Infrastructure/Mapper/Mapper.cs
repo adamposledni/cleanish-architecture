@@ -1,28 +1,26 @@
 ﻿using Onion.Core.Mapper;
-using System;
 using AM = AutoMapper;
 
-namespace Onion.Infrastructure.Mapper
+namespace Onion.Infrastructure.Mapper;
+
+public class Mapper : IMapper
 {
-    public class Mapper : IMapper
+    private readonly AM.Mapper _mapper;
+
+    public Mapper()
     {
-        private readonly AM.Mapper _mapper;
+        AM.MapperConfiguration configuration = new(MappperProfile.Configure);
+        _mapper = new(configuration);
+    }
 
-        public Mapper()
+    public TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null)
+    {
+        return _mapper.Map<TSource, TDest>(source, opts =>
         {
-            AM.MapperConfiguration configuration = new(MappperProfile.Configure);
-            _mapper = new(configuration);
-        }
-
-        public TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null)
-        {
-            return _mapper.Map<TSource, TDest>(source, opts =>
+            opts.AfterMap((s, d) =>
             {
-                opts.AfterMap((s, d) =>
-                {
-                    additionalProperties?.Invoke(d);
-                });
+                additionalProperties?.Invoke(d);
             });
-        }
+        });
     }
 }

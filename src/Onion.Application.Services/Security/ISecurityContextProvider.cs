@@ -1,9 +1,8 @@
 ﻿using Onion.Application.Services.Security.Models;
 
-namespace Onion.Application.Services.Security
+namespace Onion.Application.Services.Security;
+
+public interface ISecurityContextProvider
 {
-    public interface ISecurityContextProvider
-    {
-        SecurityContext SecurityContext { get; }
-    }
+    SecurityContext SecurityContext { get; }
 }

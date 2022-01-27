@@ -1,11 +1,12 @@
 ﻿using Onion.Application.Services.Auth.Models;
-using System.Threading.Tasks;
 
-namespace Onion.Application.Services.Auth
+namespace Onion.Application.Services.Auth;
+
+public interface IAuthService
 {
-    public interface IAuthService
-    {
-        Task<AuthRes> LoginAsync(PasswordAuthReq model);
-        Task<AuthRes> GoogleLoginAsync(IdTokenAuthReq model);
-    }
+    Task<AuthRes> LoginAsync(PasswordAuthReq model);
+    Task<AuthRes> GoogleLoginAsync(IdTokenAuthReq model);
+    Task<AuthRes> RefreshAccessTokenAsync(string refreshToken);
+    Task<RefreshTokenRes> RevokeRefreshTokenAsync(string refreshToken);
+
 }

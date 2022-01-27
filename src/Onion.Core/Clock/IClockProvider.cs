@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Onion.Core.Clock;
 
-namespace Onion.Core.Clock
+public interface IClockProvider
 {
-    public interface IClockProvider
-    {
-        DateTime Now { get; }
-    }
+    DateTime Now { get; }
 }

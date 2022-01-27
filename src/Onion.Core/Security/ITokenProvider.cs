@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
-namespace Onion.Core.Security
+namespace Onion.Core.Security;
+
+public interface ITokenProvider
 {
-    public interface ITokenProvider
-    {
-        string GenerateJwt(IEnumerable<Claim> claims, int expiresIn);
-        string GenerateRefreshToken();
-    }
+    string GenerateJwt(IEnumerable<Claim> claims, int expiresIn);
+    bool IsTokenValid(string token);
 }

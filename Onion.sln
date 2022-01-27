@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31613.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.WebApi", "src\Onion.WebApi\Onion.WebApi.csproj", "{E901B1AF-14DB-4C8F-BC87-A717DB8910D6}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Application.Services"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Core", "src\Onion.Core\Onion.Core.csproj", "{94BBD9F9-19A1-4DF5-A221-865915996E3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastucture.DataAccess", "src\Onion.Infrastucture.DataAccess\Onion.Infrastucture.DataAccess.csproj", "{20769C2C-1E9E-42F3-9554-7CF4F5BFA4AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastructure.DataAccess", "src\Onion.Infrastructure.DataAccess\Onion.Infrastructure.DataAccess.csproj", "{20769C2C-1E9E-42F3-9554-7CF4F5BFA4AE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastructure", "src\Onion.Infrastructure\Onion.Infrastructure.csproj", "{47FBAF32-6FE5-4A1A-A6B6-4E35D61DAC0C}"
 EndProject

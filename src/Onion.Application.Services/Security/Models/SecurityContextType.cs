@@ -1,7 +1,6 @@
-﻿namespace Onion.Application.Services
+﻿namespace Onion.Application.Services;
+
+public enum SecurityContextType
 {
-    public enum SecurityContextType
-    {
-        User = 0
-    }
+    User = 0
 }

@@ -1,8 +1,7 @@
-﻿namespace Onion.Infrastructure.Security.Jwt
+﻿namespace Onion.Infrastructure.Security.Jwt;
+
+public class TokenProviderSettings
 {
-    public class TokenProviderSettings
-    {
-        public string JwtSigningKey { get; set; }
-        public double ExpirationTime { get; set; }
-    }
+    public string JwtSigningKey { get; set; }
+    public double ExpirationTime { get; set; }
 }

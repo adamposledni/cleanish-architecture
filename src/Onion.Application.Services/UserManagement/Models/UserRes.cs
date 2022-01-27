@@ -1,10 +1,7 @@
-﻿using System;
+﻿namespace Onion.Application.Services.UserManagement.Models;
 
-namespace Onion.Application.Services.UserManagement.Models
+public class UserRes
 {
-    public class UserRes
-    {
-        public Guid Id { get; set; }
-        public string Email { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string Email { get; set; }
 }

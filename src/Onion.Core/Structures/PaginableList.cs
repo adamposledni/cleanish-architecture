@@ -1,28 +1,25 @@
-﻿using System.Collections.Generic;
+﻿namespace Onion.Core.Structures;
 
-namespace Onion.Core.Structures
+public class PaginableList<T>
 {
-    public class PaginableList<T>
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+    public int TotalItems { get; set; }
+    public int CurrentPage { get; set; }
+
+    public IEnumerable<T> Data { get; set; }
+
+    public PaginableList(IEnumerable<T> data, int totalItems, int pageSize, int currentPage, int totalPages)
     {
-        public int PageSize { get; set; }
-        public int TotalPages { get; set; }
-        public int TotalItems { get; set; }
-        public int CurrentPage { get; set; }
+        Data = data;
+        PageSize = pageSize;
+        TotalPages = totalPages;
+        TotalItems = totalItems;
+        CurrentPage = currentPage;
+    }
 
-        public IList<T> Data { get; set; }
-
-        public PaginableList(IList<T> data, int totalItems, int pageSize, int currentPage, int totalPages)
-        {
-            Data = data;
-            PageSize = pageSize;
-            TotalPages = totalPages;
-            TotalItems = totalItems;
-            CurrentPage = currentPage;
-        }
-
-        public PaginableList<U> Transform<U>(IList<U> data)
-        {
-            return new PaginableList<U>(data, TotalItems, PageSize, CurrentPage, TotalPages);
-        }
+    public PaginableList<U> Transform<U>(IEnumerable<U> data)
+    {
+        return new PaginableList<U>(data, TotalItems, PageSize, CurrentPage, TotalPages);
     }
 }

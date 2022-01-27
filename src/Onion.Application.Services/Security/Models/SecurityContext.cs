@@ -1,16 +1,13 @@
-﻿using System;
+﻿namespace Onion.Application.Services.Security.Models;
 
-namespace Onion.Application.Services.Security.Models
+public class SecurityContext
 {
-    public class SecurityContext
-    {
-        public Guid SubjectId { get; init; }
-        public SecurityContextType Type { get; init; }
+    public Guid SubjectId { get; init; }
+    public SecurityContextType Type { get; init; }
 
-        public SecurityContext(Guid subjectId, SecurityContextType type)
-        {
-            SubjectId = subjectId;
-            Type = type;
-        }
+    public SecurityContext(Guid subjectId, SecurityContextType type)
+    {
+        SubjectId = subjectId;
+        Type = type;
     }
 }
