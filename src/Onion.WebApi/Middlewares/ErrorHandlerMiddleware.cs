@@ -5,6 +5,7 @@ using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Exceptions.Common;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
+using System.Globalization;
 
 namespace Onion.WebApi.Middlewares;
 
@@ -17,8 +18,10 @@ public class ErrorHandlerMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext httpContext, IStringLocalizer<Resource> localizer, ILogger<ErrorHandlerMiddleware> logger)
+    public async Task InvokeAsync(HttpContext httpContext, IStringLocalizer<Strings> localizer, ILogger<ErrorHandlerMiddleware> logger)
     {
+        var culture = CultureInfo.CurrentCulture;
+
         try
         {
             await _next(httpContext);
@@ -32,7 +35,7 @@ public class ErrorHandlerMiddleware
         }
     }
 
-    public ErrorRes HandleException(Exception ex, IStringLocalizer<Resource> localizer, ILogger<ErrorHandlerMiddleware> logger)
+    public ErrorRes HandleException(Exception ex, IStringLocalizer<Strings> localizer, ILogger<ErrorHandlerMiddleware> logger)
     {
         switch (ex)
         {

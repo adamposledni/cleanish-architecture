@@ -1,30 +1,82 @@
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Onion.WebApi.Extensions;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 
-namespace Onion.WebApi;
+var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+var logging = builder.Logging;
+var services = builder.Services;
+var env = builder.Environment;
 
-public class Program
+// configuration providers
+
+configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
+configuration.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+configuration.AddEnvironmentVariables();
+
+// logging setup
+
+logging.ClearProviders();
+logging.AddConsole();
+
+// services registration
+
+services.AddControllersSetup();
+services.AddHttpContextAccessor();
+services.AddCorsSetup();
+services.AddHealthChecksSetup();
+services.AddSwaggerSetup();
+services.AddLocalizationSetup();
+services.AddJwtAuthentication(configuration);
+services.AddDataAccess(configuration);
+services.AddApplicationServices();
+services.AddCoreServices(configuration);
+services.AddSpa();
+
+// application pipeline
+
+var app = builder.Build();
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+app.UseHttpRequestLogging();
+
+var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(localizationOptions.Value);
+
+app.UseErrorHandler();
+app.UseHsts();
+
+app.UseHttpsRedirection();
+
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{Assembly.GetExecutingAssembly().GetName().Name} v1"));
+
+app.UseStaticFiles();
+app.UseSpaStaticFiles();
+
+
+app.UseRouting();
+app.UseCors();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
 {
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+    endpoints.MapControllers();
+    endpoints.MapHealthChecks("/health");
+});
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-        .ConfigureAppConfiguration((ctx, conf) =>
-        {
-            conf.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            conf.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
-            conf.AddJsonFile($"appsettings.{ctx.HostingEnvironment.EnvironmentName}.json", optional: true);
-            conf.AddEnvironmentVariables();
-        })
-        .ConfigureLogging(builder =>
-        {
-        })
-        .ConfigureWebHostDefaults(builder =>
-        {
-            builder.UseStartup<Startup>();
-        });
-}
+app.UseSpa(c =>
+{
+    c.Options.SourcePath = "wwwroot";
+});
+
+app.Run();

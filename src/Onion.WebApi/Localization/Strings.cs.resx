@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="InvalidEmailPassword" xml:space="preserve">
+    <value>Neplatný email nebo heslo</value>
+  </data>
   <data name="ServerErrorMessage" xml:space="preserve">
     <value>Objevila se chyba na serveru</value>
   </data>
   <data name="UserNotFoundMessage" xml:space="preserve">
-    <value>Uživatel s ID {0} nebyl nalezen</value>
+    <value>Uživatel nebyl nalezen</value>
   </data>
 </root>

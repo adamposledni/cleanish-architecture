@@ -52,16 +52,17 @@ public static class IServiceCollectionExtensions
     {
         var supportedCultures = new List<CultureInfo>
             {
-                new CultureInfo("en-US"),
-                new CultureInfo("cs-CZ")
+                new CultureInfo("en"),
+                new CultureInfo("cs")
             };
 
         services.Configure<RequestLocalizationOptions>(opt =>
         {
-            opt.DefaultRequestCulture = new RequestCulture(supportedCultures[1]);
+            opt.DefaultRequestCulture = new RequestCulture(new CultureInfo("en"));
             opt.SupportedCultures = supportedCultures;
             opt.SupportedUICultures = supportedCultures;
             opt.RequestCultureProviders = new[] { new AcceptLanguageHeaderRequestCultureProvider() };
+            opt.ApplyCurrentCultureToResponseHeaders = true;
         });
 
         services.AddLocalization();
