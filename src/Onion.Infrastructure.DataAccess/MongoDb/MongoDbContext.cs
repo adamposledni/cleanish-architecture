@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
 using Onion.Core.Clock;
@@ -9,14 +9,16 @@ namespace Onion.Infrastructure.DataAccess.MongoDb;
 
 public class MongoDbContext : IMongoDbContext
 {
+    private readonly MongoDbSettings _settings;
     private readonly MongoClient _mongoClient;
     private readonly IMongoDatabase _mongoDatabase;
     private readonly IClockProvider _clockProvider;
 
-    public MongoDbContext(IOptions<MongoDbSettings> mongoDbSettings, IClockProvider clockProvider)
+    public MongoDbContext(IConfiguration configuration, IClockProvider clockProvider)
     {
-        _mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
-        _mongoDatabase = _mongoClient.GetDatabase(mongoDbSettings.Value.DatabaseName);
+        _settings = configuration.GetMongoDbSettings();
+        _mongoClient = new MongoClient(_settings.ConnectionString);
+        _mongoDatabase = _mongoClient.GetDatabase(_settings.DatabaseName);
         _clockProvider = clockProvider;
     }
 

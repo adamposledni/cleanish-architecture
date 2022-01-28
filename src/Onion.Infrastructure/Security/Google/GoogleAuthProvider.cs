@@ -1,5 +1,5 @@
 ﻿using Google.Apis.Auth;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using Onion.Core.Security;
 using Onion.Core.Security.Models;
 
@@ -9,9 +9,9 @@ public class GoogleAuthProvider : IGoogleAuthProvider
 {
     private readonly GoogleAuthSettings _googleAuthSettings;
 
-    public GoogleAuthProvider(IOptions<GoogleAuthSettings> googleAuthSettings)
+    public GoogleAuthProvider(IConfiguration configuration)
     {
-        _googleAuthSettings = googleAuthSettings.Value;
+        _googleAuthSettings = configuration.GetGoogleAuthSettings();
     }
 
     public async Task<GoogleIdentity> GetIdentityAsync(string idToken)

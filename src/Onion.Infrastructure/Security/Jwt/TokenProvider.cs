@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Onion.Core.Clock;
 using Onion.Core.Security;
@@ -12,9 +12,9 @@ public class TokenProvider : ITokenProvider
     private readonly TokenProviderSettings _tokenSettings;
     private readonly IClockProvider _clockProvider;
 
-    public TokenProvider(IOptions<TokenProviderSettings> tokenSettings, IClockProvider clockProvider)
+    public TokenProvider(IConfiguration configuration, IClockProvider clockProvider)
     {
-        _tokenSettings = tokenSettings.Value;
+        _tokenSettings = configuration.GetTokenProviderSettings();
         _clockProvider = clockProvider;
     }
 

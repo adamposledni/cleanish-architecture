@@ -4,7 +4,6 @@ using Onion.Application.DataAccess.Exceptions.RefreshToken;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Security;
-using Onion.Core.Clock;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
 using System.IdentityModel.Tokens.Jwt;
@@ -99,7 +98,7 @@ public class AuthService : IAuthService
 
     private async Task<AuthRes> IssueAccessAsync(User user)
     {
-        var accessToken = GenerateAccessToken(user);
+        string accessToken = GenerateAccessToken(user);
         var refreshToken = GenerateRefeshToken(user);
 
         await _refreshTokenRepository.CreateAsync(refreshToken);

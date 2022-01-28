@@ -8,8 +8,7 @@ public partial class RemoveItemAddUser : Migration
     {
         migrationBuilder.CreateTable(
             name: "User",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                 Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
@@ -25,8 +24,7 @@ public partial class RemoveItemAddUser : Migration
 
         migrationBuilder.CreateTable(
             name: "RefreshToken",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                 Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 IsRevoked = table.Column<bool>(type: "bit", nullable: false),

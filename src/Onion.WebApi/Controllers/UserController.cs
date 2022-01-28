@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Onion.Application.Services.UserManagement;
 using Onion.Application.Services.UserManagement.Models;
+using Onion.WebApi.Atributes;
 using Onion.WebApi.Models;
 
 namespace Onion.WebApi.Controllers;
@@ -10,7 +11,7 @@ namespace Onion.WebApi.Controllers;
 [ProducesResponseType(400, Type = typeof(ErrorRes))]
 [ProducesResponseType(500, Type = typeof(ErrorRes))]
 [Produces("application/json")]
-[Route("api/users")]
+[ApiRoute("users")]
 public class UserController : BaseController
 {
     private readonly IUserService _userService;

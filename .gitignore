@@ -1,5 +1,7 @@
 appsettings.local.json
 
+.editorconfig
+
 node_modules
 package-lock.json
 /dist

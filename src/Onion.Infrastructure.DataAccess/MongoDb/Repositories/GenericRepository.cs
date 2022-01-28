@@ -4,7 +4,6 @@ using Onion.Application.DataAccess.Entities;
 using Onion.Application.DataAccess.Exceptions.Common;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Core.Structures;
-using System.Linq.Expressions;
 
 namespace Onion.Infrastructure.DataAccess.MongoDb.Repositories;
 
@@ -74,7 +73,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
         int countOfPages = (int)Math.Ceiling((double)countOfEntities / pageSize);
         if (page > countOfPages) throw new PageOutOfBoundsException();
 
-        var entities = (await ListAsync())
+        List<T> entities = (await ListAsync())
             .Where(e => filter(e))
             .Skip(pageSize * (page - 1)).Take(pageSize)
             .ToList();
