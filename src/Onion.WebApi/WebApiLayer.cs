@@ -11,6 +11,7 @@ using Onion.Application.Services.Security;
 using Onion.WebApi.Services;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 
 namespace Onion.WebApi;
 
@@ -64,7 +65,8 @@ public static class WebApiLayer
 
         services.AddScoped<ISecurityContextProvider, SecurityContextProvider>();
 
-        byte[] key = Encoding.ASCII.GetBytes(configuration.GetJwtSigningKey());
+        string signingKey = configuration.GetTokenProviderSettings()?.SigningKey;
+        byte[] key = Encoding.ASCII.GetBytes(signingKey);
         services
         .AddAuthentication(x =>
         {

@@ -1,8 +1,10 @@
-﻿using Onion.Application.DataAccess.Entities;
+﻿using Microsoft.Extensions.Configuration;
+using Onion.Application.DataAccess.Entities;
 using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Exceptions.RefreshToken;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Models;
+using Onion.Application.Services.Common;
 using Onion.Application.Services.Security;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
@@ -20,6 +22,7 @@ public class AuthService : IAuthService
     private readonly IMapper _mapper;
     private readonly IPasswordProvider _passwordProvider;
     private readonly ISecurityContextProvider _securityContextProvider;
+    private readonly ApplicationSettings _settings;
 
     public AuthService(
         IUserRepository userRepository,
@@ -28,7 +31,9 @@ public class AuthService : IAuthService
         IMapper mapper,
         IPasswordProvider passwordProvider,
         ISecurityContextProvider contextProvider,
-        IRefreshTokenRepository refreshTokenRepository)
+        IRefreshTokenRepository refreshTokenRepository,
+        IConfiguration configuration
+        )
     {
         _userRepository = userRepository;
         _tokenProvider = tokenProvider;
@@ -37,6 +42,7 @@ public class AuthService : IAuthService
         _passwordProvider = passwordProvider;
         _securityContextProvider = contextProvider;
         _refreshTokenRepository = refreshTokenRepository;
+        _settings = configuration.GetApplicationSettings();
     }
 
     public async Task<AuthRes> LoginAsync(PasswordAuthReq model)
@@ -119,7 +125,7 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
         };
-        return _tokenProvider.GenerateJwt(claims, 1);
+        return _tokenProvider.GenerateJwt(claims, _settings.AccessTokenLifetime);
     }
 
     private RefreshToken GenerateRefeshToken(User user)
@@ -128,9 +134,8 @@ public class AuthService : IAuthService
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
         };
-        int expiration = 2; // 7 days
         return new RefreshToken(
-            _tokenProvider.GenerateJwt(claims, expiration),
+            _tokenProvider.GenerateJwt(claims, _settings.RefreshTokenLifetime),
             user.Id);
     }
 }

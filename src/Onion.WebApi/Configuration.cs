@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Onion.Infrastructure.Security.Jwt;
 
 namespace Onion.WebApi;
 
 public static class Configuration
 {
-    private const string JWT_SIGNING_KEY = "JwtSettings:JwtSigningKey";
+    private const string TOKEN_PROVIDER_SETTINGS = "TokenSettings";
 
-    public static string GetJwtSigningKey(this IConfiguration configuration)
+    public static TokenProviderSettings GetTokenProviderSettings(this IConfiguration configuration)
     {
-        return configuration.GetSection(JWT_SIGNING_KEY).Get<string>();
+        return configuration.GetSection(TOKEN_PROVIDER_SETTINGS).Get<TokenProviderSettings>();
     }
 }

@@ -57,7 +57,7 @@ public class TokenProvider : ITokenProvider
 
     private SecurityKey GetSecurityKey()
     {
-        var key = Encoding.ASCII.GetBytes(_tokenSettings.JwtSigningKey);
+        var key = Encoding.ASCII.GetBytes(_tokenSettings?.SigningKey);
         return new SymmetricSecurityKey(key);
     }
 }
