@@ -1,7 +1,7 @@
 ﻿using Onion.Core.Mapper;
 using AM = AutoMapper;
 
-namespace Onion.Infrastructure.Mapper;
+namespace Onion.Infrastructure.Core.Mapper;
 
 public class Mapper : IMapper
 {

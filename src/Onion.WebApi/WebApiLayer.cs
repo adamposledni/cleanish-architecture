@@ -8,10 +8,10 @@ using Microsoft.OpenApi.Models;
 using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Exceptions.Common;
 using Onion.Application.Services.Security;
+using Onion.Infrastructure.Core.Security.Jwt;
 using Onion.WebApi.Services;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 
 namespace Onion.WebApi;
 
@@ -65,7 +65,7 @@ public static class WebApiLayer
 
         services.AddScoped<ISecurityContextProvider, SecurityContextProvider>();
 
-        string signingKey = configuration.GetTokenProviderSettings()?.SigningKey;
+        string signingKey = configuration.GetSection("TokenProviderSettings").Get<TokenProviderSettings>()?.SigningKey;
         byte[] key = Encoding.ASCII.GetBytes(signingKey);
         services
         .AddAuthentication(x =>

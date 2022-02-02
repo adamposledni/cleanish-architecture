@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Core", "src\Onion.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastructure.DataAccess", "src\Onion.Infrastructure.DataAccess\Onion.Infrastructure.DataAccess.csproj", "{20769C2C-1E9E-42F3-9554-7CF4F5BFA4AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastructure", "src\Onion.Infrastructure\Onion.Infrastructure.csproj", "{47FBAF32-6FE5-4A1A-A6B6-4E35D61DAC0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Infrastructure.Core", "src\Onion.Infrastructure.Core\Onion.Infrastructure.Core.csproj", "{47FBAF32-6FE5-4A1A-A6B6-4E35D61DAC0C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61204C7F-E27B-4026-9A43-B92402D1C6D2}"
 	ProjectSection(SolutionItems) = preProject

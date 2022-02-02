@@ -10,6 +10,8 @@ namespace Onion.Infrastructure.DataAccess;
 
 public static class DataAccessLayer
 {
+    private const string MONGO_DB_SETTINGS = "MongoDbSettings:Default";
+
     public static void Compose(IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<SqlDbContext>(opt =>
@@ -17,6 +19,7 @@ public static class DataAccessLayer
             opt.UseSqlServer(configuration.GetConnectionString("Default"));
         });
 
+        services.Configure<MongoDbSettings>(configuration.GetSection(MONGO_DB_SETTINGS));
         MongoDbContext.Configure();
         services.AddScoped<IMongoDbContext, MongoDbContext>();
 

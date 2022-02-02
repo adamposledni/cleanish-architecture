@@ -1,6 +1,6 @@
 ﻿using Onion.Core.Clock;
 
-namespace Onion.Infrastructure.Clock;
+namespace Onion.Infrastructure.Core.Clock;
 
 public class ClockProvider : IClockProvider
 {

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
 using Onion.Application.DataAccess.Entities;
 using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Exceptions.RefreshToken;
@@ -22,7 +22,7 @@ public class AuthService : IAuthService
     private readonly IMapper _mapper;
     private readonly IPasswordProvider _passwordProvider;
     private readonly ISecurityContextProvider _securityContextProvider;
-    private readonly ApplicationSettings _settings;
+    private readonly ApplicationSettings _applicationSettings;
 
     public AuthService(
         IUserRepository userRepository,
@@ -32,8 +32,7 @@ public class AuthService : IAuthService
         IPasswordProvider passwordProvider,
         ISecurityContextProvider contextProvider,
         IRefreshTokenRepository refreshTokenRepository,
-        IConfiguration configuration
-        )
+        IOptions<ApplicationSettings> applicationSettings)
     {
         _userRepository = userRepository;
         _tokenProvider = tokenProvider;
@@ -42,7 +41,7 @@ public class AuthService : IAuthService
         _passwordProvider = passwordProvider;
         _securityContextProvider = contextProvider;
         _refreshTokenRepository = refreshTokenRepository;
-        _settings = configuration.GetApplicationSettings();
+        _applicationSettings = applicationSettings.Value;
     }
 
     public async Task<AuthRes> LoginAsync(PasswordAuthReq model)
@@ -125,7 +124,7 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
         };
-        return _tokenProvider.GenerateJwt(claims, _settings.AccessTokenLifetime);
+        return _tokenProvider.GenerateJwt(claims, _applicationSettings.AccessTokenLifetime);
     }
 
     private RefreshToken GenerateRefeshToken(User user)
@@ -135,7 +134,7 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
         };
         return new RefreshToken(
-            _tokenProvider.GenerateJwt(claims, _settings.RefreshTokenLifetime),
+            _tokenProvider.GenerateJwt(claims, _applicationSettings.RefreshTokenLifetime),
             user.Id);
     }
 }

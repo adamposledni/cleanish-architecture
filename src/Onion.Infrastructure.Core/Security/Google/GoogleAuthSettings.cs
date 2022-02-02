@@ -1,4 +1,4 @@
-﻿namespace Onion.Infrastructure.Security.Google;
+﻿namespace Onion.Infrastructure.Core.Security.Google;
 
 public class GoogleAuthSettings
 {

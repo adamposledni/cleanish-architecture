@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Onion.Application.Services;
-using Onion.Infrastructure;
+using Onion.Infrastructure.Core;
 using Onion.Infrastructure.DataAccess;
 using Onion.WebApi;
 

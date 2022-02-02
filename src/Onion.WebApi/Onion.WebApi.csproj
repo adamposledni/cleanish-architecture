@@ -31,7 +31,7 @@
     <ProjectReference Include="..\Onion.Application.Services\Onion.Application.Services.csproj" />
     <ProjectReference Include="..\Onion.Core\Onion.Core.csproj" />
     <ProjectReference Include="..\Onion.Infrastructure.DataAccess\Onion.Infrastructure.DataAccess.csproj" />
-    <ProjectReference Include="..\Onion.Infrastructure\Onion.Infrastructure.csproj" />
+    <ProjectReference Include="..\Onion.Infrastructure.Core\Onion.Infrastructure.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,7 +3,7 @@ using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.UserManagement.Models;
 using AM = AutoMapper;
 
-namespace Onion.Infrastructure.Mapper;
+namespace Onion.Infrastructure.Core.Mapper;
 
 public static class MappperProfile
 {

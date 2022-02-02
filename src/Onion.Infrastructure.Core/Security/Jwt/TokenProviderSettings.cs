@@ -1,4 +1,4 @@
-﻿namespace Onion.Infrastructure.Security.Jwt;
+﻿namespace Onion.Infrastructure.Core.Security.Jwt;
 
 public class TokenProviderSettings
 {

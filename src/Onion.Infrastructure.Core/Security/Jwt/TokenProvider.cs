@@ -1,20 +1,20 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Onion.Core.Clock;
 using Onion.Core.Security;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Onion.Infrastructure.Security.Jwt;
+namespace Onion.Infrastructure.Core.Security.Jwt;
 
 public class TokenProvider : ITokenProvider
 {
     private readonly TokenProviderSettings _tokenSettings;
     private readonly IClockProvider _clockProvider;
 
-    public TokenProvider(IConfiguration configuration, IClockProvider clockProvider)
+    public TokenProvider(IOptions<TokenProviderSettings> tokenSettings, IClockProvider clockProvider)
     {
-        _tokenSettings = configuration.GetTokenProviderSettings();
+        _tokenSettings = tokenSettings.Value;
         _clockProvider = clockProvider;
     }
 
@@ -46,7 +46,7 @@ public class TokenProvider : ITokenProvider
                     ValidateIssuer = false,
                     ClockSkew = TimeSpan.Zero
                 },
-                out SecurityToken validatedToken);
+                out var validatedToken);
         }
         catch
         {

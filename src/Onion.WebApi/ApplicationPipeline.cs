@@ -26,7 +26,7 @@ public static class ApplicationPipeline
 
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint(
-            "/swagger/v1/swagger.json", 
+            "/swagger/v1/swagger.json",
             $"{Assembly.GetAssembly(typeof(ApplicationPipeline)).FullName} v1"));
 
         app.UseStaticFiles();
