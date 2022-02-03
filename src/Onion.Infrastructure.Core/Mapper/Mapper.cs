@@ -1,4 +1,5 @@
-﻿using Onion.Core.Mapper;
+﻿using Onion.Core.Helpers;
+using Onion.Core.Mapper;
 using AM = AutoMapper;
 
 namespace Onion.Infrastructure.Core.Mapper;
@@ -15,6 +16,8 @@ public class Mapper : IMapper
 
     public TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null)
     {
+        Guard.NotNull(source, nameof(source));
+
         return _mapper.Map<TSource, TDest>(source, opts =>
         {
             opts.AfterMap((s, d) =>

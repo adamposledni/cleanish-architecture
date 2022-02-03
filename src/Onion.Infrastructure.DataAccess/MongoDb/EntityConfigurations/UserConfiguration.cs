@@ -3,7 +3,7 @@ using Onion.Application.DataAccess.Entities;
 
 namespace Onion.Infrastructure.DataAccess.MongoDb.EntityConfigurations;
 
-public class UserConfiguration : EntityTypeConfiguration
+public class UserConfiguration : BaseEntityConfiguration
 {
     public override void Configure()
     {

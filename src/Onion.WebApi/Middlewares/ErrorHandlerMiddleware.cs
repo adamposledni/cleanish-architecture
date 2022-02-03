@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Onion.Application.DataAccess.Exceptions.Auth;
 using Onion.Application.DataAccess.Exceptions.Common;
+using Onion.Core.Helpers;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
 using System.Globalization;
@@ -37,6 +38,10 @@ public class ErrorHandlerMiddleware
 
     public ErrorRes HandleException(Exception ex, IStringLocalizer<Strings> localizer, ILogger<ErrorHandlerMiddleware> logger)
     {
+        Guard.NotNull(ex, nameof(ex));
+        Guard.NotNull(localizer, nameof(localizer));
+        Guard.NotNull(logger, nameof(logger));
+
         switch (ex)
         {
             case NotFoundException notFoundException:

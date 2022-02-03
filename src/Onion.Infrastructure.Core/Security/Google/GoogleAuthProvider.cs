@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Auth;
 using Microsoft.Extensions.Options;
+using Onion.Core.Helpers;
 using Onion.Core.Security;
 using Onion.Core.Security.Models;
 
@@ -16,6 +17,8 @@ public class GoogleAuthProvider : IGoogleAuthProvider
 
     public async Task<GoogleIdentity> GetIdentityAsync(string idToken)
     {
+        Guard.NotNullOrEmptyOrWhiteSpace(idToken, nameof(idToken));
+
         GoogleJsonWebSignature.Payload payload;
         try
         {

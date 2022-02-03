@@ -5,6 +5,7 @@ using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Security;
 using Onion.Application.Services.UserManagement.Models;
+using Onion.Core.Helpers;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
 
@@ -48,9 +49,11 @@ public class UserService : IUserService
 
     public async Task<UserRes> CreateAsync(UserReq model)
     {
+        Guard.NotNull(model, nameof(model));
+
+        (byte[] hash, byte[] salt) = _passwordProvider.Hash(model.Password);
         var newUser = _mapper.Map<UserReq, User>(model, u =>
         {
-            (byte[] hash, byte[] salt) = _passwordProvider.Hash(model.Password);
             u.PasswordHash = hash;
             u.PasswordSalt = salt;
         });
@@ -61,6 +64,8 @@ public class UserService : IUserService
 
     public async Task<UserRes> GoogleLinkAsync(IdTokenAuthReq model)
     {
+        Guard.NotNull(model, nameof(model));
+
         var securityContext = _securityContextProvider.SecurityContext;
         if (securityContext == null || securityContext.Type != SecurityContextType.User)
             throw new UnauthorizedException();

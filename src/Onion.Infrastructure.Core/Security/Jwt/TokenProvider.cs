@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Onion.Core.Clock;
+using Onion.Core.Helpers;
 using Onion.Core.Security;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,6 +21,9 @@ public class TokenProvider : ITokenProvider
 
     public string GenerateJwt(IEnumerable<Claim> claims, int expiresIn)
     {
+        Guard.NotNullOrEmpty(claims, nameof(claims));
+        Guard.Min(expiresIn, 1, nameof(expiresIn));
+
         JwtSecurityTokenHandler tokenHandler = new();
         SecurityTokenDescriptor tokenDescriptor = new()
         {
@@ -33,6 +37,8 @@ public class TokenProvider : ITokenProvider
 
     public bool IsTokenValid(string token)
     {
+        Guard.NotNullOrEmptyOrWhiteSpace(token, nameof(token));
+
         JwtSecurityTokenHandler tokenHandler = new();
         try
         {

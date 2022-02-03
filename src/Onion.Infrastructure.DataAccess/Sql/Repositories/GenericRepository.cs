@@ -2,6 +2,7 @@
 using Onion.Application.DataAccess.Entities;
 using Onion.Application.DataAccess.Exceptions.Common;
 using Onion.Application.DataAccess.Repositories;
+using Onion.Core.Helpers;
 using Onion.Core.Structures;
 
 namespace Onion.Infrastructure.DataAccess.Sql.Repositories;
@@ -33,11 +34,16 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 
     public async Task<PaginableList<T>> PaginateAsync(int pageSize, int page)
     {
+        Guard.Min(pageSize, 1, nameof(pageSize));
+        Guard.Min(page, 1, nameof(page));
+
         return await PaginateAsync(pageSize, page, e => true);
     }
 
     public async Task<T> CreateAsync(T newEntity)
     {
+        Guard.NotNull(newEntity, nameof(newEntity));
+
         T createdEntity = _dbSet.Add(newEntity).Entity;
         await _dbContext.SaveChangesAsync();
         return createdEntity;
@@ -45,12 +51,16 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 
     public async Task<T> UpdateAsync(T updatedEntity)
     {
+        Guard.NotNull(updatedEntity, nameof(updatedEntity));
+
         await _dbContext.SaveChangesAsync();
         return updatedEntity;
     }
 
     public async Task<T> DeleteAsync(T entityToDelete)
     {
+        Guard.NotNull(entityToDelete, nameof(entityToDelete));
+
         T deletedEntity = _dbSet.Remove(entityToDelete).Entity;
         await _dbContext.SaveChangesAsync();
         return deletedEntity;
@@ -58,6 +68,10 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 
     protected async Task<PaginableList<T>> PaginateAsync(int pageSize, int page, Func<T, bool> filter)
     {
+        Guard.Min(pageSize, 1, nameof(pageSize));
+        Guard.Min(page, 1, nameof(page));
+        Guard.NotNull(filter, nameof(filter));
+
         int countOfEntities = await CountAsync();
         int countOfPages = (int)Math.Ceiling((double)countOfEntities / pageSize);
         if (page > countOfPages) throw new PageOutOfBoundsException();

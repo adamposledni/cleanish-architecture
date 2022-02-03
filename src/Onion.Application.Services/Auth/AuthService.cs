@@ -6,6 +6,7 @@ using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Common;
 using Onion.Application.Services.Security;
+using Onion.Core.Helpers;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
 using System.IdentityModel.Tokens.Jwt;
@@ -46,6 +47,8 @@ public class AuthService : IAuthService
 
     public async Task<AuthRes> LoginAsync(PasswordAuthReq model)
     {
+        Guard.NotNull(model, nameof(model));
+
         var user = await _userRepository.GetByEmailAsync(model.Email);
         if (user == null || !_passwordProvider.Verify(model.Password, user.PasswordHash, user.PasswordSalt))
             throw new InvalidEmailPasswordException();
@@ -55,6 +58,8 @@ public class AuthService : IAuthService
 
     public async Task<AuthRes> GoogleLoginAsync(IdTokenAuthReq model)
     {
+        Guard.NotNull(model, nameof(model));
+
         var googleIdentity = await _googleAuthProvider.GetIdentityAsync(model.IdToken);
         if (googleIdentity == null) throw new InvalidGoogleIdTokenException();
 
@@ -64,28 +69,35 @@ public class AuthService : IAuthService
         return await IssueAccessAsync(user);
     }
 
-    public async Task<RefreshTokenRes> RevokeRefreshTokenAsync(string refreshToken)
+    public async Task<RefreshTokenRes> RevokeRefreshTokenAsync(RefreshTokenReq model)
     {
-        if (!_tokenProvider.IsTokenValid(refreshToken)) throw new InvalidRefreshTokenException();
+        Guard.NotNull(model, nameof(model));
+
+        if (!_tokenProvider.IsTokenValid(model.RefreshToken)) throw new InvalidRefreshTokenException();
 
         var securityContext = _securityContextProvider.SecurityContext;
         if (securityContext == null || securityContext.Type != SecurityContextType.User)
             throw new UnauthorizedException();
 
         var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAndUserIdAsync(
-            refreshToken, securityContext.SubjectId);
+            model.RefreshToken, securityContext.SubjectId);
+        
+        if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
 
         refreshTokenEntity = await RevokeRefreshTokenAsync(refreshTokenEntity);
 
         return _mapper.Map<RefreshToken, RefreshTokenRes>(refreshTokenEntity);
     }
 
-    public async Task<AuthRes> RefreshAccessTokenAsync(string refreshToken)
+    public async Task<AuthRes> RefreshAccessTokenAsync(RefreshTokenReq model)
     {
-        if (!_tokenProvider.IsTokenValid(refreshToken)) throw new InvalidRefreshTokenException();
+        Guard.NotNull(model, nameof(model));
 
-        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
-        if (refreshTokenEntity.IsRevoked) throw new RefreshTokenAlreadyRevokedException();
+        if (!_tokenProvider.IsTokenValid(model.RefreshToken)) throw new InvalidRefreshTokenException();
+
+        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(model.RefreshToken);
+        
+        if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
 
         refreshTokenEntity = await RevokeRefreshTokenAsync(refreshTokenEntity);
 
@@ -95,14 +107,17 @@ public class AuthService : IAuthService
 
     private async Task<RefreshToken> RevokeRefreshTokenAsync(RefreshToken refreshToken)
     {
-        if (refreshToken == null) throw new RefreshTokenNotFoundException();
+        Guard.NotNull(refreshToken, nameof(refreshToken));
 
+        if (refreshToken.IsRevoked) throw new RefreshTokenAlreadyRevokedException();
         refreshToken.IsRevoked = true;
         return await _refreshTokenRepository.UpdateAsync(refreshToken);
     }
 
     private async Task<AuthRes> IssueAccessAsync(User user)
     {
+        Guard.NotNull(user, nameof(user));
+
         string accessToken = GenerateAccessToken(user);
         var refreshToken = GenerateRefeshToken(user);
 
@@ -119,6 +134,8 @@ public class AuthService : IAuthService
 
     private string GenerateAccessToken(User user)
     {
+        Guard.NotNull(user, nameof(user));
+        
         List<Claim> claims = new()
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
@@ -129,6 +146,8 @@ public class AuthService : IAuthService
 
     private RefreshToken GenerateRefeshToken(User user)
     {
+        Guard.NotNull(user, nameof(user));
+
         List<Claim> claims = new()
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),

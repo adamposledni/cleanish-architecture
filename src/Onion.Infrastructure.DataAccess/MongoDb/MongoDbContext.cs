@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
 using Onion.Core.Clock;
 using Onion.Core.Extensions;
+using Onion.Core.Helpers;
 using Onion.Infrastructure.DataAccess.MongoDb.EntityConfigurations;
 
 namespace Onion.Infrastructure.DataAccess.MongoDb;
@@ -29,6 +30,8 @@ public class MongoDbContext : IMongoDbContext
 
     public void SetAuditDates(BaseEntity entity, bool created = false)
     {
+        Guard.NotNull(entity, nameof(entity));
+
         if (created) entity.Created = _clockProvider.Now;
         entity.Updated = _clockProvider.Now;
     }
@@ -36,11 +39,11 @@ public class MongoDbContext : IMongoDbContext
     public static void Configure()
     {
         var assembly = typeof(MongoDbContext).Assembly;
-        var configurationTypes = assembly.GetDerivedTypes<EntityTypeConfiguration>();
+        var configurationTypes = assembly.GetDerivedTypes<BaseEntityConfiguration>();
 
         foreach (var configurationType in configurationTypes)
         {
-            var instance = (EntityTypeConfiguration)Activator.CreateInstance(configurationType);
+            var instance = (BaseEntityConfiguration)Activator.CreateInstance(configurationType);
             instance.Configure();
         }
     }

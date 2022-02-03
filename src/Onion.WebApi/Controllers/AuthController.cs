@@ -43,7 +43,7 @@ public class AuthController : BaseController
     [HttpPost("revoke-refresh-token")]
     public async Task<ActionResult<RefreshTokenRes>> RevokeRefreshToken([FromBody] RefreshTokenReq body)
     {
-        return StatusCode(200, await _authService.RevokeRefreshTokenAsync(body.RefreshToken));
+        return StatusCode(200, await _authService.RevokeRefreshTokenAsync(body));
     }
 
     [AllowAnonymous]
@@ -52,6 +52,6 @@ public class AuthController : BaseController
     [HttpPost("refresh-access-token")]
     public async Task<ActionResult<AuthRes>> RefreshAccessToken([FromBody] RefreshTokenReq body)
     {
-        return StatusCode(200, await _authService.RefreshAccessTokenAsync(body.RefreshToken));
+        return StatusCode(200, await _authService.RefreshAccessTokenAsync(body));
     }
 }
