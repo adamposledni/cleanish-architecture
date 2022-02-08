@@ -5,7 +5,6 @@ using Onion.Application.DataAccess.Exceptions.Base;
 using Onion.Core.Helpers;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
-using System.Globalization;
 
 namespace Onion.WebApi.Middlewares;
 

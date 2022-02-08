@@ -44,5 +44,4 @@ public class UserController : BaseController
     {
         return StatusCode(201, await _userService.CreateAsync(body));
     }
-
 }

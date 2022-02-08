@@ -63,7 +63,6 @@ public static class WebApiLayer
         #endregion
 
         #region Authentication
-
         services.AddScoped<ISecurityContextProvider, SecurityContextProvider>();
 
         string signingKey = configuration.GetSection("TokenProviderSettings").Get<TokenProviderSettings>()?.SigningKey;
@@ -95,6 +94,7 @@ public static class WebApiLayer
         #endregion
 
         #region Swagger
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
             //c.IncludeXmlComments(string.Format(@"{0}\Onion.WebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory));
