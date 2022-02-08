@@ -10,16 +10,15 @@ namespace Onion.Infrastructure.DataAccess.MongoDb;
 
 public class MongoDbContext : IMongoDbContext
 {
-    private readonly MongoDbSettings _mongoDbSettings;
     private readonly MongoClient _mongoClient;
     private readonly IMongoDatabase _mongoDatabase;
     private readonly IClockProvider _clockProvider;
 
-    public MongoDbContext(IOptions<MongoDbSettings> mongoDbSettings, IClockProvider clockProvider)
+    public MongoDbContext(MongoDbContextOptions options, IClockProvider clockProvider)
     {
-        _mongoDbSettings = mongoDbSettings.Value;
-        _mongoClient = new MongoClient(_mongoDbSettings.ConnectionString);
-        _mongoDatabase = _mongoClient.GetDatabase(_mongoDbSettings.DatabaseName);
+        MongoUrl connectionString = new(options.ConnectionString);
+        _mongoClient = new MongoClient(connectionString);
+        _mongoDatabase = _mongoClient.GetDatabase(connectionString.DatabaseName);
         _clockProvider = clockProvider;
     }
 
