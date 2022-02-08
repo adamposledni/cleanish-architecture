@@ -1,18 +1,16 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Onion.Infrastructure.DataAccess.Migrations
+namespace Onion.Infrastructure.DataAccess.Sql.Migrations
 {
-    public partial class initCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "User",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
@@ -29,8 +27,7 @@ namespace Onion.Infrastructure.DataAccess.Migrations
 
             migrationBuilder.CreateTable(
                 name: "RefreshToken",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsRevoked = table.Column<bool>(type: "bit", nullable: false),

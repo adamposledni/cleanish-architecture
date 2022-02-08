@@ -3,19 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Onion.Infrastructure.DataAccess.Sql;
 
 #nullable disable
 
-namespace Onion.Infrastructure.DataAccess.Migrations
+namespace Onion.Infrastructure.DataAccess.Sql.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20220208101645_initCreate")]
-    partial class initCreate
+    partial class SqlDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
