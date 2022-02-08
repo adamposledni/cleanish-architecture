@@ -1,9 +1,10 @@
 ﻿using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions.Auth;
-using Onion.Application.DataAccess.Exceptions.User;
+using Onion.Application.DataAccess.Exceptions.Base;
 using Onion.Application.DataAccess.Repositories;
+using Onion.Application.Services.Auth.Exceptions;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Security;
+using Onion.Application.Services.UserManagement.Exceptions;
 using Onion.Application.Services.UserManagement.Models;
 using Onion.Core.Helpers;
 using Onion.Core.Mapper;
@@ -75,6 +76,8 @@ public class UserService : IUserService
 
         var user = await _userRepository.GetByIdAsync(securityContext.SubjectId);
         if (user == null) throw new UserNotFoundException();
+
+        if (!string.IsNullOrWhiteSpace(user.GoogleSubjectId)) throw new GoogleLinkAlreadyExistsException();
 
         user.GoogleSubjectId = googleIdentity.SubjectId;
         await _userRepository.UpdateAsync(user);

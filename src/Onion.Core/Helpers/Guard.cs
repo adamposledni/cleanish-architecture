@@ -25,7 +25,7 @@ public static class Guard
         NotNull(argument, argumentName);
 
         if (string.IsNullOrWhiteSpace(argument))
-            throw new ArgumentException("String is empty or consists only of white-space characters"); 
+            throw new ArgumentException("String is empty or consists only of white-space characters");
     }
 
     public static void Max(int argument, int maxValue, string argumentName)

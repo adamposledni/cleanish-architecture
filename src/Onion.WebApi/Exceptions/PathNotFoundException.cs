@@ -1,4 +1,4 @@
-﻿using Onion.Application.DataAccess.Exceptions.Common;
+﻿using Onion.Application.DataAccess.Exceptions.Base;
 
 namespace Onion.WebApi.Exceptions;
 

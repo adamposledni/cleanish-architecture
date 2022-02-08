@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Onion.Application.DataAccess.Exceptions.Auth;
-using Onion.Application.DataAccess.Exceptions.Common;
+using Onion.Application.DataAccess.Exceptions.Base;
+using Onion.Application.Services.Common.Exceptions;
 using Onion.Application.Services.Security;
 using Onion.Infrastructure.Core.Security.Jwt;
 using Onion.WebApi.Services;
@@ -25,6 +25,7 @@ public static class WebApiLayer
         {
             opt.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
             opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            opt.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
         })
         .ConfigureApiBehaviorOptions(opt =>
         {
@@ -37,7 +38,7 @@ public static class WebApiLayer
                 .Select(v => v.ErrorMessage);
 
                 string errors = string.Join(" ", errorMessages);
-                throw new InvalidRequestException(errors);
+                throw new InvalidRequestModelException(errors);
             };
         });
         #endregion

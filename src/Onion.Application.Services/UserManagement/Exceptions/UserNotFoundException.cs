@@ -1,6 +1,6 @@
-﻿using Onion.Application.DataAccess.Exceptions.Common;
+﻿using Onion.Application.DataAccess.Exceptions.Base;
 
-namespace Onion.Application.DataAccess.Exceptions.User;
+namespace Onion.Application.Services.UserManagement.Exceptions;
 
 public class UserNotFoundException : NotFoundException
 {

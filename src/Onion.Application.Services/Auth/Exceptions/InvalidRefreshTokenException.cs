@@ -1,6 +1,6 @@
-﻿using Onion.Application.DataAccess.Exceptions.Common;
+﻿using Onion.Application.DataAccess.Exceptions.Base;
 
-namespace Onion.Application.DataAccess.Exceptions.RefreshToken;
+namespace Onion.Application.Services.Auth.Exceptions;
 
 public class InvalidRefreshTokenException : BadRequestException
 {

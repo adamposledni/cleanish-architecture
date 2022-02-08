@@ -1,4 +1,6 @@
-﻿namespace Onion.Application.DataAccess.Exceptions.Common;
+﻿using Onion.Application.DataAccess.Exceptions.Base;
+
+namespace Onion.Application.DataAccess.Exceptions;
 
 public class PageOutOfBoundsException : BadRequestException
 {

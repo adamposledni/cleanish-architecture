@@ -1,4 +1,4 @@
-﻿namespace Onion.Application.DataAccess.Exceptions.Common;
+﻿namespace Onion.Application.DataAccess.Exceptions.Base;
 
 public class BadRequestException : Exception
 {

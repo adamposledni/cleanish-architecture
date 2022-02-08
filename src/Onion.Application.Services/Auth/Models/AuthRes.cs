@@ -1,4 +1,6 @@
-﻿namespace Onion.Application.Services.Auth.Models;
+﻿using Onion.Application.DataAccess.Entities.Fields;
+
+namespace Onion.Application.Services.Auth.Models;
 
 public class AuthRes
 {
@@ -7,5 +9,4 @@ public class AuthRes
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
 
-    // TODO: roles, refresh token, user name
 }

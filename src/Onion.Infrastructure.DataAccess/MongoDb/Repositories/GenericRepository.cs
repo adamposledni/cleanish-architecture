@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions.Common;
+using Onion.Application.DataAccess.Exceptions;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Core.Helpers;
 using Onion.Core.Structures;

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Onion.Application.DataAccess.Exceptions.Auth;
-using Onion.Application.DataAccess.Exceptions.Common;
+using Onion.Application.DataAccess.Exceptions.Base;
 using Onion.Core.Helpers;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
@@ -21,8 +20,6 @@ public class ErrorHandlerMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext, IStringLocalizer<Strings> localizer, ILogger<ErrorHandlerMiddleware> logger)
     {
-        var culture = CultureInfo.CurrentCulture;
-
         try
         {
             await _next(httpContext);
@@ -45,7 +42,7 @@ public class ErrorHandlerMiddleware
         switch (ex)
         {
             case NotFoundException notFoundException:
-                return new ErrorRes(404, localizer[notFoundException.MessageKey, notFoundException]);
+                return new ErrorRes(404, localizer[notFoundException.MessageKey]);
 
             case BadRequestException badRequestException:
                 return new ErrorRes(400, localizer[badRequestException.MessageKey], badRequestException.Details);

@@ -5,24 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\html\**" />
-    <Compile Remove="wwwroot\images\**" />
-    <Content Remove="wwwroot\html\**" />
-    <Content Remove="wwwroot\images\**" />
-    <EmbeddedResource Remove="wwwroot\html\**" />
-    <EmbeddedResource Remove="wwwroot\images\**" />
-    <None Remove="wwwroot\html\**" />
-    <None Remove="wwwroot\images\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Controllers\UserController.cs~RF29bc9f00.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -32,11 +21,6 @@
     <ProjectReference Include="..\Onion.Core\Onion.Core.csproj" />
     <ProjectReference Include="..\Onion.Infrastructure.DataAccess\Onion.Infrastructure.DataAccess.csproj" />
     <ProjectReference Include="..\Onion.Infrastructure.Core\Onion.Infrastructure.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\css\" />
-    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 </Project>

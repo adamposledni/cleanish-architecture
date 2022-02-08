@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions.Auth;
-using Onion.Application.DataAccess.Exceptions.RefreshToken;
+using Onion.Application.DataAccess.Exceptions.Base;
 using Onion.Application.DataAccess.Repositories;
+using Onion.Application.Services.Auth.Exceptions;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Common;
 using Onion.Application.Services.Security;
@@ -81,7 +81,7 @@ public class AuthService : IAuthService
 
         var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAndUserIdAsync(
             model.RefreshToken, securityContext.SubjectId);
-        
+
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
 
         refreshTokenEntity = await RevokeRefreshTokenAsync(refreshTokenEntity);
@@ -96,13 +96,9 @@ public class AuthService : IAuthService
         if (!_tokenProvider.IsTokenValid(model.RefreshToken)) throw new InvalidRefreshTokenException();
 
         var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(model.RefreshToken);
-        
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
 
-        refreshTokenEntity = await RevokeRefreshTokenAsync(refreshTokenEntity);
-
-        var user = refreshTokenEntity.User;
-        return await IssueAccessAsync(user);
+        return await IssueAccessAsync(refreshTokenEntity.User);
     }
 
     private async Task<RefreshToken> RevokeRefreshTokenAsync(RefreshToken refreshToken)
@@ -135,11 +131,12 @@ public class AuthService : IAuthService
     private string GenerateAccessToken(User user)
     {
         Guard.NotNull(user, nameof(user));
-        
+
         List<Claim> claims = new()
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
         };
         return _tokenProvider.GenerateJwt(claims, _applicationSettings.AccessTokenLifetime);
     }

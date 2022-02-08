@@ -1,6 +1,6 @@
-﻿using Onion.Application.DataAccess.Exceptions.Common;
+﻿using Onion.Application.DataAccess.Exceptions.Base;
 
-namespace Onion.Application.DataAccess.Exceptions.Auth;
+namespace Onion.Application.Services.Auth.Exceptions;
 
 public class GoogleLinkMissingException : BadRequestException
 {

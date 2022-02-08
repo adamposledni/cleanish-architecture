@@ -1,8 +1,7 @@
-﻿namespace Onion.Application.DataAccess.Exceptions.Auth;
+﻿namespace Onion.Application.DataAccess.Exceptions.Base;
 
 public class UnauthorizedException : Exception
 {
-
     private const string MESSAGE_KEY = "Unauthorized";
     public string MessageKey { get; private set; }
 
