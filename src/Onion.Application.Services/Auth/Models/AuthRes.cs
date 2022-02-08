@@ -1,6 +1,4 @@
-﻿using Onion.Application.DataAccess.Entities.Fields;
-
-namespace Onion.Application.Services.Auth.Models;
+﻿namespace Onion.Application.Services.Auth.Models;
 
 public class AuthRes
 {
