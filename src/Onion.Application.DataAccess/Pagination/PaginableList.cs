@@ -1,4 +1,4 @@
-﻿namespace Onion.Core.Structures;
+﻿namespace Onion.Application.DataAccess.Pagination;
 
 public class PaginableList<T>
 {

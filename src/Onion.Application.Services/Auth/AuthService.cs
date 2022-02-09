@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
+using Onion.Application.DataAccess.BaseExceptions;
 using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions.Base;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Exceptions;
 using Onion.Application.Services.Auth.Models;

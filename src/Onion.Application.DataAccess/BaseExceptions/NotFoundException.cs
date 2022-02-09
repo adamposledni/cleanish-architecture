@@ -1,4 +1,4 @@
-﻿namespace Onion.Application.DataAccess.Exceptions.Base;
+﻿namespace Onion.Application.DataAccess.BaseExceptions;
 
 public abstract class NotFoundException : Exception
 {

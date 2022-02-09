@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Onion.Application.DataAccess.Exceptions.Base;
+using Onion.Application.DataAccess.BaseExceptions;
 using Onion.Application.Services.Common.Exceptions;
 using Onion.Application.Services.Security;
 using Onion.Infrastructure.Core.Security.Jwt;

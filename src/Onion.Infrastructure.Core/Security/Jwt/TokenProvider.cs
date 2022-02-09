@@ -46,10 +46,10 @@ public class TokenProvider : ITokenProvider
                 token,
                 new TokenValidationParameters()
                 {
-                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = GetSecurityKey(),
-                    ValidateAudience = false,
                     ValidateIssuer = false,
+                    ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
                 },
                 out var validatedToken);

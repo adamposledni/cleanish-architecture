@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Exceptions;
+using Onion.Application.DataAccess.Pagination;
 using Onion.Application.DataAccess.Repositories;
 using Onion.Core.Helpers;
-using Onion.Core.Structures;
 
 namespace Onion.Infrastructure.DataAccess.MongoDb.Repositories;
 

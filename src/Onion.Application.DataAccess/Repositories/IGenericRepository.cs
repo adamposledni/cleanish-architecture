@@ -1,5 +1,5 @@
 ﻿using Onion.Application.DataAccess.Entities;
-using Onion.Core.Structures;
+using Onion.Application.DataAccess.Pagination;
 using System.Threading.Tasks;
 
 namespace Onion.Application.DataAccess.Repositories;

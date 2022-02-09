@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Onion.Application.DataAccess.Exceptions.Base;
+using Onion.Application.DataAccess.BaseExceptions;
 using Onion.Core.Helpers;
 using Onion.WebApi.Models;
 using Onion.WebApi.Resources;
