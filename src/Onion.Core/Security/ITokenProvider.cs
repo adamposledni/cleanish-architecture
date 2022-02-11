@@ -6,4 +6,5 @@ public interface ITokenProvider
 {
     string GenerateJwt(IEnumerable<Claim> claims, int expiresIn);
     bool IsTokenValid(string token);
+    string GetRandomToken(int bytes);
 }

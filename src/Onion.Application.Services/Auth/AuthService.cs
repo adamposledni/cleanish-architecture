@@ -6,6 +6,7 @@ using Onion.Application.Services.Auth.Exceptions;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Common;
 using Onion.Application.Services.Security;
+using Onion.Core.Clock;
 using Onion.Core.Helpers;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
@@ -24,6 +25,7 @@ public class AuthService : IAuthService
     private readonly IPasswordProvider _passwordProvider;
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ApplicationSettings _applicationSettings;
+    private readonly IClockProvider _clockProvider;
 
     public AuthService(
         IUserRepository userRepository,
@@ -33,7 +35,8 @@ public class AuthService : IAuthService
         IPasswordProvider passwordProvider,
         ISecurityContextProvider contextProvider,
         IRefreshTokenRepository refreshTokenRepository,
-        IOptions<ApplicationSettings> applicationSettings)
+        IOptions<ApplicationSettings> applicationSettings, 
+        IClockProvider clockProvider)
     {
         _userRepository = userRepository;
         _tokenProvider = tokenProvider;
@@ -43,6 +46,7 @@ public class AuthService : IAuthService
         _securityContextProvider = contextProvider;
         _refreshTokenRepository = refreshTokenRepository;
         _applicationSettings = applicationSettings.Value;
+        _clockProvider = clockProvider;
     }
 
     public async Task<AuthRes> LoginAsync(PasswordAuthReq model)
@@ -73,19 +77,16 @@ public class AuthService : IAuthService
     {
         Guard.NotNull(model, nameof(model));
 
-        if (!_tokenProvider.IsTokenValid(model.RefreshToken)) throw new InvalidRefreshTokenException();
-
         var securityContext = _securityContextProvider.SecurityContext;
         if (securityContext == null || securityContext.Type != SecurityContextType.User)
             throw new UnauthorizedException();
-
-        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAndUserIdAsync(
-            model.RefreshToken, securityContext.SubjectId);
+        
+        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(model.RefreshToken);
 
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
+        if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
 
         refreshTokenEntity = await RevokeRefreshTokenAsync(refreshTokenEntity);
-
         return _mapper.Map<RefreshToken, RefreshTokenRes>(refreshTokenEntity);
     }
 
@@ -93,10 +94,11 @@ public class AuthService : IAuthService
     {
         Guard.NotNull(model, nameof(model));
 
-        if (!_tokenProvider.IsTokenValid(model.RefreshToken)) throw new InvalidRefreshTokenException();
 
         var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(model.RefreshToken);
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
+        if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
+        if (refreshTokenEntity.IsRevoked) throw new RefreshTokenAlreadyRevokedException();
 
         return await IssueAccessAsync(refreshTokenEntity.User);
     }
@@ -145,12 +147,10 @@ public class AuthService : IAuthService
     {
         Guard.NotNull(user, nameof(user));
 
-        List<Claim> claims = new()
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        };
         return new RefreshToken(
-            _tokenProvider.GenerateJwt(claims, _applicationSettings.RefreshTokenLifetime),
-            user.Id);
+            _tokenProvider.GetRandomToken(32),
+            user.Id,
+            _clockProvider.Now.AddMinutes(_applicationSettings.RefreshTokenLifetime)
+        );
     }
 }

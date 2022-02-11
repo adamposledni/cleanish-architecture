@@ -18,7 +18,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
     }
     public async Task<T> GetByIdAsync(Guid entityId)
     {
-        return await _dbSet.FirstOrDefaultAsync(e => e.Id == entityId);
+        return await _dbSet.SingleOrDefaultAsync(e => e.Id == entityId);
     }
 
     public async Task<IEnumerable<T>> ListAsync()

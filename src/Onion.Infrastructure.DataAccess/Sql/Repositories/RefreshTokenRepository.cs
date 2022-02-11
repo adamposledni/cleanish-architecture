@@ -14,7 +14,7 @@ public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshT
     {
         Guard.NotNullOrEmptyOrWhiteSpace(token, nameof(token));
 
-        return await _dbSet.FirstOrDefaultAsync(rt => rt.UserId == userId && rt.Token == token);
+        return await _dbSet.SingleOrDefaultAsync(rt => rt.UserId == userId && rt.Token == token);
     }
 
     public async Task<RefreshToken> GetByTokenAsync(string token)
@@ -24,6 +24,6 @@ public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshT
         return await _dbSet
             .Where(rt => rt.Token == token)
             .Include(rt => rt.User)
-            .FirstOrDefaultAsync();
+            .SingleOrDefaultAsync();
     }
 }

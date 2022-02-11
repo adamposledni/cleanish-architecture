@@ -5,6 +5,7 @@ using Onion.Core.Helpers;
 using Onion.Core.Security;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace Onion.Infrastructure.Core.Security.Jwt;
 
@@ -59,6 +60,18 @@ public class TokenProvider : ITokenProvider
             return false;
         }
         return true;
+    }
+
+    public string GetRandomToken(int bytes)
+    {
+        Guard.Min(bytes, 0, nameof(bytes));
+
+        var randomNumber = new byte[bytes];
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
     }
 
     private SecurityKey GetSecurityKey()

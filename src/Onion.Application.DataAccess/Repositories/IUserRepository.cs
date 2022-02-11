@@ -7,4 +7,5 @@ public interface IUserRepository : IGenericRepository<User>
 {
     public Task<User> GetByEmailAsync(string email);
     public Task<User> GetByGoogleIdAsync(string googleId);
+    Task<bool> EmailAlreadyExistsAsync(string email);
 }

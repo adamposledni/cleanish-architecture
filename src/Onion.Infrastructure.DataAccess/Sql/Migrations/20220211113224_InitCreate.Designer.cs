@@ -12,8 +12,8 @@ using Onion.Infrastructure.DataAccess.Sql;
 namespace Onion.Infrastructure.DataAccess.Sql.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20220208224145_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220211113224_InitCreate")]
+    partial class InitCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,11 +33,15 @@ namespace Onion.Infrastructure.DataAccess.Sql.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("Expiration")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsRevoked")
                         .HasColumnType("bit");
 
                     b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime2");
@@ -47,9 +51,12 @@ namespace Onion.Infrastructure.DataAccess.Sql.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Token")
+                        .IsUnique();
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshToken");
+                    b.ToTable("RefreshToken", (string)null);
                 });
 
             modelBuilder.Entity("Onion.Application.DataAccess.Entities.User", b =>
@@ -63,10 +70,10 @@ namespace Onion.Infrastructure.DataAccess.Sql.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("GoogleSubjectId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("varbinary(max)");
@@ -81,6 +88,13 @@ namespace Onion.Infrastructure.DataAccess.Sql.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("GoogleSubjectId")
+                        .IsUnique()
+                        .HasFilter("[GoogleSubjectId] IS NOT NULL");
 
                     b.ToTable("User", (string)null);
                 });

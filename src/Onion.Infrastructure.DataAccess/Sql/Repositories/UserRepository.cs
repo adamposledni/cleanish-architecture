@@ -15,13 +15,20 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     {
         Guard.NotNullOrEmptyOrWhiteSpace(email, nameof(email));
 
-        return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
+        return await _dbSet.SingleOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<User> GetByGoogleIdAsync(string googleId)
     {
         Guard.NotNullOrEmptyOrWhiteSpace(googleId, nameof(googleId));
 
-        return await _dbSet.FirstOrDefaultAsync(e => e.GoogleSubjectId == googleId);
+        return await _dbSet.SingleOrDefaultAsync(e => e.GoogleSubjectId == googleId);
+    }
+
+    public async Task<bool> EmailAlreadyExistsAsync(string email)
+    {
+        Guard.NotNullOrEmptyOrWhiteSpace(email, nameof(email));
+
+        return await _dbSet.AnyAsync(u => u.Email == email);
     }
 }

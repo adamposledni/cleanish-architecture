@@ -13,5 +13,7 @@ public class UserConfiguration : BaseEntityConfiguration<User>
         base.Configure(builder);
 
         builder.Property(i => i.Email).IsRequired();
+        builder.HasIndex(i => i.Email).IsUnique();
+        builder.HasIndex(i => i.GoogleSubjectId).IsUnique();
     }
 }

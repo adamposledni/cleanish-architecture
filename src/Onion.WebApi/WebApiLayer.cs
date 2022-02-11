@@ -52,7 +52,7 @@ public static class WebApiLayer
 
         services.Configure<RequestLocalizationOptions>(opt =>
         {
-            opt.DefaultRequestCulture = new RequestCulture(new CultureInfo("en"));
+            opt.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
             opt.SupportedCultures = supportedCultures;
             opt.SupportedUICultures = supportedCultures;
             opt.RequestCultureProviders = new[] { new AcceptLanguageHeaderRequestCultureProvider() };
@@ -65,7 +65,7 @@ public static class WebApiLayer
         #region Authentication
         services.AddScoped<ISecurityContextProvider, SecurityContextProvider>();
 
-        string signingKey = configuration.GetSection("TokenProviderSettings").Get<TokenProviderSettings>()?.SigningKey;
+        string signingKey = configuration.GetValue<string>("TokenProviderSettings:SigningKey");
         byte[] key = Encoding.ASCII.GetBytes(signingKey);
         services
         .AddAuthentication(x =>
@@ -75,7 +75,6 @@ public static class WebApiLayer
         })
         .AddJwtBearer(x =>
         {
-            x.RequireHttpsMetadata = false;
             x.SaveToken = true;
             x.TokenValidationParameters = new TokenValidationParameters
             {
