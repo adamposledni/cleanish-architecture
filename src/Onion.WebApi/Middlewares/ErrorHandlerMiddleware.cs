@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Onion.Application.DataAccess.BaseExceptions;
+using Onion.Application.DataAccess.Localization;
 using Onion.Core.Helpers;
 using Onion.WebApi.Models;
-using Onion.WebApi.Resources;
 
 namespace Onion.WebApi.Middlewares;
 
