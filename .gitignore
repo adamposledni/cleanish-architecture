@@ -1,4 +1,5 @@
 appsettings.local.json
+appsettings.Development.json
 
 .editorconfig
 

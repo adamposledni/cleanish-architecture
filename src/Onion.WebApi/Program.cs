@@ -20,7 +20,6 @@ var env = builder.Environment;
 
 // configuration providers
 configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
 configuration.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 configuration.AddEnvironmentVariables();
 

@@ -122,12 +122,12 @@ public class AuthService : IAuthService
         await _refreshTokenRepository.CreateAsync(refreshToken);
 
         return _mapper.Map<User, AuthRes>(
-                user,
-                a =>
-                {
-                    a.AccessToken = accessToken;
-                    a.RefreshToken = refreshToken.Token;
-                });
+            user,
+            a =>
+            {
+                a.AccessToken = accessToken;
+                a.RefreshToken = refreshToken.Token;
+            });
     }
 
     private string GenerateAccessToken(User user)
