@@ -81,8 +81,7 @@ public class AuthService : IAuthService
         if (securityContext == null || securityContext.Type != SecurityContextType.User)
             throw new UnauthorizedException();
         
-        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(model.RefreshToken);
-
+        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAndUserIdAsync(model.RefreshToken, securityContext.SubjectId);
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
         if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
 
@@ -93,7 +92,6 @@ public class AuthService : IAuthService
     public async Task<AuthRes> RefreshAccessTokenAsync(RefreshTokenReq model)
     {
         Guard.NotNull(model, nameof(model));
-
 
         var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(model.RefreshToken);
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();

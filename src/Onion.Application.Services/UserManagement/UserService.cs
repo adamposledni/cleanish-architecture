@@ -52,8 +52,7 @@ public class UserService : IUserService
     {
         Guard.NotNull(model, nameof(model));
 
-        if (await _userRepository.EmailAlreadyExistsAsync(model.Email))
-            throw new EmailAlreadyTakenException();
+        if (await _userRepository.EmailAlreadyExistsAsync(model.Email)) throw new EmailAlreadyTakenException();
 
         (byte[] hash, byte[] salt) = _passwordProvider.Hash(model.Password);
         var newUser = _mapper.Map<UserReq, User>(model, u =>

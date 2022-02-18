@@ -21,26 +21,26 @@ public static class WebApiLayer
     {
         #region Controllers
         services.AddControllers()
-        .AddNewtonsoftJson(opt =>
-        {
-            opt.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
-            opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            opt.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-        })
-        .ConfigureApiBehaviorOptions(opt =>
-        {
-            // handle model validation errors
-            opt.InvalidModelStateResponseFactory = (ctx) =>
+            .AddNewtonsoftJson(opt =>
             {
-                var errorMessages = ctx.ModelState.Values
-                .Where(v => v.Errors.Count > 0)
-                .SelectMany(v => v.Errors)
-                .Select(v => v.ErrorMessage);
+                opt.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                opt.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            })
+            .ConfigureApiBehaviorOptions(opt =>
+            {
+                // handle model validation errors
+                opt.InvalidModelStateResponseFactory = (ctx) =>
+                {
+                    var errorMessages = ctx.ModelState.Values
+                    .Where(v => v.Errors.Count > 0)
+                    .SelectMany(v => v.Errors)
+                    .Select(v => v.ErrorMessage);
 
-                string errors = string.Join(" ", errorMessages);
-                throw new InvalidRequestModelException(errors);
-            };
-        });
+                    string errors = string.Join(" ", errorMessages);
+                    throw new InvalidRequestModelException(errors);
+                };
+            });
         #endregion
 
         #region Localization
@@ -65,31 +65,30 @@ public static class WebApiLayer
         #region Authentication
         services.AddScoped<ISecurityContextProvider, SecurityContextProvider>();
 
-        string signingKey = configuration.GetValue<string>("TokenProviderSettings:SigningKey");
-        byte[] key = Encoding.ASCII.GetBytes(signingKey);
+        var tokenProviderSettings = configuration.GetSection("TokenProviderSettings").Get<TokenProviderSettings>();
         services
-        .AddAuthentication(x =>
-        {
-            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(x =>
-        {
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
+            .AddAuthentication(x =>
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ClockSkew = TimeSpan.Zero
-            };
-            x.Events = new JwtBearerEvents()
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
             {
-                OnChallenge = c => throw new UnauthorizedException(),
-                OnForbidden = c => throw new ForbiddenException()
-            };
-        });
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = tokenProviderSettings.GetSecurityKey(),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+                x.Events = new JwtBearerEvents()
+                {
+                    OnChallenge = c => throw new UnauthorizedException(),
+                    OnForbidden = c => throw new ForbiddenException()
+                };
+            });
         #endregion
 
         #region Swagger

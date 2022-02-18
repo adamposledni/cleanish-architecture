@@ -30,7 +30,7 @@ public class TokenProvider : ITokenProvider
         {
             Subject = new ClaimsIdentity(claims),
             Expires = _clockProvider.Now.AddMinutes(expiresIn),
-            SigningCredentials = new SigningCredentials(GetSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(_tokenSettings.GetSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
@@ -48,7 +48,7 @@ public class TokenProvider : ITokenProvider
                 new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = GetSecurityKey(),
+                    IssuerSigningKey = _tokenSettings.GetSecurityKey(),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
@@ -67,16 +67,8 @@ public class TokenProvider : ITokenProvider
         Guard.Min(bytes, 0, nameof(bytes));
 
         var randomNumber = new byte[bytes];
-        using (var rng = RandomNumberGenerator.Create())
-        {
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
-    }
-
-    private SecurityKey GetSecurityKey()
-    {
-        var key = Encoding.ASCII.GetBytes(_tokenSettings?.SigningKey);
-        return new SymmetricSecurityKey(key);
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }
