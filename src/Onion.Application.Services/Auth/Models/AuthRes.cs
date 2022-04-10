@@ -1,4 +1,4 @@
-﻿using Onion.Application.DataAccess.Entities.Fields;
+﻿using Onion.Application.DataAccess.Database.Entities.Fields;
 
 namespace Onion.Application.Services.Auth.Models;
 

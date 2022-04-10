@@ -8,8 +8,8 @@ using Onion.WebApi.Models;
 namespace Onion.WebApi.Controllers;
 
 [ApiController]
-[ProducesResponseType(400, Type = typeof(ErrorRes))]
-[ProducesResponseType(500, Type = typeof(ErrorRes))]
+[ProducesErrorResponse(400)]
+[ProducesErrorResponse(500)]
 [Produces("application/json")]
 [ApiRoute("auth")]
 public class AuthController : BaseController
@@ -38,8 +38,8 @@ public class AuthController : BaseController
     }
 
     [Authorize]
-    [ProducesResponseType(404, Type = typeof(ErrorRes))]
     [ProducesResponseType(200)]
+    [ProducesErrorResponse(404)]
     [HttpPost("revoke-refresh-token")]
     public async Task<ActionResult<RefreshTokenRes>> RevokeRefreshToken([FromBody] RefreshTokenReq body)
     {
@@ -48,7 +48,7 @@ public class AuthController : BaseController
 
     [AllowAnonymous]
     [ProducesResponseType(200)]
-    [ProducesResponseType(404, Type = typeof(ErrorRes))]
+    [ProducesErrorResponse(404)]
     [HttpPost("refresh-access-token")]
     public async Task<ActionResult<AuthRes>> RefreshAccessToken([FromBody] RefreshTokenReq body)
     {

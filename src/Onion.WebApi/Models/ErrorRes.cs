@@ -6,7 +6,7 @@ public class ErrorRes
     {
         StatusCode = statusCode;
         Message = message;
-        ServerDetails = details;
+        Details = details;
     }
 
     public ErrorRes()
@@ -15,5 +15,5 @@ public class ErrorRes
 
     public int StatusCode { get; set; }
     public string Message { get; set; }
-    public string ServerDetails { get; set; }
+    public string Details { get; set; }
 }

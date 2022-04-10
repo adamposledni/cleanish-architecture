@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Onion.Application.DataAccess.BaseExceptions;
 using Onion.Application.Services.Common.Exceptions;
 using Onion.Application.Services.Security;
+using Onion.Core.Exceptions;
 using Onion.Infrastructure.Core.Security.Jwt;
 using Onion.WebApi.Services;
 using System.Globalization;
@@ -98,7 +98,7 @@ public static class WebApiLayer
             //c.IncludeXmlComments(string.Format(@"{0}\Onion.WebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory));
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = Assembly.GetAssembly(typeof(WebApiLayer)).FullName,
+                Title = Assembly.GetAssembly(typeof(WebApiLayer)).GetName().Name,
                 Version = "v1"
             });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

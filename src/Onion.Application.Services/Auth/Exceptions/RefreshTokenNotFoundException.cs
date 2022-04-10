@@ -1,4 +1,4 @@
-﻿using Onion.Application.DataAccess.BaseExceptions;
+﻿using Onion.Core.Exceptions;
 
 namespace Onion.Application.Services.Auth.Exceptions;
 

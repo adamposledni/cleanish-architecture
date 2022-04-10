@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Onion.Application.DataAccess.Repositories;
-using Onion.Infrastructure.DataAccess.Sql;
-using Onion.Infrastructure.DataAccess.Sql.Repositories;
+using Onion.Application.DataAccess.Database;
+using Onion.Application.DataAccess.Database.Repositories;
+using Onion.Infrastructure.DataAccess.Database;
+using Onion.Infrastructure.DataAccess.Database.Repositories;
 
 namespace Onion.Infrastructure.DataAccess;
 

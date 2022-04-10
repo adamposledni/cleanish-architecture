@@ -52,13 +52,13 @@ public class TokenProvider : ITokenProvider
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
-                },
-                out var validatedToken);
+                }, 
+                out _);
         }
         catch
         {
             return false;
-        }
+        }  
         return true;
     }
 

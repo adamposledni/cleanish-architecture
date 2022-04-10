@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Onion.Application.Services.UserManagement;
-using Onion.Application.Services.UserManagement.Models;
+using Onion.Application.Services.Users;
+using Onion.Application.Services.Users.Models;
 using Onion.WebApi.Atributes;
 using Onion.WebApi.Models;
 
 namespace Onion.WebApi.Controllers;
 
 [ApiController]
-[ProducesResponseType(400, Type = typeof(ErrorRes))]
-[ProducesResponseType(500, Type = typeof(ErrorRes))]
+[ProducesErrorResponse(400)]
+[ProducesErrorResponse(500)]
 [Produces("application/json")]
 [ApiRoute("users")]
 public class UserController : BaseController
@@ -23,7 +23,7 @@ public class UserController : BaseController
 
     [Authorize]
     [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesErrorResponse(404)]
     [HttpGet("{userId}")]
     public async Task<ActionResult<UserRes>> Get([FromRoute] Guid userId)
     {

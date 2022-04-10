@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Onion.Application.Services.Auth;
 using Onion.Application.Services.Common;
-using Onion.Application.Services.UserManagement;
+using Onion.Application.Services.Users;
 
 namespace Onion.Application.Services;
 

@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using Onion.Application.DataAccess.BaseExceptions;
-using Onion.Application.DataAccess.Entities;
-using Onion.Application.DataAccess.Repositories;
 using Onion.Application.Services.Auth.Exceptions;
 using Onion.Application.Services.Auth.Models;
 using Onion.Application.Services.Common;
@@ -10,8 +7,11 @@ using Onion.Core.Clock;
 using Onion.Core.Helpers;
 using Onion.Core.Mapper;
 using Onion.Core.Security;
+using Onion.Core.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Onion.Application.DataAccess.Database.Entities;
+using Onion.Application.DataAccess.Database.Repositories;
 
 namespace Onion.Application.Services.Auth;
 

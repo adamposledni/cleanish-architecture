@@ -28,10 +28,10 @@ logging.ClearProviders();
 logging.AddConsole();
 
 // services registration
-WebApiLayer.Compose(services, configuration);
-ApplicationLayer.Compose(services, configuration);
-DataAccessLayer.Compose(services, configuration);
 CoreLayer.Compose(services, configuration);
+DataAccessLayer.Compose(services, configuration);
+ApplicationLayer.Compose(services, configuration);
+WebApiLayer.Compose(services, configuration);
 
 // application pipeline
 var app = builder.Build();

@@ -1,4 +1,5 @@
-﻿using Onion.Core.Helpers;
+﻿using Onion.Application.Services.Users.Models;
+using Onion.Core.Helpers;
 using Onion.Core.Mapper;
 using AM = AutoMapper;
 
@@ -25,5 +26,12 @@ public class Mapper : IMapper
                 additionalProperties?.Invoke(d);
             });
         });
+    }
+
+    public IEnumerable<TDest> MapCollection<TSource, TDest>(IEnumerable<TSource> sources, Action<TDest> additionalProperties = null)
+    {
+        Guard.NotNull(sources, nameof(sources));
+
+        return sources.Select(s => Map(s, additionalProperties));
     }
 }

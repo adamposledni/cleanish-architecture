@@ -20,10 +20,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Onion.Application.DataAccess\Onion.Application.DataAccess.csproj" />
     <ProjectReference Include="..\Onion.Core\Onion.Core.csproj" />
+    <ProjectReference Include="..\Onion.Infrastructure.Core\Onion.Infrastructure.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Sql\Migrations\" />
+    <Folder Include="Database\Migrations\" />
   </ItemGroup>
 
 </Project>
