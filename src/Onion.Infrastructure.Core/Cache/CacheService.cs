@@ -15,7 +15,6 @@ public class CacheService : ICacheService
         _cacheOptions = new MemoryCacheEntryOptions()
             .SetAbsoluteExpiration(TimeSpan.FromSeconds(30))
             .SetSize(1024);
-
     }
 
     public async Task<T> UseCacheAsync<T>(CacheKey cacheKey, Func<Task<T>> valueProvider)

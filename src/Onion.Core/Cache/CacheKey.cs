@@ -13,9 +13,6 @@ public class CacheKey
         cacheBuilder.Append($"{repositoryName}");
         cacheBuilder.Append($"__{methodName}");
         cacheBuilder.Append($"__{string.Join("_", (parameters is null || parameters.Length == 0) ? new string[] { "?" } : parameters)}");
-
-        cacheBuilder.ToString();
-
         Key = cacheBuilder.ToString().ToMd5Thumbprint();
     }
 }
