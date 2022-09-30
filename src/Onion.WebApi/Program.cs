@@ -35,7 +35,7 @@ WebApiLayer.Compose(services, configuration);
 
 // application pipeline
 var app = builder.Build();
-
+var logger = app.Services.GetService<ILogger<Program>>();
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 app.UseHttpRequesLogging();
@@ -71,7 +71,5 @@ app.UseEndpoints(endpoints =>
 
 app.UseSpa(c => c.Options.SourcePath = "wwwroot");
 
-var logger = app.Services.GetService<ILogger<Program>>();
 logger.LogInformation("Web application was successfully created");
-
 app.Run();

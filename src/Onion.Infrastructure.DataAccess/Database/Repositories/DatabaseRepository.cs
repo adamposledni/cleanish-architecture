@@ -63,7 +63,7 @@ public abstract class DatabaseRepository<T> : IDatabaseRepository<T> where T : B
         Guard.NotNull(entityToDelete, nameof(entityToDelete));
 
         T deletedEntity = _dbSet.Remove(entityToDelete).Entity;
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();        
         return deletedEntity;
     }
 

@@ -17,6 +17,7 @@ public class ErrorHandlerMiddleware
         _next = next;
     }
 
+    // no need for guard clause - DI method
     public async Task InvokeAsync(HttpContext httpContext, IStringLocalizer<Strings> localizer, ILogger<ErrorHandlerMiddleware> logger)
     {
         try

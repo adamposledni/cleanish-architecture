@@ -77,6 +77,7 @@ public class UserService : IUserService
         if (googleIdentity == null) throw new InvalidGoogleIdTokenException();
 
         var user = await _userRepository.GetByIdAsync(securityContext.SubjectId);
+        // TODO: maybe guard clause ???
         if (user == null) throw new UserNotFoundException();
 
         if (!string.IsNullOrWhiteSpace(user.GoogleSubjectId)) throw new GoogleLinkAlreadyExistsException();

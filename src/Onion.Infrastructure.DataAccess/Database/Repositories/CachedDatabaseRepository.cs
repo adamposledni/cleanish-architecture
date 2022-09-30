@@ -6,6 +6,7 @@ using Onion.Core.Pagination;
 
 namespace Onion.Infrastructure.DataAccess.Database.Repositories;
 
+// TODO: use decorator pattern
 public class CachedDatabaseRepository<T> : DatabaseRepository<T>, ICachedDatabaseRepository<T> where T: BaseEntity
 {
     protected readonly ICacheService _cacheService;
