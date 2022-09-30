@@ -2,7 +2,7 @@
 
 namespace Onion.Application.DataAccess.Database.Repositories;
 
-public interface IUserRepository : ICachedDatabaseRepository<User>
+public interface IUserRepository : IDatabaseRepository<User>
 {
     public Task<User> GetByEmailAsync(string email);
     public Task<User> GetByGoogleIdAsync(string googleId);

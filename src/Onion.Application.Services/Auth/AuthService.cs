@@ -12,13 +12,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Onion.Application.DataAccess.Database.Entities;
 using Onion.Application.DataAccess.Database.Repositories;
+using Onion.Core.Cache;
+using Onion.Application.DataAccess.Specifications;
 
 namespace Onion.Application.Services.Auth;
 
 public class AuthService : IAuthService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IDatabaseRepository<User> _userRepository;
+    private readonly IDatabaseRepository<RefreshToken> _refreshTokenRepository;
     private readonly ITokenProvider _tokenProvider;
     private readonly IGoogleAuthProvider _googleAuthProvider;
     private readonly IMapper _mapper;
@@ -26,34 +28,35 @@ public class AuthService : IAuthService
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ApplicationSettings _applicationSettings;
     private readonly IClockProvider _clockProvider;
+    private readonly IDatabaseRepositoryManager _databaseRepositoryManager;
 
     public AuthService(
-        IUserRepository userRepository,
         ITokenProvider tokenProvider,
         IGoogleAuthProvider googleAuthProvider,
         IMapper mapper,
         IPasswordProvider passwordProvider,
         ISecurityContextProvider contextProvider,
-        IRefreshTokenRepository refreshTokenRepository,
-        IOptions<ApplicationSettings> applicationSettings, 
-        IClockProvider clockProvider)
+        IOptions<ApplicationSettings> applicationSettings,
+        IClockProvider clockProvider,
+        IDatabaseRepositoryManager databaseRepositoryManager)
     {
-        _userRepository = userRepository;
         _tokenProvider = tokenProvider;
         _googleAuthProvider = googleAuthProvider;
         _mapper = mapper;
         _passwordProvider = passwordProvider;
         _securityContextProvider = contextProvider;
-        _refreshTokenRepository = refreshTokenRepository;
         _applicationSettings = applicationSettings.Value;
         _clockProvider = clockProvider;
+        _databaseRepositoryManager = databaseRepositoryManager;
+        _userRepository = _databaseRepositoryManager.GetDatabaseRepository<User>(CacheStrategy.Bypass);
+        _refreshTokenRepository = _databaseRepositoryManager.GetDatabaseRepository<RefreshToken>(CacheStrategy.Bypass);
     }
 
     public async Task<AuthRes> LoginAsync(PasswordAuthReq model)
     {
         Guard.NotNull(model, nameof(model));
 
-        var user = await _userRepository.GetByEmailAsync(model.Email);
+        var user = await _userRepository.GetAsync(UserSpecifications.WithEmail(model.Email));
         if (user == null || !_passwordProvider.Verify(model.Password, user.PasswordHash, user.PasswordSalt))
             throw new InvalidEmailPasswordException();
 
@@ -67,7 +70,7 @@ public class AuthService : IAuthService
         var googleIdentity = await _googleAuthProvider.GetIdentityAsync(model.IdToken);
         if (googleIdentity == null) throw new InvalidGoogleIdTokenException();
 
-        var user = await _userRepository.GetByGoogleIdAsync(googleIdentity.SubjectId);
+        var user = await _userRepository.GetAsync(UserSpecifications.WithGoogleSubjectId(googleIdentity.SubjectId));
         if (user == null) throw new GoogleLinkMissingException();
 
         return await IssueAccessAsync(user);
@@ -80,8 +83,8 @@ public class AuthService : IAuthService
         var securityContext = _securityContextProvider.SecurityContext;
         if (securityContext == null || securityContext.Type != SecurityContextType.User)
             throw new UnauthorizedException();
-        
-        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAndUserIdAsync(model.RefreshToken, securityContext.SubjectId);
+
+        var refreshTokenEntity = await _refreshTokenRepository.GetAsync(RefreshTokenSpecifications.WithTokenAndUserId(model.RefreshToken, securityContext.SubjectId));
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
         if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
 
@@ -93,7 +96,7 @@ public class AuthService : IAuthService
     {
         Guard.NotNull(model, nameof(model));
 
-        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(model.RefreshToken);
+        var refreshTokenEntity = await _refreshTokenRepository.GetAsync(RefreshTokenSpecifications.WithToken(model.RefreshToken));
         if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
         if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
         if (refreshTokenEntity.IsRevoked) throw new RefreshTokenAlreadyRevokedException();

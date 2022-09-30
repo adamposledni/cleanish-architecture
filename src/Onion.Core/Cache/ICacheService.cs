@@ -2,5 +2,5 @@
 
 public interface ICacheService
 {
-    Task<T> UseCacheAsync<T>(CacheKey cacheKey, Func<Task<T>> valueProvider);
+    Task<T> UseCacheAsync<T>(CacheStrategy cacheStrategy, CacheKey cacheKey, Func<Task<T>> valueProvider);
 }

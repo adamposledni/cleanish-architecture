@@ -44,4 +44,12 @@ public class UserController : BaseController
     {
         return StatusCode(201, await _userService.CreateAsync(body));
     }
+
+    [ProducesResponseType(200)]
+    [ProducesErrorResponse(404)]
+    [HttpGet("foo")]
+    public async Task<ActionResult<Foo1Res>> Foo()
+    {
+        return StatusCode(200, await _userService.FooAsync());
+    }
 }

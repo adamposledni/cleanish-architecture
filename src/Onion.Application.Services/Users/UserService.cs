@@ -9,6 +9,8 @@ using Onion.Core.Security;
 using Onion.Core.Exceptions;
 using Onion.Application.DataAccess.Database.Entities;
 using Onion.Application.DataAccess.Database.Repositories;
+using Onion.Core.Cache;
+using Onion.Application.DataAccess.Specifications;
 
 namespace Onion.Application.Services.Users;
 
@@ -18,20 +20,22 @@ public class UserService : IUserService
     private readonly IPasswordProvider _passwordProvider;
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly IGoogleAuthProvider _googleAuthProvider;
-    private readonly IUserRepository _userRepository;
+    private readonly IDatabaseRepositoryManager _databaseRepositoryManager;
+    private readonly IDatabaseRepository<User> _userRepository;
 
     public UserService(
         IMapper mapper,
         IPasswordProvider passwordProvider,
         ISecurityContextProvider securityContextProvider,
         IGoogleAuthProvider googleAuthProvider, 
-        IUserRepository userRepository)
+        IDatabaseRepositoryManager databaseRepositoryManager)
     {
         _mapper = mapper;
         _passwordProvider = passwordProvider;
         _securityContextProvider = securityContextProvider;
         _googleAuthProvider = googleAuthProvider;
-        _userRepository = userRepository;
+        _databaseRepositoryManager = databaseRepositoryManager;
+        _userRepository = _databaseRepositoryManager.GetDatabaseRepository<User>(CacheStrategy.Bypass);
     }
 
     public async Task<UserRes> GetAsync(Guid userId)
@@ -44,7 +48,7 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserRes>> ListAsync()
     {
-        var users = await _userRepository.CachedListAsync();
+        var users = await _userRepository.ListAsync();
         return _mapper.MapCollection<User, UserRes>(users);
     }
 
@@ -52,7 +56,10 @@ public class UserService : IUserService
     {
         Guard.NotNull(model, nameof(model));
 
-        if (await _userRepository.EmailAlreadyExistsAsync(model.Email)) throw new EmailAlreadyTakenException();
+        if (await _userRepository.AnyAsync(UserSpecifications.WithEmail(model.Email)))
+        {
+            throw new EmailAlreadyTakenException();
+        }
 
         (byte[] hash, byte[] salt) = _passwordProvider.Hash(model.Password);
         var newUser = _mapper.Map<UserReq, User>(model, u =>
@@ -86,5 +93,11 @@ public class UserService : IUserService
         await _userRepository.UpdateAsync(user);
 
         return _mapper.Map<User, UserRes>(user);
+    }
+
+    public async Task<Foo1Res> FooAsync()
+    {
+        var user = await _userRepository.GetAsync(UserSpecifications.Foo(new Guid("8bdbb57b-0888-4897-5896-08daa2f02e7c")));
+        return _mapper.Map<User, Foo1Res>(user);
     }
 }

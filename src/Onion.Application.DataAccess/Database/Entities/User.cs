@@ -10,4 +10,6 @@ public class User : BaseEntity
     public string GoogleSubjectId { get; set; }
     public UserRole Role { get; set; }
     public IEnumerable<RefreshToken> RefreshTokens { get; set; }
+
+    public IEnumerable<TodoList> TodoLists { get; set; }
 }

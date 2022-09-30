@@ -7,4 +7,5 @@ public interface IUserService
     Task<UserRes> GetAsync(Guid userId);
     Task<IEnumerable<UserRes>> ListAsync();
     Task<UserRes> CreateAsync(UserReq model);
+    Task<Foo1Res> FooAsync();
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Onion.Application.DataAccess.Database.Entities;
+using Onion.Application.Services.Auth.Models;
 using Onion.Core.Clock;
 using System.Reflection;
 using System.Threading;
@@ -11,6 +12,9 @@ public class SqlDbContext : DbContext
     private readonly IClockProvider _clockProvider;
 
     public DbSet<User> Users { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<TodoList> TodoLists { get; set; }
+    public DbSet<TodoItem> TodoItems { get; set; }
 
     public SqlDbContext(DbContextOptions<SqlDbContext> options, IClockProvider clockProvider) : base(options)
     {

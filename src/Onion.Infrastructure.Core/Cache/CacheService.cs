@@ -17,9 +17,11 @@ public class CacheService : ICacheService
             .SetSize(1024);
     }
 
-    public async Task<T> UseCacheAsync<T>(CacheKey cacheKey, Func<Task<T>> valueProvider)
+    public async Task<TResult> UseCacheAsync<TResult>(CacheStrategy cacheStrategy, CacheKey cacheKey, Func<Task<TResult>> valueProvider)
     {
-        if (!_memoryCache.TryGetValue(cacheKey.Key, out T value))
+        if (cacheStrategy == CacheStrategy.Bypass) return await valueProvider();
+
+        if (!_memoryCache.TryGetValue(cacheKey.Key, out TResult value))
         {
             value = await valueProvider();
             _memoryCache.Set(cacheKey.Key, value, _cacheOptions);

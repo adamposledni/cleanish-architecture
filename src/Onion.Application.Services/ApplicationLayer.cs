@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Onion.Application.Services.Auth;
 using Onion.Application.Services.Common;
+using Onion.Application.Services.TodoLists;
 using Onion.Application.Services.Users;
 
 namespace Onion.Application.Services;
@@ -16,5 +17,7 @@ public static class ApplicationLayer
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ITodoItemService, TodoItemService>();
+        services.AddScoped<ITodoListService, TodoListService>();
     }
 }

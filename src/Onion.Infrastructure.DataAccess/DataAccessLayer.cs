@@ -14,7 +14,6 @@ public static class DataAccessLayer
     {
         services.AddDbContext<SqlDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("Sql")));
 
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IDatabaseRepositoryManager, DatabaseRepositoryManager>();
     }
 }
