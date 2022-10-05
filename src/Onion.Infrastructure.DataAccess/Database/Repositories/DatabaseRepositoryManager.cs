@@ -1,24 +1,32 @@
-﻿using Onion.Application.DataAccess.Database.Entities;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Onion.Application.DataAccess.Database.Entities;
 using Onion.Application.DataAccess.Database.Repositories;
 using Onion.Core.Cache;
+using Onion.Core.Helpers;
 
 namespace Onion.Infrastructure.DataAccess.Database.Repositories;
 
+// TODO: Disposable
+// TODO: UoW
 public class DatabaseRepositoryManager : IDatabaseRepositoryManager
 {
     private readonly SqlDbContext _dbContext;
-    private readonly ICacheService _cacheService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public DatabaseRepositoryManager(SqlDbContext dbContext, ICacheService cacheService)
+    public DatabaseRepositoryManager(SqlDbContext dbContext, IServiceProvider serviceProvider)
     {
         _dbContext = dbContext;
-        _cacheService = cacheService;
+        _serviceProvider = serviceProvider;
     }
 
-    public IDatabaseRepository<T> GetDatabaseRepository<T>(CacheStrategy cacheStrategy) where T : BaseEntity
+    public TRepository GetRepository<TRepository, TEntity>(CacheStrategy cacheStrategy) 
+        where TRepository: IDatabaseRepository<TEntity> where TEntity: BaseEntity
     {
-        // TODO: reuse repositories
-        return new DatabaseRepository<T>(_dbContext, _cacheService, cacheStrategy);
+        var repository = _serviceProvider.GetService<TRepository>();
+        Guard.NotNull(repository, nameof(repository));
+
+        repository.CacheStrategy = cacheStrategy;
+        return repository;
     }
 }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Onion.Application.DataAccess.Database;
 using Onion.Application.DataAccess.Database.Repositories;
 using Onion.Infrastructure.DataAccess.Database;
 using Onion.Infrastructure.DataAccess.Database.Repositories;
@@ -14,6 +13,11 @@ public static class DataAccessLayer
     {
         services.AddDbContext<SqlDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("Sql")));
 
-        services.AddScoped<IDatabaseRepositoryManager, DatabaseRepositoryManager>();
+        services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<ITodoListRepository, TodoListRepository>();
+        services.AddTransient<ITodoItemRepository, TodoItemRepository>();
+        services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
+
+        services.AddTransient<IDatabaseRepositoryManager, DatabaseRepositoryManager>();
     }
 }

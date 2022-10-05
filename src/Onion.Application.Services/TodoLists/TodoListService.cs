@@ -1,6 +1,5 @@
 ﻿using Onion.Application.DataAccess.Database.Entities;
 using Onion.Application.DataAccess.Database.Repositories;
-using Onion.Application.DataAccess.Specifications;
 using Onion.Application.Services.Security;
 using Onion.Application.Services.TodoLists.Exceptions;
 using Onion.Application.Services.TodoLists.Models;
@@ -8,25 +7,22 @@ using Onion.Core.Cache;
 using Onion.Core.Exceptions;
 using Onion.Core.Helpers;
 using Onion.Core.Mapper;
-using System.Reflection;
 
 namespace Onion.Application.Services.TodoLists;
 
 public class TodoListService : ITodoListService
 {
     private readonly IDatabaseRepositoryManager _databaseRepositoryManager;
-    private readonly IMapper _mapper;
+    private readonly IObjectMapper _mapper;
     private readonly ISecurityContextProvider _securityContextProvider;
-    private readonly IDatabaseRepository<TodoItem> _todoItemRepository;
-    private readonly IDatabaseRepository<TodoList> _todoListRepository;
+    private readonly ITodoListRepository _todoListRepository;
 
-    public TodoListService(IDatabaseRepositoryManager databaseRepositoryManager, IMapper mapper, ISecurityContextProvider securityContextProvider)
+    public TodoListService(IDatabaseRepositoryManager databaseRepositoryManager, IObjectMapper mapper, ISecurityContextProvider securityContextProvider)
     {
         _databaseRepositoryManager = databaseRepositoryManager;
         _mapper = mapper;
         _securityContextProvider = securityContextProvider;
-        _todoItemRepository = _databaseRepositoryManager.GetDatabaseRepository<TodoItem>(CacheStrategy.Bypass);
-        _todoListRepository = _databaseRepositoryManager.GetDatabaseRepository<TodoList>(CacheStrategy.Bypass);
+        _todoListRepository = _databaseRepositoryManager.GetRepository<ITodoListRepository, TodoList>(CacheStrategy.Bypass);
     }
 
     public async Task<TodoListRes> CreateAsync(TodoListReq model)
@@ -52,7 +48,7 @@ public class TodoListService : ITodoListService
         bool todoListBelongsToUser = await TodoListBelongsToUserAsync(todoListId, securityContext.SubjectId);
         if (!todoListBelongsToUser) throw new ForbiddenException();
 
-        var todoList = await _todoListRepository.GetAsync(TodoListSpecifications.WithIdIncludeTodoItem(todoListId));
+        var todoList = await _todoListRepository.GetByIdAsync(todoListId);
         if (todoList == null) throw new TodoListNotFoundException();
 
         return _mapper.Map<TodoList, TodoListRes>(todoList);
@@ -66,6 +62,6 @@ public class TodoListService : ITodoListService
 
     private async Task<bool> TodoListBelongsToUserAsync(Guid listId, Guid userId)
     {
-        return await _todoListRepository.AnyAsync(TodoListSpecifications.WithIdAndUserId(listId, userId));
+        return await _todoListRepository.AnyWithIdAndUserIdAsync(listId, userId);
     }
 }

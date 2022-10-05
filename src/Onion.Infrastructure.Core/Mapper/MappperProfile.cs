@@ -6,7 +6,7 @@ using AM = AutoMapper;
 
 namespace Onion.Infrastructure.Core.Mapper;
 
-public static class MappperProfile
+public static class MapperProfile
 {
     public static void Configure(AM.IMapperConfigurationExpression configuration)
     {
@@ -27,7 +27,7 @@ public static class MappperProfile
         configuration.CreateMap<TodoList, TodoListBriefRes>();
 
         configuration.CreateMap<User, Foo1Res>();
-        configuration.CreateMap<TodoList, Foo1Res>();
-        configuration.CreateMap<TodoItem, Foo1Res>();
+        configuration.CreateMap<TodoList, Foo2Res>();
+        configuration.CreateMap<TodoItem, Foo3Res>();
     }
 }

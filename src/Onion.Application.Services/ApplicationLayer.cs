@@ -15,9 +15,9 @@ public static class ApplicationLayer
     {
         services.Configure<ApplicationSettings>(configuration.GetSection(APPLICATION_SETTINGS));
 
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<ITodoItemService, TodoItemService>();
-        services.AddScoped<ITodoListService, TodoListService>();
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<ITodoItemService, TodoItemService>();
+        services.AddTransient<ITodoListService, TodoListService>();
     }
 }

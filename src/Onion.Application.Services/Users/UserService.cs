@@ -10,21 +10,21 @@ using Onion.Core.Exceptions;
 using Onion.Application.DataAccess.Database.Entities;
 using Onion.Application.DataAccess.Database.Repositories;
 using Onion.Core.Cache;
-using Onion.Application.DataAccess.Specifications;
 
 namespace Onion.Application.Services.Users;
 
 public class UserService : IUserService
 {
-    private readonly IMapper _mapper;
+    private readonly IObjectMapper _mapper;
     private readonly IPasswordProvider _passwordProvider;
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly IGoogleAuthProvider _googleAuthProvider;
     private readonly IDatabaseRepositoryManager _databaseRepositoryManager;
-    private readonly IDatabaseRepository<User> _userRepository;
+    
+    private readonly IUserRepository _userRepository;
 
     public UserService(
-        IMapper mapper,
+        IObjectMapper mapper,
         IPasswordProvider passwordProvider,
         ISecurityContextProvider securityContextProvider,
         IGoogleAuthProvider googleAuthProvider, 
@@ -35,7 +35,8 @@ public class UserService : IUserService
         _securityContextProvider = securityContextProvider;
         _googleAuthProvider = googleAuthProvider;
         _databaseRepositoryManager = databaseRepositoryManager;
-        _userRepository = _databaseRepositoryManager.GetDatabaseRepository<User>(CacheStrategy.Bypass);
+
+        _userRepository = _databaseRepositoryManager.GetRepository<IUserRepository, User>(CacheStrategy.Bypass);
     }
 
     public async Task<UserRes> GetAsync(Guid userId)
@@ -56,7 +57,7 @@ public class UserService : IUserService
     {
         Guard.NotNull(model, nameof(model));
 
-        if (await _userRepository.AnyAsync(UserSpecifications.WithEmail(model.Email)))
+        if (await _userRepository.AnyWithEmailAsync(model.Email))
         {
             throw new EmailAlreadyTakenException();
         }
@@ -97,7 +98,7 @@ public class UserService : IUserService
 
     public async Task<Foo1Res> FooAsync()
     {
-        var user = await _userRepository.GetAsync(UserSpecifications.Foo(new Guid("8bdbb57b-0888-4897-5896-08daa2f02e7c")));
-        return _mapper.Map<User, Foo1Res>(user);
+        var foo = await _userRepository.FooAsync();
+        return _mapper.Map<User, Foo1Res>(foo);
     }
 }

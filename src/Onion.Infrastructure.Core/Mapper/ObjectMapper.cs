@@ -1,17 +1,17 @@
-﻿using Onion.Core.Helpers;
+﻿using AutoMapper;
+using Onion.Core.Helpers;
 using Onion.Core.Mapper;
-using AM = AutoMapper;
 
 namespace Onion.Infrastructure.Core.Mapper;
 
-public class Mapper : IMapper
+public class ObjectMapper : IObjectMapper
 {
-    private readonly AM.Mapper _mapperAdaptee;
+    private readonly IMapper _mapperAdaptee;
 
-    public Mapper()
+    public ObjectMapper(IMapper mapperAdaptee)
     {
-        AM.MapperConfiguration configuration = new(MappperProfile.Configure);
-        _mapperAdaptee = new(configuration);
+
+        _mapperAdaptee = mapperAdaptee;
     }
 
     public TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null)

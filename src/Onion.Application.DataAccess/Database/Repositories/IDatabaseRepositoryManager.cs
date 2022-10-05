@@ -5,5 +5,6 @@ namespace Onion.Application.DataAccess.Database.Repositories;
 
 public interface IDatabaseRepositoryManager
 {
-    IDatabaseRepository<T> GetDatabaseRepository<T>(CacheStrategy cacheStrategy) where T: BaseEntity;
+    public TRepository GetRepository<TRepository, TEntity>(CacheStrategy cacheStrategy)
+        where TRepository : IDatabaseRepository<TEntity> where TEntity : BaseEntity;
 }
