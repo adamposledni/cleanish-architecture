@@ -18,8 +18,7 @@ public class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TE
     private readonly ICacheService _cacheService;
     private readonly DbSet<TEntity> _dbSet;
 
-    private readonly SetOnce<CacheStrategy> _setOnceCacheStrategy = new SetOnce<CacheStrategy>();
-
+    private readonly SetOnce<CacheStrategy> _setOnceCacheStrategy = new();
     public CacheStrategy CacheStrategy 
     {
         get { return _setOnceCacheStrategy.Value; }
@@ -33,24 +32,24 @@ public class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TE
         _dbSet = _dbContext.Set<TEntity>();        
     }
 
-    public async Task<TEntity> CreateAsync(TEntity newEntity)
+    public async Task<TEntity> CreateAsync(TEntity newEntity, bool commitAfter = true)
     {
         Guard.NotNull(newEntity, nameof(newEntity));
 
         TEntity createdEntity = _dbSet.Add(newEntity).Entity;
-        await _dbContext.SaveChangesAsync();
+        await CommitIfTrueAsync(commitAfter);
         return createdEntity;
     }
 
-    public async Task<TEntity> UpdateAsync(TEntity updatedEntity)
+    public async Task<TEntity> UpdateAsync(TEntity updatedEntity, bool commitAfter = true)
     {
         Guard.NotNull(updatedEntity, nameof(updatedEntity));
 
-        await _dbContext.SaveChangesAsync();
+        await CommitIfTrueAsync(commitAfter);
         return updatedEntity;
     }
 
-    public async Task<TEntity> DeleteAsync(TEntity entityToDelete)
+    public async Task<TEntity> DeleteAsync(TEntity entityToDelete, bool commitAfter = true)
     {
         Guard.NotNull(entityToDelete, nameof(entityToDelete));
 
@@ -58,6 +57,14 @@ public class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TE
         await _dbContext.SaveChangesAsync();
         return deletedEntity;
     }
+
+    private async Task<int> CommitIfTrueAsync(bool shouldCommit)
+    {
+        if (shouldCommit) return await _dbContext.SaveChangesAsync();
+        return 0;
+    }
+
+    protected SpecificationBuilder<TEntity> Specification() => new SpecificationBuilder<TEntity>();
 
     protected async Task<TResult> ReadDataAsync<TResult>(Func<IQueryable<TEntity>, Task<TResult>> queryOperation, [CallerMemberName] string callerMethodName = "")
     {
@@ -83,10 +90,6 @@ public class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TE
         );
     }
 
-    protected SpecificationBuilder<TEntity> Specification()
-    {
-        return new SpecificationBuilder<TEntity>();
-    }
 
     //public async Task<PaginableList<T>> PaginateAsync(int pageSize, int page)
     //{

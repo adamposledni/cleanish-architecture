@@ -7,7 +7,7 @@ public interface IDatabaseRepository<T> where T : BaseEntity
 {
     CacheStrategy CacheStrategy { get; set; }
 
-    Task<T> CreateAsync(T newEntity);
-    Task<T> DeleteAsync(T entityToDelete);
-    Task<T> UpdateAsync(T updatedEntity);
+    Task<T> CreateAsync(T newEntity, bool commitAfter = true);
+    Task<T> DeleteAsync(T entityToDelete, bool commitAfter = true);
+    Task<T> UpdateAsync(T updatedEntity, bool commitAfter = true);
 }

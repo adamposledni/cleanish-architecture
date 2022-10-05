@@ -7,7 +7,6 @@ using Onion.Core.Helpers;
 namespace Onion.Infrastructure.DataAccess.Database.Repositories;
 
 // TODO: Disposable
-// TODO: UoW
 public class DatabaseRepositoryManager : IDatabaseRepositoryManager
 {
     private readonly SqlDbContext _dbContext;
@@ -27,6 +26,11 @@ public class DatabaseRepositoryManager : IDatabaseRepositoryManager
 
         repository.CacheStrategy = cacheStrategy;
         return repository;
+    }
+
+    public async Task<int> CommitAsync()
+    {
+        return await _dbContext.SaveChangesAsync();
     }
 }
 
