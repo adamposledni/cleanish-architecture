@@ -20,7 +20,6 @@ public class UserService : IUserService
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly IGoogleAuthProvider _googleAuthProvider;
     private readonly IDatabaseRepositoryManager _databaseRepositoryManager;
-    private readonly Func<CacheStrategy, IUserRepository> _userRepositoryFactory;
     private readonly IUserRepository _userRepository;
     private readonly IUserRepository _cachedUserRepository;
 
@@ -37,7 +36,6 @@ public class UserService : IUserService
         _securityContextProvider = securityContextProvider;
         _googleAuthProvider = googleAuthProvider;
         _databaseRepositoryManager = databaseRepositoryManager;
-        _userRepositoryFactory = userRepositoryFactory;
         _userRepository = _databaseRepositoryManager.GetRepository<IUserRepository, User>(CacheStrategy.Bypass);
         _cachedUserRepository = _databaseRepositoryManager.GetRepository<IUserRepository, User>(CacheStrategy.Use);
     }
@@ -100,8 +98,7 @@ public class UserService : IUserService
 
     public async Task<Foo1Res> FooAsync()
     {
-        var repo = _userRepositoryFactory(CacheStrategy.Bypass);
-        var foo = await repo.FooAsync();
+        var foo = await _cachedUserRepository.FooAsync();
         return _mapper.Map<User, Foo1Res>(foo);
     }
 }
