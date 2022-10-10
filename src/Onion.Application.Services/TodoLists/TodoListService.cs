@@ -30,10 +30,10 @@ public class TodoListService : ITodoListService
         Guard.NotNull(model, nameof(model));
 
         var userId = _securityContextProvider.GetUserId();
-        var newTodoList = _mapper.Map<TodoListReq, TodoList>(model, tl => tl.UserId = userId);
+        var newTodoList = _mapper.Map<TodoList>(model, tl => tl.UserId = userId);
         newTodoList = await _todoListRepository.CreateAsync(newTodoList);
 
-        return _mapper.Map<TodoList, TodoListRes>(newTodoList);
+        return _mapper.Map<TodoListRes>(newTodoList);
     }
 
     public async Task<TodoListRes> GetAsync(Guid todoListId)
@@ -43,13 +43,13 @@ public class TodoListService : ITodoListService
         if (todoList == null) throw new TodoListNotFoundException();
         if (todoList.UserId != userId) throw new ForbiddenException();
 
-        return _mapper.Map<TodoList, TodoListRes>(todoList);
+        return _mapper.Map<TodoListRes>(todoList);
     }
 
     public async Task<IEnumerable<TodoListBriefRes>> ListAsync()
     {
         var userId = _securityContextProvider.GetUserId();
         var todoLists = await _todoListRepository.ListAsync(userId);
-        return _mapper.MapCollection<TodoList, TodoListBriefRes>(todoLists);
+        return _mapper.MapCollection<TodoListBriefRes>(todoLists);
     }
 }

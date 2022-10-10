@@ -2,6 +2,6 @@
 
 public interface IObjectMapper
 {
-    TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null);
-    IEnumerable<TDest> MapCollection<TSource, TDest>(IEnumerable<TSource> sources, Action<TDest> additionalProperties = null);
+    TDest Map<TDest>(object source, Action<TDest> additionalProperties = null);
+    IEnumerable<TDest> MapCollection<TDest>(IEnumerable<object> sources, Action<TDest> additionalProperties = null);
 }

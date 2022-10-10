@@ -22,7 +22,10 @@ public class RefreshTokenRepository : DatabaseRepository<RefreshToken>, IRefresh
     public async Task<RefreshToken> GetByTokenAsync(string token)
     {
         return await ReadDataAsync(
-            Specification().SetFilter(rt => rt.Token == token).Build(),
+            Specification()
+            .SetFilter(rt => rt.Token == token)
+            .AddInclude(q => q.Include(rt => rt.User))
+            .Build(),
             q => q.SingleOrDefaultAsync()
         );
     }

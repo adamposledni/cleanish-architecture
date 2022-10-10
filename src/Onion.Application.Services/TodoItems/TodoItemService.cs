@@ -35,10 +35,10 @@ public class TodoItemService : ITodoItemService
         Guid userId = _securityContextProvider.GetUserId();
         await ValidateTodoListOwnership(model.TodoListId, userId);
 
-        var newTodoItem = _mapper.Map<TodoItemReq, TodoItem>(model);
+        var newTodoItem = _mapper.Map<TodoItem>(model);
 
         newTodoItem = await _todoItemRepository.CreateAsync(newTodoItem);
-        return _mapper.Map<TodoItem, TodoItemRes>(newTodoItem);
+        return _mapper.Map<TodoItemRes>(newTodoItem);
     }
 
     public async Task<TodoItemRes> GetAsync(Guid todoItemId, Guid todoListId)
@@ -49,7 +49,7 @@ public class TodoItemService : ITodoItemService
         var todoItem = await _todoItemRepository.GetByIdAsync(todoItemId);
         if (todoItem == null) throw new TodoItemNotFoundException();
 
-        return _mapper.Map<TodoItem, TodoItemRes>(todoItem);
+        return _mapper.Map<TodoItemRes>(todoItem);
     }
 
     public async Task<IEnumerable<TodoItemRes>> ListAsync(Guid todoListId)
@@ -58,7 +58,7 @@ public class TodoItemService : ITodoItemService
         await ValidateTodoListOwnership(todoListId, userId);
 
         var todoItems = await _todoItemRepository.ListAsync(todoListId);
-        return _mapper.MapCollection<TodoItem, TodoItemRes>(todoItems);
+        return _mapper.MapCollection<TodoItemRes>(todoItems);
     }
 
     private async Task ValidateTodoListOwnership(Guid todoListId, Guid userId)

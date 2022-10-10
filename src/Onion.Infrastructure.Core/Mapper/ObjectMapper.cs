@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MapsterMapper;
 using Onion.Core.Helpers;
 using Onion.Core.Mapper;
 
@@ -16,20 +16,17 @@ public class ObjectMapper : IObjectMapper
         _mapperAdaptee = mapperAdaptee;
     }
 
-    public TDest Map<TSource, TDest>(TSource source, Action<TDest> additionalProperties = null)
+    public TDest Map<TDest>(object source, Action<TDest> additionalProperties = null)
     {
         Guard.NotNull(source, nameof(source));
 
-        return _mapperAdaptee.Map<TSource, TDest>(source, opts =>
-        {
-            opts.AfterMap((s, d) =>
-            {
-                additionalProperties?.Invoke(d);
-            });
-        });
+        TDest dest = _mapperAdaptee.Map<TDest>(source);
+
+        additionalProperties?.Invoke(dest);
+        return dest;
     }
 
-    public IEnumerable<TDest> MapCollection<TSource, TDest>(IEnumerable<TSource> sources, Action<TDest> additionalProperties = null)
+    public IEnumerable<TDest> MapCollection<TDest>(IEnumerable<object> sources, Action<TDest> additionalProperties = null)
     {
         Guard.NotNull(sources, nameof(sources));
 

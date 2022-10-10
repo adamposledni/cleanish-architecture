@@ -88,7 +88,7 @@ public class AuthService : IAuthService
         if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
 
         refreshTokenEntity = await RevokeRefreshTokenAsync(refreshTokenEntity);
-        return _mapper.Map<RefreshToken, RefreshTokenRes>(refreshTokenEntity);
+        return _mapper.Map<RefreshTokenRes>(refreshTokenEntity);
     }
 
     public async Task<AuthRes> RefreshAccessTokenAsync(RefreshTokenReq model)
@@ -121,7 +121,7 @@ public class AuthService : IAuthService
 
         refreshToken = await _refreshTokenRepository.CreateAsync(refreshToken);
 
-        return _mapper.Map<User, AuthRes>(
+        return _mapper.Map<AuthRes>(
             user,
             a =>
             {

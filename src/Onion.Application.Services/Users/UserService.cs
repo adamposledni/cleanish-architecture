@@ -28,8 +28,7 @@ public class UserService : IUserService
         IPasswordProvider passwordProvider,
         ISecurityContextProvider securityContextProvider,
         IGoogleAuthProvider googleAuthProvider, 
-        IDatabaseRepositoryManager databaseRepositoryManager,
-        Func<CacheStrategy, IUserRepository> userRepositoryFactory)
+        IDatabaseRepositoryManager databaseRepositoryManager)
     {
         _mapper = mapper;
         _passwordProvider = passwordProvider;
@@ -45,13 +44,13 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) throw new UserNotFoundException();
 
-        return _mapper.Map<User, UserRes>(user);
+        return _mapper.Map<UserRes>(user);
     }
 
     public async Task<IEnumerable<UserRes>> ListAsync()
     {
         var users = await _userRepository.ListAsync();
-        return _mapper.MapCollection<User, UserRes>(users);
+        return _mapper.MapCollection< UserRes>(users);
     }
 
     public async Task<UserRes> CreateAsync(UserReq model)
@@ -64,14 +63,14 @@ public class UserService : IUserService
         }
 
         (byte[] hash, byte[] salt) = _passwordProvider.Hash(model.Password);
-        var newUser = _mapper.Map<UserReq, User>(model, u =>
+        var newUser = _mapper.Map<User>(model, u =>
         {
             u.PasswordHash = hash;
             u.PasswordSalt = salt;
         });
         var user = await _userRepository.CreateAsync(newUser);
 
-        return _mapper.Map<User, UserRes>(user);
+        return _mapper.Map<UserRes>(user);
     }
 
     public async Task<UserRes> GoogleLinkAsync(IdTokenAuthReq model)
@@ -93,12 +92,12 @@ public class UserService : IUserService
         user.GoogleSubjectId = googleIdentity.SubjectId;
         await _userRepository.UpdateAsync(user);
 
-        return _mapper.Map<User, UserRes>(user);
+        return _mapper.Map<UserRes>(user);
     }
 
     public async Task<Foo1Res> FooAsync()
     {
         var foo = await _cachedUserRepository.FooAsync();
-        return _mapper.Map<User, Foo1Res>(foo);
+        return _mapper.Map<Foo1Res>(foo, (d) => d.Foo = 1);
     }
 }

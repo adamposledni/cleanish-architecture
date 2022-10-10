@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Onion.Core.Cache;
 using Onion.Core.Clock;
@@ -10,6 +12,7 @@ using Onion.Infrastructure.Core.Mapper;
 using Onion.Infrastructure.Core.Security.Google;
 using Onion.Infrastructure.Core.Security.Jwt;
 using Onion.Infrastructure.Core.Security.Password;
+using System.Reflection;
 
 namespace Onion.Infrastructure.Core;
 
@@ -20,11 +23,14 @@ public static class CoreLayer
 
     public static void Compose(IServiceCollection services, IConfiguration configuration)
     {
-        // TODO: mapster
-        services.AddAutoMapper(MapperProfile.Configure);
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
+
         services.AddScoped<IObjectMapper, ObjectMapper>();
 
-        services.AddHttpClient();
+        //services.AddHttpClient();
 
         // TODO: cache size
         services.AddMemoryCache();
