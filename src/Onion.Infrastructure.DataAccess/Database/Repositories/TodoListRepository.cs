@@ -31,9 +31,10 @@ public class TodoListRepository : DatabaseRepository<TodoList>, ITodoListReposit
         );
     }
 
-    public async Task<IEnumerable<TodoList>> ListAsync()
+    public async Task<IEnumerable<TodoList>> ListAsync(Guid userId)
     {
         return await ReadDataAsync(
+            Specification().SetFilter(tl => tl.UserId == userId).Build(),
             q => q.ToListAsync()
         );
     }

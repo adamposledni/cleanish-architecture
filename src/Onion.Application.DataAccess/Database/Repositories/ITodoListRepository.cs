@@ -6,6 +6,6 @@ public interface ITodoListRepository : IDatabaseRepository<TodoList>
 {
 
     Task<TodoList> GetByIdAsync(Guid todoListId);
-    Task<IEnumerable<TodoList>> ListAsync();
+    Task<IEnumerable<TodoList>> ListAsync(Guid userId);
     Task<bool> AnyWithIdAndUserIdAsync(Guid todoListId, Guid userId);
 }

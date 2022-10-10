@@ -10,9 +10,8 @@ using Onion.Core.Extensions;
 
 namespace Onion.Infrastructure.DataAccess.Database.Repositories;
 
-// TODO: test cache key
 // TODO: pagination
-public class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
+public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
 {
     private readonly SqlDbContext _dbContext;
     private readonly ICacheService _cacheService;
@@ -54,7 +53,7 @@ public class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TE
         Guard.NotNull(entityToDelete, nameof(entityToDelete));
 
         TEntity deletedEntity = _dbSet.Remove(entityToDelete).Entity;
-        await _dbContext.SaveChangesAsync();
+        await CommitIfTrueAsync(commitAfter);
         return deletedEntity;
     }
 

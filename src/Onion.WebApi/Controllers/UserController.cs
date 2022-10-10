@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Onion.Application.Services.Users;
 using Onion.Application.Services.Users.Models;
 using Onion.WebApi.Atributes;
-using Onion.WebApi.Models;
 
 namespace Onion.WebApi.Controllers;
 
@@ -12,6 +11,9 @@ namespace Onion.WebApi.Controllers;
 [ProducesErrorResponse(500)]
 [Produces("application/json")]
 [ApiRoute("users")]
+
+// TODO: presentation contracts vs. business contracts
+// TODO: mediator - auth, validation
 public class UserController : BaseController
 {
     private readonly IUserService _userService;

@@ -27,7 +27,7 @@ public class TodoListController : BaseController
     [ProducesResponseType(200)]
     [ProducesErrorResponse(404)]
     [HttpGet("{todoListId}")]
-    public async Task<ActionResult<TodoListRes>> Get([FromRoute] Guid todoListId)
+    public async Task<ActionResult<TodoListRes>> Get(Guid todoListId)
     {
         return StatusCode(200, await _todoListService.GetAsync(todoListId));
     }
@@ -41,7 +41,7 @@ public class TodoListController : BaseController
 
     [ProducesResponseType(201)]
     [HttpPost]
-    public async Task<ActionResult<TodoListRes>> Create([FromBody] TodoListReq body)
+    public async Task<ActionResult<TodoListRes>> Create(TodoListReq body)
     {
         return StatusCode(201, await _todoListService.CreateAsync(body));
     }
@@ -49,21 +49,21 @@ public class TodoListController : BaseController
     [ProducesResponseType(200)]
     [ProducesErrorResponse(404)]
     [HttpGet("{todoListId}/items/{todoItemId}")]
-    public async Task<ActionResult<TodoListRes>> GetTodoItem([FromRoute] Guid todoListId, [FromRoute] Guid todoItemId)
+    public async Task<ActionResult<TodoListRes>> GetTodoItem(Guid todoListId, Guid todoItemId)
     {
         return StatusCode(200, await _todoItemService.GetAsync(todoItemId, todoListId));
     }
 
     [ProducesResponseType(200)]
     [HttpGet("{todoListId}/items")]
-    public async Task<ActionResult<IEnumerable<TodoListBriefRes>>> ListTodoItems([FromRoute] Guid todoListId)
+    public async Task<ActionResult<IEnumerable<TodoListBriefRes>>> ListTodoItems(Guid todoListId)
     {
         return StatusCode(200, await _todoItemService.ListAsync(todoListId));
     }
 
     [ProducesResponseType(201)]
     [HttpPost("{todoListId}/items")]
-    public async Task<ActionResult<TodoListRes>> CreateTodoItem([FromRoute] Guid todoListId, [FromBody] TodoItemReq body)
+    public async Task<ActionResult<TodoListRes>> CreateTodoItem(Guid todoListId, TodoItemReq body)
     {
         return StatusCode(201, await _todoItemService.CreateAsync(body));
     }

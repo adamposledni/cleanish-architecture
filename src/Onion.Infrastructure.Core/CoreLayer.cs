@@ -20,23 +20,24 @@ public static class CoreLayer
 
     public static void Compose(IServiceCollection services, IConfiguration configuration)
     {
+        // TODO: mapster
         services.AddAutoMapper(MapperProfile.Configure);
-        services.AddTransient<IObjectMapper, ObjectMapper>();
+        services.AddScoped<IObjectMapper, ObjectMapper>();
 
         services.AddHttpClient();
 
         // TODO: cache size
         services.AddMemoryCache();
-        services.AddTransient<ICacheService, CacheService>();
+        services.AddScoped<ICacheService, CacheService>();
 
         services.Configure<TokenProviderSettings>(configuration.GetSection(TOKEN_PROVIDER_SETTINGS));
-        services.AddTransient<ITokenProvider, TokenProvider>();
+        services.AddScoped<ITokenProvider, TokenProvider>();
         
-        services.AddTransient<IClockProvider, ClockProvider>();
+        services.AddScoped<IClockProvider, ClockProvider>();
         
-        services.AddTransient<IPasswordProvider, PasswordProvider>();
+        services.AddScoped<IPasswordProvider, PasswordProvider>();
 
         services.Configure<GoogleAuthSettings>(configuration.GetSection(GOOGLE_AUTH_SETTINGS));
-        services.AddTransient<IGoogleAuthProvider, GoogleAuthProvider>();
+        services.AddScoped<IGoogleAuthProvider, GoogleAuthProvider>();
     }
 }

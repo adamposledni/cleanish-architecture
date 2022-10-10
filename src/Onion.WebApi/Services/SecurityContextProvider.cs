@@ -2,6 +2,7 @@
 using Onion.Application.Services;
 using Onion.Application.Services.Security;
 using Onion.Application.Services.Security.Models;
+using Onion.Core.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Onion.WebApi.Services;
@@ -32,5 +33,13 @@ public class SecurityContextProvider : ISecurityContextProvider
             return new SecurityContext(subjectId, SecurityContextType.User);
         }
         return null;
+    }
+
+    public Guid GetUserId()
+    {
+        if (SecurityContext == null || SecurityContext.Type != SecurityContextType.User)
+            throw new UnauthorizedException();
+
+        return SecurityContext.SubjectId;
     }
 }

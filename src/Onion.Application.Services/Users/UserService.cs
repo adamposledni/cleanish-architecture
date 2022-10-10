@@ -20,23 +20,26 @@ public class UserService : IUserService
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly IGoogleAuthProvider _googleAuthProvider;
     private readonly IDatabaseRepositoryManager _databaseRepositoryManager;
-    
+    private readonly Func<CacheStrategy, IUserRepository> _userRepositoryFactory;
     private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _cachedUserRepository;
 
     public UserService(
         IObjectMapper mapper,
         IPasswordProvider passwordProvider,
         ISecurityContextProvider securityContextProvider,
         IGoogleAuthProvider googleAuthProvider, 
-        IDatabaseRepositoryManager databaseRepositoryManager)
+        IDatabaseRepositoryManager databaseRepositoryManager,
+        Func<CacheStrategy, IUserRepository> userRepositoryFactory)
     {
         _mapper = mapper;
         _passwordProvider = passwordProvider;
         _securityContextProvider = securityContextProvider;
         _googleAuthProvider = googleAuthProvider;
         _databaseRepositoryManager = databaseRepositoryManager;
-
+        _userRepositoryFactory = userRepositoryFactory;
         _userRepository = _databaseRepositoryManager.GetRepository<IUserRepository, User>(CacheStrategy.Bypass);
+        _cachedUserRepository = _databaseRepositoryManager.GetRepository<IUserRepository, User>(CacheStrategy.Use);
     }
 
     public async Task<UserRes> GetAsync(Guid userId)
@@ -85,8 +88,7 @@ public class UserService : IUserService
         if (googleIdentity == null) throw new InvalidGoogleIdTokenException();
 
         var user = await _userRepository.GetByIdAsync(securityContext.SubjectId);
-        // TODO: maybe guard clause ???
-        if (user == null) throw new UserNotFoundException();
+        Guard.NotNull(user, nameof(user));
 
         if (!string.IsNullOrWhiteSpace(user.GoogleSubjectId)) throw new GoogleLinkAlreadyExistsException();
 
@@ -98,7 +100,8 @@ public class UserService : IUserService
 
     public async Task<Foo1Res> FooAsync()
     {
-        var foo = await _userRepository.FooAsync();
+        var repo = _userRepositoryFactory(CacheStrategy.Bypass);
+        var foo = await repo.FooAsync();
         return _mapper.Map<User, Foo1Res>(foo);
     }
 }

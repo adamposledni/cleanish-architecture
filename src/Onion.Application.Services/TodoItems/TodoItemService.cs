@@ -32,13 +32,8 @@ public class TodoItemService : ITodoItemService
     {
         Guard.NotNull(model, nameof(model));
 
-        // TODO: DRY it
-        var securityContext = _securityContextProvider.SecurityContext;
-        if (securityContext == null || securityContext.Type != SecurityContextType.User)
-            throw new UnauthorizedException();
-
-        bool todoListBelongsToUser = await TodoListBelongsToUserAsync(model.TodoListId, securityContext.SubjectId);
-        if (!todoListBelongsToUser) throw new ForbiddenException();
+        Guid userId = _securityContextProvider.GetUserId();
+        await ValidateTodoListOwnership(model.TodoListId, userId);
 
         var newTodoItem = _mapper.Map<TodoItemReq, TodoItem>(model);
 
@@ -48,12 +43,8 @@ public class TodoItemService : ITodoItemService
 
     public async Task<TodoItemRes> GetAsync(Guid todoItemId, Guid todoListId)
     {
-        var securityContext = _securityContextProvider.SecurityContext;
-        if (securityContext == null || securityContext.Type != SecurityContextType.User)
-            throw new UnauthorizedException();
-
-        bool todoListBelongsToUser = await TodoListBelongsToUserAsync(todoListId, securityContext.SubjectId);
-        if (!todoListBelongsToUser) throw new ForbiddenException();
+        Guid userId = _securityContextProvider.GetUserId();
+        await ValidateTodoListOwnership(todoListId, userId);
 
         var todoItem = await _todoItemRepository.GetByIdAsync(todoItemId);
         if (todoItem == null) throw new TodoItemNotFoundException();
@@ -63,19 +54,16 @@ public class TodoItemService : ITodoItemService
 
     public async Task<IEnumerable<TodoItemRes>> ListAsync(Guid todoListId)
     {
-        var securityContext = _securityContextProvider.SecurityContext;
-        if (securityContext == null || securityContext.Type != SecurityContextType.User)
-            throw new UnauthorizedException();
-
-        bool todoListBelongsToUser = await TodoListBelongsToUserAsync(todoListId, securityContext.SubjectId);
-        if (!todoListBelongsToUser) throw new ForbiddenException();
+        Guid userId = _securityContextProvider.GetUserId();
+        await ValidateTodoListOwnership(todoListId, userId);
 
         var todoItems = await _todoItemRepository.ListAsync(todoListId);
         return _mapper.MapCollection<TodoItem, TodoItemRes>(todoItems);
     }
 
-    private async Task<bool> TodoListBelongsToUserAsync(Guid todoListId, Guid userId)
+    private async Task ValidateTodoListOwnership(Guid todoListId, Guid userId)
     {
-        return await _todoListRepository.AnyWithIdAndUserIdAsync(todoListId, userId);
+        bool todoListBelongsToUser = await _todoListRepository.AnyWithIdAndUserIdAsync(todoListId, userId);
+        if (!todoListBelongsToUser) throw new ForbiddenException();
     }
 }

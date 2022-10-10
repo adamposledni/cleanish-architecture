@@ -29,11 +29,8 @@ public class TodoListService : ITodoListService
     {
         Guard.NotNull(model, nameof(model));
 
-        var securityContext = _securityContextProvider.SecurityContext;
-        if (securityContext == null || securityContext.Type != SecurityContextType.User)
-            throw new UnauthorizedException();
-
-        var newTodoList = _mapper.Map<TodoListReq, TodoList>(model, tl => tl.UserId = securityContext.SubjectId);
+        var userId = _securityContextProvider.GetUserId();
+        var newTodoList = _mapper.Map<TodoListReq, TodoList>(model, tl => tl.UserId = userId);
         newTodoList = await _todoListRepository.CreateAsync(newTodoList);
 
         return _mapper.Map<TodoList, TodoListRes>(newTodoList);
@@ -41,27 +38,18 @@ public class TodoListService : ITodoListService
 
     public async Task<TodoListRes> GetAsync(Guid todoListId)
     {
-        var securityContext = _securityContextProvider.SecurityContext;
-        if (securityContext == null || securityContext.Type != SecurityContextType.User)
-            throw new UnauthorizedException();
-
-        bool todoListBelongsToUser = await TodoListBelongsToUserAsync(todoListId, securityContext.SubjectId);
-        if (!todoListBelongsToUser) throw new ForbiddenException();
-
+        var userId = _securityContextProvider.GetUserId();
         var todoList = await _todoListRepository.GetByIdAsync(todoListId);
         if (todoList == null) throw new TodoListNotFoundException();
+        if (todoList.UserId != userId) throw new ForbiddenException();
 
         return _mapper.Map<TodoList, TodoListRes>(todoList);
     }
 
     public async Task<IEnumerable<TodoListBriefRes>> ListAsync()
     {
-        var todoLists = await _todoListRepository.ListAsync();
+        var userId = _securityContextProvider.GetUserId();
+        var todoLists = await _todoListRepository.ListAsync(userId);
         return _mapper.MapCollection<TodoList, TodoListBriefRes>(todoLists);
-    }
-
-    private async Task<bool> TodoListBelongsToUserAsync(Guid listId, Guid userId)
-    {
-        return await _todoListRepository.AnyWithIdAndUserIdAsync(listId, userId);
     }
 }

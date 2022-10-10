@@ -7,6 +7,7 @@ public class TodoItemReq
 {
     [Required]
     public string Title { get; set; }
+
     [Required]
     public Guid TodoListId { get; set; }
 }
