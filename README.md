@@ -6,7 +6,34 @@
 **TODOS**
 - merge Infrastructure.DataAccess a Infrastructure.Core
 - layers
-    - presentation
-    - infrastructure (interface implementations)
-    - application (business logic services, use cases, DTOs)
-    - dataAccess (entities, repository interfaces, localization)
+    - Presentation
+        - Onion.Pres.WebApi
+            - Controllers
+            - Middlewares
+            - Models
+            - Exceptions
+    - Job
+        - Onion.Job.Common
+        - Onion.Job.DailyNotifications
+    - Application
+        - Onion.App.Logic   
+            - UseCases
+            - Models
+            - Validations
+            - Exceptions
+        - Onion.App.Data
+            - Cache
+            - OAuth,Password,Token providers
+            - Localization
+            - Repositories
+            - Entities
+    - Shared
+        - Onion.Shared
+            - Clock
+            - Extensions
+            - Helpers
+            - Structures
+            - Exceptions
+    - Implementation
+        - Onion.Impl.App.Data   
+        - Onion.Impl.Shared
