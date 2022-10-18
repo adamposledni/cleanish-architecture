@@ -6,7 +6,6 @@ using Onion.Shared.Exceptions;
 
 namespace Onion.Pres.WebApi.Controllers;
 
-// TODO: presentation contracts vs. business contracts
 [ApiController]
 [ProducesErrorResponse(400)]
 [ProducesErrorResponse(401)]
