@@ -1,8 +1,6 @@
-﻿using FluentValidation;
-using MediatR;
-using Onion.App.Data.Database.Repositories;
+﻿using MediatR;
 using Onion.App.Logic.Common.Attributes;
-using Onion.App.Logic.Security;
+using Onion.App.Logic.Common.Security;
 using Onion.Shared.Exceptions;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +8,7 @@ using System.Threading;
 
 namespace Onion.App.Logic.Common.Mediator.Behaviors;
 
-public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
 

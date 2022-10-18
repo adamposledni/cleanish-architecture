@@ -1,6 +1,6 @@
 ﻿namespace Onion.Impl.App.Data.Security.Google;
 
-public class GoogleAuthSettings
+internal class GoogleAuthSettings
 {
     public const string CONFIG_KEY = "GoogleAuth";
 

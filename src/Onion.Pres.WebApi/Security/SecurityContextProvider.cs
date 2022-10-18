@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Onion.App.Logic;
-using Onion.App.Logic.Security;
-using Onion.App.Logic.Security.Models;
-using Onion.Shared.Exceptions;
+using Onion.App.Logic.Common.Security;
+using Onion.Shared.Helpers;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Onion.Pres.WebApi.Services;
+namespace Onion.Pres.WebApi.Security;
 
 public class SecurityContextProvider : ISecurityContextProvider
 {
@@ -27,12 +25,16 @@ public class SecurityContextProvider : ISecurityContextProvider
         var claims = _httpContextAccessor.HttpContext?.User?.Claims;
         if (claims == null || !claims.Any()) return null;
 
-        string sub = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+        var sub = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
 
-        if (!string.IsNullOrWhiteSpace(sub) && Guid.TryParse(sub, out Guid subjectId))
-        {
+        if (!string.IsNullOrWhiteSpace(sub) && Guid.TryParse(sub, out var subjectId))
             return new SecurityContext(subjectId);
-        }
         return null;
+    }
+
+    public Guid GetSubjectId()
+    {
+        Guard.NotNull(SecurityContext, nameof(SecurityContext));
+        return SecurityContext.SubjectId;
     }
 }

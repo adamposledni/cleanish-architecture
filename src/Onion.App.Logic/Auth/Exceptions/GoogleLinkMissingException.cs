@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.Auth.Exceptions;
 
-public class GoogleLinkMissingException : BadLogicException
+internal class GoogleLinkMissingException : BadLogicException
 {
     public GoogleLinkMissingException() : base("GoogleLinkMissing")
     {

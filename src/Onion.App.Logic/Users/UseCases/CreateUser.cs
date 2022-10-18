@@ -30,7 +30,7 @@ internal class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, Use
     private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;
     private readonly IObjectMapper _mapper;
-     
+
     public CreateUserRequestHandler(IUserRepository userRepository, ICryptographyService passwordProvider, IObjectMapper mapper)
     {
         _userRepository = userRepository;

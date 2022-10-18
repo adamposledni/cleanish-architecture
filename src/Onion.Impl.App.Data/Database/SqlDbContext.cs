@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Onion.Impl.App.Data.Database;
 
-public class SqlDbContext : DbContext
+internal class SqlDbContext : DbContext
 {
     private readonly IClockProvider _clockProvider;
 

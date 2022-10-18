@@ -4,7 +4,7 @@ using Onion.App.Data.Database.Repositories;
 using Onion.App.Data.Security;
 using Onion.App.Logic.Auth.Exceptions;
 using Onion.App.Logic.Common.Attributes;
-using Onion.App.Logic.Security;
+using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.Users.Models;
 using Onion.Shared.Helpers;
 using Onion.Shared.Mapper;
@@ -18,7 +18,7 @@ public class CreateGoogleLinkRequest : IRequest<UserRes>
     public string IdToken { get; set; }
 }
 
-internal class CreateGoogleLinkRequestValidator: AbstractValidator<CreateGoogleLinkRequest>
+internal class CreateGoogleLinkRequestValidator : AbstractValidator<CreateGoogleLinkRequest>
 {
     public CreateGoogleLinkRequestValidator()
     {
@@ -34,8 +34,8 @@ internal class CreateGoogleLinkRequestHandler : IRequestHandler<CreateGoogleLink
     private readonly IGoogleAuthProvider _googleAuthProvider;
 
     public CreateGoogleLinkRequestHandler(
-        IUserRepository userRepository, 
-        IObjectMapper mapper, 
+        IUserRepository userRepository,
+        IObjectMapper mapper,
         ISecurityContextProvider securityContextProvider,
         IGoogleAuthProvider googleAuthProvider)
     {

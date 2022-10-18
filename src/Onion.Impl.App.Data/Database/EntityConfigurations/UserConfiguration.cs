@@ -4,7 +4,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Database.EntityConfigurations;
 
-public class UserConfiguration : BaseEntityConfiguration<User>
+internal class UserConfiguration : BaseEntityConfiguration<User>
 {
     public override void Configure(EntityTypeBuilder<User> builder)
     {

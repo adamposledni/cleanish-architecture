@@ -1,15 +1,4 @@
-﻿using Moq;
-using Onion.App.Data.Cache;
-using Onion.App.Data.Database;
-using Onion.App.Data.Database.Entities;
-using Onion.App.Data.Database.Repositories;
-using Onion.App.Data.Security;
-using Onion.App.Logic.Security;
-using Onion.App.Logic.Users;
-using Onion.App.Logic.Users.Models;
-using Onion.Shared.Mapper;
-
-namespace Onion.App.Logic.Test.Users;
+﻿namespace Onion.App.Logic.Test.Users;
 
 // TODO: Unit tests
 // TODO: Integ tests
@@ -17,7 +6,7 @@ public class UserServiceTest
 {
     public UserServiceTest()
     {
-        
+
     }
 
     [Fact]

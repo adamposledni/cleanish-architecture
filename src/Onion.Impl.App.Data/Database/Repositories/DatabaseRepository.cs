@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace Onion.Impl.App.Data.Database.Repositories;
 
-public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
+internal abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
 {
     private readonly SqlDbContext _dbContext;
     private readonly ICacheService _cacheService;
@@ -61,8 +61,8 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
     protected SpecificationBuilder<TEntity> Specification() => new();
 
     protected async Task<PaginableList<TEntity>> ReadPaginatedData(
-        ISpecification<TEntity> specification, 
-        int pageSize, 
+        ISpecification<TEntity> specification,
+        int pageSize,
         int page,
         [CallerMemberName] string callerMethodName = "")
     {
@@ -84,15 +84,15 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
 
     protected async Task<TResult> ReadDataAsync<TResult>(
         ISpecification<TEntity> specification,
-        Func<IQueryable<TEntity>, Task<TResult>> queryOperation, 
+        Func<IQueryable<TEntity>, Task<TResult>> queryOperation,
         [CallerMemberName] string callerMethodName = "")
     {
         return await ReadDataAsync(specification, queryOperation, CacheStrategy, callerMethodName);
     }
 
     private async Task<TResult> ReadDataAsync<TResult>(
-        ISpecification<TEntity> specification, 
-        Func<IQueryable<TEntity>, Task<TResult>> queryOperation, 
+        ISpecification<TEntity> specification,
+        Func<IQueryable<TEntity>, Task<TResult>> queryOperation,
         CacheStrategy cacheStrategy,
         [CallerMemberName] string callerMethodName = "")
     {

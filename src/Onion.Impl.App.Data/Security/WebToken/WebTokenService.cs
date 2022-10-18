@@ -5,11 +5,10 @@ using Onion.Shared.Clock;
 using Onion.Shared.Helpers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace Onion.Impl.App.Data.Security.WebToken;
 
-public class WebTokenService : IWebTokenService
+internal class WebTokenService : IWebTokenService
 {
     private readonly WebTokenSettings _tokenSettings;
     private readonly IClockProvider _clockProvider;

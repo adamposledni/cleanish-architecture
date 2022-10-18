@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Onion.App.Data.Cache;
 using Onion.App.Data.Database.Repositories;
 using Onion.App.Logic.Common.Attributes;

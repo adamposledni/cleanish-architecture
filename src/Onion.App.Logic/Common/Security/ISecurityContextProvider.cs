@@ -1,8 +1,8 @@
-﻿using Onion.App.Logic.Security.Models;
-
-namespace Onion.App.Logic.Security;
+﻿namespace Onion.App.Logic.Common.Security;
 
 public interface ISecurityContextProvider
 {
     SecurityContext SecurityContext { get; }
+
+    Guid GetSubjectId();
 }

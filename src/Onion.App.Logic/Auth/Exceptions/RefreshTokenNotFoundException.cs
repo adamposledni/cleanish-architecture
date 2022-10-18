@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.Auth.Exceptions;
 
-public class RefreshTokenNotFoundException : NotFoundException
+internal class RefreshTokenNotFoundException : NotFoundException
 {
     public RefreshTokenNotFoundException() : base("RefreshTokenNotFound")
     {

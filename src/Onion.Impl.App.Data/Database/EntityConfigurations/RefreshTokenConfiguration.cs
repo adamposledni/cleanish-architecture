@@ -4,7 +4,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Database.EntityConfigurations;
 
-public class RefreshTokenConfiguration : BaseEntityConfiguration<RefreshToken>
+internal class RefreshTokenConfiguration : BaseEntityConfiguration<RefreshToken>
 {
     public override void Configure(EntityTypeBuilder<RefreshToken> builder)
     {

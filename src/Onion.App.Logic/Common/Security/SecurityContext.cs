@@ -1,6 +1,6 @@
 ﻿using Onion.App.Data.Database.Entities.Fields;
 
-namespace Onion.App.Logic.Security.Models;
+namespace Onion.App.Logic.Common.Security;
 
 public class SecurityContext
 {

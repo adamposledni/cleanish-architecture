@@ -1,20 +1,23 @@
 ﻿using Onion.App.Data.Database.Entities;
 using Onion.App.Data.Database.Repositories;
 using Onion.App.Data.Security;
+using Onion.App.Logic.Auth.Models;
 using Onion.Shared.Clock;
+using Onion.Shared.Mapper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Onion.App.Logic.Auth;
 
-public static class AuthCommonLogic
+internal static class AuthCommonLogic
 {
-    public async static Task<(string accessToken, string refreshToken)> IssueAccessAsync(
-        User user, 
-        IClockProvider clockProvider,
+    public async static Task<AuthRes> IssueAccessAsync(
         IRefreshTokenRepository refreshTokenRepository,
         IWebTokenService tokenProvider,
         ICryptographyService cryptographyService,
+        IClockProvider clockProvider,
+        IObjectMapper mapper,
+        User user,
         int accessTokenLifetime,
         int refreshTokenLifetime)
     {
@@ -23,7 +26,12 @@ public static class AuthCommonLogic
 
         refreshToken = await refreshTokenRepository.CreateAsync(refreshToken);
 
-        return (accessToken, refreshToken.Token);
+        return mapper.Map<AuthRes>(user,
+            a =>
+            {
+                a.AccessToken = accessToken;
+                a.RefreshToken = refreshToken.Token;
+            });
     }
 
     private static string GenerateAccessToken(IWebTokenService webTokenService, User user, int tokenLifetime)
@@ -38,10 +46,10 @@ public static class AuthCommonLogic
     }
 
     private static RefreshToken GenerateRefeshToken(
-        IWebTokenService tokenProvider, 
+        IWebTokenService tokenProvider,
         ICryptographyService cryptographyService,
-        IClockProvider clockProvider, 
-        User user, 
+        IClockProvider clockProvider,
+        User user,
         int refreshTokenLifetime)
     {
         return new RefreshToken(

@@ -26,7 +26,7 @@ public static class DependencyInjection
             .AddTransient<ICacheService, CacheService>();
 
         services.AddDbContext<SqlDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("Sql")));
-        
+
         services
             .AddDatabaseRepository<IUserRepository, UserRepository>()
             .AddDatabaseRepository<IUserRepository, UserRepository>()
@@ -47,12 +47,12 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddDatabaseRepository<TService, TImplementation>(this IServiceCollection services) where TImplementation : TService where TService: ICachable
+    private static IServiceCollection AddDatabaseRepository<TService, TImplementation>(this IServiceCollection services) where TImplementation : TService where TService : ICachable
     {
         services.AddTransient(typeof(TService), sp =>
         {
             return Activator.CreateInstance(
-                typeof(TImplementation), 
+                typeof(TImplementation),
                 sp.GetRequiredService<SqlDbContext>(),
                 sp.GetRequiredService<ICacheService>(),
                 CacheStrategy.Bypass);
@@ -69,5 +69,5 @@ public static class DependencyInjection
         });
 
         return services;
-    } 
+    }
 }

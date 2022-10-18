@@ -12,41 +12,37 @@ using System.Threading;
 
 namespace Onion.App.Logic.Auth.UseCases;
 
-public class UserBasicLoginRequest : IRequest<AuthRes>
+public class UserGoogleLoginRequest : IRequest<AuthRes>
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string IdToken { get; set; }
 }
 
-internal class UserBasicLoginRequestValidator : AbstractValidator<UserBasicLoginRequest>
+internal class UserGoogleLoginRequestValidator : AbstractValidator<UserGoogleLoginRequest>
 {
-    public UserBasicLoginRequestValidator()
+    public UserGoogleLoginRequestValidator()
     {
-        RuleFor(x => x.Email)
-            .NotEmpty()
-            .EmailAddress();
-        RuleFor(x => x.Password)
-            .MinimumLength(5)
-            .NotEmpty();
+        RuleFor(x => x.IdToken).NotEmpty();
     }
 }
 
-internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, AuthRes>
+internal class UserGoogleLoginHandler : IRequestHandler<UserGoogleLoginRequest, AuthRes>
 {
     private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;
     private readonly IClockProvider _clockProvider;
     private readonly IWebTokenService _webTokenService;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IGoogleAuthProvider _googleAuthProvider;
     private readonly ApplicationSettings _applicationSettings;
     private readonly IObjectMapper _mapper;
 
-    public UserBasicLoginHandler(
+    public UserGoogleLoginHandler(
         IUserRepository userRepository,
         ICryptographyService cryptographyService,
         IClockProvider clockProvider,
         IWebTokenService webTokenService,
         IRefreshTokenRepository refreshTokenRepository,
+        IGoogleAuthProvider googleAuthProvider,
         IOptions<ApplicationSettings> applicationSettings,
         IObjectMapper mapper)
     {
@@ -55,17 +51,18 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
         _clockProvider = clockProvider;
         _webTokenService = webTokenService;
         _refreshTokenRepository = refreshTokenRepository;
+        _googleAuthProvider = googleAuthProvider;
         _applicationSettings = applicationSettings.Value;
         _mapper = mapper;
     }
 
-    public async Task<AuthRes> Handle(UserBasicLoginRequest request, CancellationToken cancellationToken)
+    public async Task<AuthRes> Handle(UserGoogleLoginRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email);
-        if (user == null || !_cryptographyService.VerifyStringHash(request.Password, user.PasswordHash, user.PasswordSalt))
-        {
-            throw new InvalidEmailPasswordException();
-        }
+        var googleIdentity = await _googleAuthProvider.GetIdentityAsync(request.IdToken);
+        if (googleIdentity == null) throw new InvalidGoogleIdTokenException();
+
+        var user = await _userRepository.GetByGoogleIdAsync(googleIdentity.SubjectId);
+        if (user == null) throw new GoogleLinkMissingException();
 
         return await AuthCommonLogic.IssueAccessAsync(
             _refreshTokenRepository,

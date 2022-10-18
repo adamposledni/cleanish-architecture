@@ -12,7 +12,7 @@ public class FooRequest : IRequest<Foo1Res>
 {
 }
 
-internal class FooRequestValidator: AbstractValidator<FooRequest>
+internal class FooRequestValidator : AbstractValidator<FooRequest>
 {
 }
 

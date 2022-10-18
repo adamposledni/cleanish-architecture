@@ -12,28 +12,21 @@ using System.Threading;
 
 namespace Onion.App.Logic.Auth.UseCases;
 
-public class UserBasicLoginRequest : IRequest<AuthRes>
+public class RefreshAccessTokenRequest : IRequest<AuthRes>
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string RefreshToken { get; set; }
 }
 
-internal class UserBasicLoginRequestValidator : AbstractValidator<UserBasicLoginRequest>
+internal class RefreshAccessTokenRequestValidator : AbstractValidator<RefreshAccessTokenRequest>
 {
-    public UserBasicLoginRequestValidator()
+    public RefreshAccessTokenRequestValidator()
     {
-        RuleFor(x => x.Email)
-            .NotEmpty()
-            .EmailAddress();
-        RuleFor(x => x.Password)
-            .MinimumLength(5)
-            .NotEmpty();
+        RuleFor(x => x.RefreshToken).NotEmpty();
     }
 }
 
-internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, AuthRes>
+internal class RefreshAccessTokenHandler : IRequestHandler<RefreshAccessTokenRequest, AuthRes>
 {
-    private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;
     private readonly IClockProvider _clockProvider;
     private readonly IWebTokenService _webTokenService;
@@ -41,8 +34,7 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
     private readonly ApplicationSettings _applicationSettings;
     private readonly IObjectMapper _mapper;
 
-    public UserBasicLoginHandler(
-        IUserRepository userRepository,
+    public RefreshAccessTokenHandler(
         ICryptographyService cryptographyService,
         IClockProvider clockProvider,
         IWebTokenService webTokenService,
@@ -50,7 +42,6 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
         IOptions<ApplicationSettings> applicationSettings,
         IObjectMapper mapper)
     {
-        _userRepository = userRepository;
         _cryptographyService = cryptographyService;
         _clockProvider = clockProvider;
         _webTokenService = webTokenService;
@@ -59,13 +50,13 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
         _mapper = mapper;
     }
 
-    public async Task<AuthRes> Handle(UserBasicLoginRequest request, CancellationToken cancellationToken)
+    public async Task<AuthRes> Handle(RefreshAccessTokenRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email);
-        if (user == null || !_cryptographyService.VerifyStringHash(request.Password, user.PasswordHash, user.PasswordSalt))
-        {
-            throw new InvalidEmailPasswordException();
-        }
+        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAsync(request.RefreshToken);
+
+        if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
+        if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
+        if (refreshTokenEntity.IsRevoked) throw new RefreshTokenAlreadyRevokedException();
 
         return await AuthCommonLogic.IssueAccessAsync(
             _refreshTokenRepository,
@@ -73,7 +64,7 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
             _cryptographyService,
             _clockProvider,
             _mapper,
-            user,
+            refreshTokenEntity.User,
             _applicationSettings.AccessTokenLifetime,
             _applicationSettings.RefreshTokenLifetime);
     }
