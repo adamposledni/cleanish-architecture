@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Onion.Impl.App.Data.Database.Specifications;
 
-internal class SpecificationBuilder<T> where T : BaseEntity
+public class SpecificationBuilder<T> where T : BaseEntity
 {
     private readonly ISpecification<T> _specification = new Specification<T>();
 

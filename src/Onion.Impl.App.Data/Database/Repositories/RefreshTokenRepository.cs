@@ -5,7 +5,7 @@ using Onion.App.Data.Database.Repositories;
 
 namespace Onion.Impl.App.Data.Database.Repositories;
 
-internal class RefreshTokenRepository : DatabaseRepository<RefreshToken>, IRefreshTokenRepository
+public class RefreshTokenRepository : DatabaseRepository<RefreshToken>, IRefreshTokenRepository
 {
     public RefreshTokenRepository(SqlDbContext dbContext, ICacheService cacheService, CacheStrategy cacheStrategy)
     : base(dbContext, cacheService, cacheStrategy)

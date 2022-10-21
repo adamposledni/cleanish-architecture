@@ -6,7 +6,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Database.Repositories;
 
-internal class UserRepository : DatabaseRepository<User>, IUserRepository
+public class UserRepository : DatabaseRepository<User>, IUserRepository
 {
     public UserRepository(SqlDbContext dbContext, ICacheService cacheService, CacheStrategy cacheStrategy)
         : base(dbContext, cacheService, cacheStrategy)

@@ -26,7 +26,7 @@ internal class CreateGoogleLinkRequestValidator : AbstractValidator<CreateGoogle
     }
 }
 
-internal class CreateGoogleLinkRequestHandler : IRequestHandler<CreateGoogleLinkRequest, UserRes>
+public class CreateGoogleLinkRequestHandler : IRequestHandler<CreateGoogleLinkRequest, UserRes>
 {
     private readonly IUserRepository _userRepository;
     private readonly IObjectMapper _mapper;

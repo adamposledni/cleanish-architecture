@@ -1,7 +1,11 @@
-﻿namespace Onion.App.Logic.Test.Users;
+﻿using Moq;
+using Onion.App.Data.Database.Entities;
+using Onion.App.Logic.Users.Models;
+using Onion.Shared.Mapper;
+
+namespace Onion.App.Logic.Test.Users;
 
 // TODO: Unit tests
-// TODO: Integ tests
 public class UserServiceTest
 {
     public UserServiceTest()
@@ -10,12 +14,13 @@ public class UserServiceTest
     }
 
     [Fact]
-    public async Task Test1()
+    public async Task GetById_Found()
     {
         //// Arrange
 
         //var mockMapper = new Mock<IObjectMapper>();
-        //mockMapper.Setup(m => m.Map<UserRes>(It.IsAny<User>())).Returns<User>(user => {
+        //mockMapper.Setup(m => m.Map<UserRes>(It.IsAny<User>())).Returns<User>(user =>
+        //{
         //    if (user == null) return null;
         //    return new UserRes();
         //});
@@ -33,9 +38,9 @@ public class UserServiceTest
         //    .Setup(m => m.GetRepository<IUserRepository, User>(It.IsAny<CacheStrategy>())).Returns(mockUserRepository.Object);
 
         //IUserService userService = new UserService(
-        //    mockMapper.Object, 
-        //    mockPasswordProvider.Object, 
-        //    mockSecurityProvider.Object, 
+        //    mockMapper.Object,
+        //    mockPasswordProvider.Object,
+        //    mockSecurityProvider.Object,
         //    mockGoogleAuthProvider.Object,
         //    mockDatabaseRepositoryManager.Object
         // );

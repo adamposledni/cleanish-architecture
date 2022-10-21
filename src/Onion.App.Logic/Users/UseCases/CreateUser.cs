@@ -25,7 +25,7 @@ internal class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
     }
 }
 
-internal class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, UserRes>
+public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, UserRes>
 {
     private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;

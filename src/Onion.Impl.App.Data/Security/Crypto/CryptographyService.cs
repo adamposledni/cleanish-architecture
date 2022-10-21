@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace Onion.Impl.App.Data.Security.Crypto;
 
-internal class CryptographyService : ICryptographyService
+public class CryptographyService : ICryptographyService
 {
     public (byte[] hash, byte[] salt) GetStringHash(string password)
     {

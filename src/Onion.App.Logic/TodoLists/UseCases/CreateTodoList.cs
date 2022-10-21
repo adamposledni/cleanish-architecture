@@ -24,7 +24,7 @@ internal class CreateTodoListRequestValidator : AbstractValidator<CreateTodoList
     }
 }
 
-internal class CreateTodoListRequestHandler : IRequestHandler<CreateTodoListRequest, TodoListRes>
+public class CreateTodoListRequestHandler : IRequestHandler<CreateTodoListRequest, TodoListRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly IObjectMapper _mapper;

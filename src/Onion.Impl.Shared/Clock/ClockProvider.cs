@@ -2,7 +2,7 @@
 
 namespace Onion.Impl.Shared.Clock;
 
-internal class ClockProvider : IClockProvider
+public class ClockProvider : IClockProvider
 {
     public DateTime Now => DateTime.UtcNow;
 }

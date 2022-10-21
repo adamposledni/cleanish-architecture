@@ -29,7 +29,7 @@ internal class ListTodoItemsRequestValidator : AbstractValidator<ListTodoItemsRe
     }
 }
 
-internal class ListTodoItemsRequestHandler : IRequestHandler<ListTodoItemsRequest, IEnumerable<TodoItemRes>>
+public class ListTodoItemsRequestHandler : IRequestHandler<ListTodoItemsRequest, IEnumerable<TodoItemRes>>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoListRepository _todoListRepository;

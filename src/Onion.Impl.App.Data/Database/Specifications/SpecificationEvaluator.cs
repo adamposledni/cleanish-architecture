@@ -2,7 +2,7 @@
 
 namespace Onion.Impl.App.Data.Database.Specifications;
 
-internal static class SpecificationEvaluator
+public static class SpecificationEvaluator
 {
     public static IQueryable<TEntity> Evaluate<TEntity>(IQueryable<TEntity> query, ISpecification<TEntity> specification) where TEntity : BaseEntity
     {

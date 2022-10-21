@@ -16,7 +16,7 @@ internal class FooRequestValidator : AbstractValidator<FooRequest>
 {
 }
 
-internal class FooRequestHandler : IRequestHandler<FooRequest, Foo1Res>
+public class FooRequestHandler : IRequestHandler<FooRequest, Foo1Res>
 {
     private readonly IUserRepository _userRepository;
     private readonly IObjectMapper _mapper;

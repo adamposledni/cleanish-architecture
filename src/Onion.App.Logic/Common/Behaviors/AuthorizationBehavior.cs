@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Onion.App.Logic.Common.Mediator.Behaviors;
 
-internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
 
@@ -33,30 +33,26 @@ internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TR
             throw new NotAuthenticatedException();
         }
 
-        //var authorizeAttributesWithRoles = authorizeAttributes.Where(a => a.Roles.Any());
-        //if (authorizeAttributesWithRoles.Any())
-        //{
-        //    bool authorized = false;
+        // role security
+        var authorizeAttributeWithRoles = authorizeAttributes.Where(a => a.Roles != null && a.Roles.Any()).FirstOrDefault();
+        if (authorizeAttributeWithRoles != null)
+        {
+            bool authorized = false;
+            foreach (var role in authorizeAttributeWithRoles.Roles)
+            {
+                if (role == _securityContextProvider.SecurityContext.Role)
+                {
+                    authorized = true;
+                    break;
+                }
+            }
 
-        //    foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles))
-        //    {
-        //        foreach (var role in roles)
-        //        {
-        //            var isInRole = );
-        //            if (isInRole)
-        //            {
-        //                authorized = true;
-        //                break;
-        //            }
-        //        }
-        //    }
-
-        //    // Must be a member of at least one role in roles
-        //    if (!authorized)
-        //    {
-        //        throw new NotAuthorizedException();
-        //    }
-        //}
+            // invalid role
+            if (!authorized)
+            {
+                throw new NotAuthorizedException();
+            }
+        }
 
         return await next();
     }

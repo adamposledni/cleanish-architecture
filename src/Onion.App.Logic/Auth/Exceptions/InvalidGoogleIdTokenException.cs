@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.Auth.Exceptions;
 
-internal class InvalidGoogleIdTokenException : BadLogicException
+public class InvalidGoogleIdTokenException : BadLogicException
 {
     public InvalidGoogleIdTokenException() : base("InvalidGoogleIdToken")
     {

@@ -31,7 +31,7 @@ internal class UserBasicLoginRequestValidator : AbstractValidator<UserBasicLogin
     }
 }
 
-internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, AuthRes>
+public class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, AuthRes>
 {
     private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;

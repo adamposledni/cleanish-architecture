@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.TodoItems.Exceptions;
 
-internal class TodoItemNotFoundException : NotFoundException
+public class TodoItemNotFoundException : NotFoundException
 {
     public TodoItemNotFoundException() : base("TodoItemNotFound")
     {

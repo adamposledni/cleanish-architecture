@@ -5,7 +5,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Database.EntityConfigurations;
 
-internal abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
+public abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
 {
     public virtual void Configure(EntityTypeBuilder<T> builder)
     {
@@ -13,5 +13,6 @@ internal abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T>
 
         builder.ToTable(typeof(T).Name);
         builder.HasKey(e => e.Id);
+        builder.Property(e => e.Version).IsRowVersion();
     }
 }

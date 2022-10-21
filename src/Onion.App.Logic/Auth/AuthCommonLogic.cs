@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Onion.App.Logic.Auth;
 
-internal static class AuthCommonLogic
+public static class AuthCommonLogic
 {
     public async static Task<AuthRes> IssueAccessAsync(
         IRefreshTokenRepository refreshTokenRepository,
@@ -38,9 +38,9 @@ internal static class AuthCommonLogic
     {
         List<Claim> claims = new()
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
+            new Claim("sub", user.Id.ToString()),
+            new Claim("email", user.Email),
+            new Claim("role", user.Role.ToString())
         };
         return webTokenService.CreateWebToken(claims, tokenLifetime);
     }

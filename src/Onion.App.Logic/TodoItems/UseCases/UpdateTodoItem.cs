@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Onion.App.Data.Database.Entities;
 using Onion.App.Data.Database.Entities.Fields;
 using Onion.App.Data.Database.Repositories;
 using Onion.App.Logic.Common.Attributes;
@@ -18,6 +19,7 @@ public class UpdateTodoItemRequest : IRequest<TodoItemRes>
     public string Title { get; set; }
     public TodoItemState State { get; set; }
     public Guid TodoListId { get; set; }
+    public byte[] Version { get; set; }
 }
 
 internal class UpdateTodoItemRequestValidator : AbstractValidator<UpdateTodoItemRequest>
@@ -28,10 +30,11 @@ internal class UpdateTodoItemRequestValidator : AbstractValidator<UpdateTodoItem
         RuleFor(x => x.Title).NotEmpty();
         RuleFor(x => x.State).NotEmpty();
         RuleFor(x => x.TodoListId).NotEmpty();
+        RuleFor(x => x.Version).NotEmpty();
     }
 }
 
-internal class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemRequest, TodoItemRes>
+public class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemRequest, TodoItemRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoItemRepository _todoItemRepository;
@@ -59,15 +62,15 @@ internal class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemRequ
         var todoItem = await _todoItemRepository.GetByIdAsync(request.Id);
         if (todoItem == null) throw new TodoItemNotFoundException();
 
-        // TODO: update mapper
-        todoItem.Title = request.Title;
-        todoItem.State = request.State;
-
-        // TODO: optimistic conc
-        await Task.Delay(10000);
-
+        UpdateFields(todoItem, request);
         todoItem = await _todoItemRepository.UpdateAsync(todoItem);
 
         return _mapper.Map<TodoItemRes>(todoItem);
+    }
+
+    private void UpdateFields(TodoItem entity, UpdateTodoItemRequest request)
+    {
+        entity.Title = request.Title;
+        entity.State = request.State;
     }
 }

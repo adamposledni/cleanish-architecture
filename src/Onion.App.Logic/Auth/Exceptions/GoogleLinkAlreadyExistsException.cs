@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.Auth.Exceptions;
 
-internal class GoogleLinkAlreadyExistsException : BadLogicException
+public class GoogleLinkAlreadyExistsException : BadLogicException
 {
     public GoogleLinkAlreadyExistsException() : base("GoogleLinkAlreadyExists")
     {

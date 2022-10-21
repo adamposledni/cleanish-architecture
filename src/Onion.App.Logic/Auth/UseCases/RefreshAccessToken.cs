@@ -25,7 +25,7 @@ internal class RefreshAccessTokenRequestValidator : AbstractValidator<RefreshAcc
     }
 }
 
-internal class RefreshAccessTokenHandler : IRequestHandler<RefreshAccessTokenRequest, AuthRes>
+public class RefreshAccessTokenHandler : IRequestHandler<RefreshAccessTokenRequest, AuthRes>
 {
     private readonly ICryptographyService _cryptographyService;
     private readonly IClockProvider _clockProvider;

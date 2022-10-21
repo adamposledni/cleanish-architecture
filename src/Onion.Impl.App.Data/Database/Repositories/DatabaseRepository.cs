@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Onion.App.Data.Cache;
 using Onion.App.Data.Database.Entities;
+using Onion.App.Data.Database.Exceptions;
 using Onion.App.Data.Database.Repositories;
 using Onion.Impl.App.Data.Database.Specifications;
 using Onion.Shared.Exceptions;
@@ -11,7 +12,7 @@ using System.Runtime.CompilerServices;
 
 namespace Onion.Impl.App.Data.Database.Repositories;
 
-internal abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
+public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
 {
     private readonly SqlDbContext _dbContext;
     private readonly ICacheService _cacheService;
@@ -26,30 +27,31 @@ internal abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntit
         _dbSet = _dbContext.Set<TEntity>();
     }
 
-    public async Task<TEntity> CreateAsync(TEntity newEntity, bool commitAfter = true)
+    public async Task<TEntity> CreateAsync(TEntity entity, bool commitAfter = true)
     {
-        Guard.NotNull(newEntity, nameof(newEntity));
+        Guard.NotNull(entity, nameof(entity));
 
-        TEntity createdEntity = _dbSet.Add(newEntity).Entity;
+        TEntity createdEntity = _dbSet.Add(entity).Entity;
         await CommitIfTrueAsync(commitAfter);
         return createdEntity;
     }
 
-    public async Task<TEntity> UpdateAsync(TEntity updatedEntity, bool commitAfter = true)
+    public async Task<TEntity> UpdateAsync(TEntity entity, bool commitAfter = true)
     {
-        Guard.NotNull(updatedEntity, nameof(updatedEntity));
+        Guard.NotNull(entity, nameof(entity));
 
+        entity = _dbSet.Update(entity).Entity;
         await CommitIfTrueAsync(commitAfter);
-        return updatedEntity;
+        return entity;
     }
 
-    public async Task<TEntity> DeleteAsync(TEntity entityToDelete, bool commitAfter = true)
+    public async Task<TEntity> DeleteAsync(TEntity entity, bool commitAfter = true)
     {
-        Guard.NotNull(entityToDelete, nameof(entityToDelete));
+        Guard.NotNull(entity, nameof(entity));
 
-        TEntity deletedEntity = _dbSet.Remove(entityToDelete).Entity;
+        entity = _dbSet.Remove(entity).Entity;
         await CommitIfTrueAsync(commitAfter);
-        return deletedEntity;
+        return entity;
     }
 
     private async Task<int> CommitIfTrueAsync(bool shouldCommit)

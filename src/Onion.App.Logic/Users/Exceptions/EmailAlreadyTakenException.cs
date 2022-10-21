@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.Users.Exceptions;
 
-internal class EmailAlreadyTakenException : BadLogicException
+public class EmailAlreadyTakenException : BadLogicException
 {
     public EmailAlreadyTakenException() : base("EmailAlreadyTaken")
     {

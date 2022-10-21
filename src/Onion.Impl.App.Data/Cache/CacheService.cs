@@ -5,7 +5,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Cache;
 
-internal class CacheService : ICacheService
+public class CacheService : ICacheService
 {
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheOptions;

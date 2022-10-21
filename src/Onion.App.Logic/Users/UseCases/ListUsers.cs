@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Onion.App.Data.Cache;
+using Onion.App.Data.Database.Entities.Fields;
 using Onion.App.Data.Database.Repositories;
 using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Users.Models;
@@ -8,12 +9,12 @@ using System.Threading;
 
 namespace Onion.App.Logic.Users.UseCases;
 
-[Authorize]
+[Authorize(Roles = new[] { UserRole.Admin })]
 public class ListUsersRequest : IRequest<IEnumerable<UserRes>>
 {
 }
 
-internal class ListUsersRequestHandler : IRequestHandler<ListUsersRequest, IEnumerable<UserRes>>
+public class ListUsersRequestHandler : IRequestHandler<ListUsersRequest, IEnumerable<UserRes>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IObjectMapper _mapper;

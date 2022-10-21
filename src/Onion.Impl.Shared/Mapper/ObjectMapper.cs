@@ -4,7 +4,7 @@ using Onion.Shared.Mapper;
 
 namespace Onion.Impl.Shared.Mapper;
 
-internal class ObjectMapper : IObjectMapper
+public class ObjectMapper : IObjectMapper
 {
     private readonly IMapper _mapperAdaptee;
 

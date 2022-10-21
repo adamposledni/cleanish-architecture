@@ -1,4 +1,6 @@
-﻿namespace Onion.App.Logic.Common.Attributes;
+﻿using Onion.App.Data.Database.Entities.Fields;
+
+namespace Onion.App.Logic.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 internal class AuthorizeAttribute : Attribute
@@ -7,5 +9,5 @@ internal class AuthorizeAttribute : Attribute
     {
     }
 
-    //public UserRole[] Roles { get; set; }
+    public UserRole[] Roles { get; set; }
 }

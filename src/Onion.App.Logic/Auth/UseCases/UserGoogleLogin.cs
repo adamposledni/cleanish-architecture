@@ -25,7 +25,7 @@ internal class UserGoogleLoginRequestValidator : AbstractValidator<UserGoogleLog
     }
 }
 
-internal class UserGoogleLoginHandler : IRequestHandler<UserGoogleLoginRequest, AuthRes>
+public class UserGoogleLoginHandler : IRequestHandler<UserGoogleLoginRequest, AuthRes>
 {
     private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;

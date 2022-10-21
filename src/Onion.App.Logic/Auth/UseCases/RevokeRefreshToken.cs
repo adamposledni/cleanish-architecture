@@ -25,7 +25,7 @@ internal class RevokeRefreshTokenRequestValidator : AbstractValidator<RevokeRefr
     }
 }
 
-internal class RevokeRefreshTokenHandler : IRequestHandler<RevokeRefreshTokenRequest, RefreshTokenRes>
+public class RevokeRefreshTokenHandler : IRequestHandler<RevokeRefreshTokenRequest, RefreshTokenRes>
 {
     private readonly IClockProvider _clockProvider;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
@@ -48,15 +48,15 @@ internal class RevokeRefreshTokenHandler : IRequestHandler<RevokeRefreshTokenReq
     {
         var subjectId = _securityContextProvider.GetSubjectId();
 
-        var refreshTokenEntity = await _refreshTokenRepository.GetByTokenAndUserIdAsync(request.RefreshToken, subjectId);
+        var refreshToken = await _refreshTokenRepository.GetByTokenAndUserIdAsync(request.RefreshToken, subjectId);
 
-        if (refreshTokenEntity == null) throw new RefreshTokenNotFoundException();
-        if (refreshTokenEntity.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
-        if (refreshTokenEntity.IsRevoked) throw new RefreshTokenAlreadyRevokedException();
+        if (refreshToken == null) throw new RefreshTokenNotFoundException();
+        if (refreshToken.IsExpired(_clockProvider.Now)) throw new InvalidRefreshTokenException();
+        if (refreshToken.IsRevoked) throw new RefreshTokenAlreadyRevokedException();
 
-        refreshTokenEntity.IsRevoked = true;
-        refreshTokenEntity = await _refreshTokenRepository.UpdateAsync(refreshTokenEntity);
+        refreshToken.IsRevoked = true;
+        refreshToken = await _refreshTokenRepository.UpdateAsync(refreshToken);
 
-        return _mapper.Map<RefreshTokenRes>(refreshTokenEntity);
+        return _mapper.Map<RefreshTokenRes>(refreshToken);
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Onion.Impl.App.Data.Cache;
-internal class CacheSettings
+
+public class CacheSettings
 {
     public const string CONFIG_KEY = "MemoryCache";
 

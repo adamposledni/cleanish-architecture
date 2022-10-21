@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Onion.App.Data.Database.Entities.Fields;
 using Onion.App.Logic.Common.Security;
 using Onion.Shared.Helpers;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Onion.Pres.WebApi.Security;
 
@@ -18,18 +20,23 @@ public class SecurityContextProvider : ISecurityContextProvider
         _securityContext = new Lazy<SecurityContext>(() => BuildSecurityContext());
     }
 
-
-    // TODO: RBS
     private SecurityContext BuildSecurityContext()
     {
         var claims = _httpContextAccessor.HttpContext?.User?.Claims;
         if (claims == null || !claims.Any()) return null;
 
-        var sub = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+        var subClaim = claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+        var roleClaim = claims.FirstOrDefault(c => c.Type == "role")?.Value;
 
-        if (!string.IsNullOrWhiteSpace(sub) && Guid.TryParse(sub, out var subjectId))
-            return new SecurityContext(subjectId);
-        return null;
+        if (string.IsNullOrWhiteSpace(subClaim) || 
+            !Guid.TryParse(subClaim, out var subjectId) ||
+            string.IsNullOrWhiteSpace(roleClaim) ||
+            !Enum.TryParse<UserRole>(roleClaim, out var userRole))
+        {
+            return null;
+        }
+
+        return new SecurityContext(subjectId, userRole);
     }
 
     public Guid GetSubjectId()

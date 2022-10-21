@@ -6,7 +6,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Security.Google;
 
-internal class GoogleAuthProvider : IGoogleAuthProvider
+public class GoogleAuthProvider : IGoogleAuthProvider
 {
     private readonly GoogleAuthSettings _googleAuthSettings;
 

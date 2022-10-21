@@ -36,9 +36,6 @@ public class ErrorHandlerMiddleware
 
     public ErrorRes HandleException(Exception ex, IStringLocalizer<Strings> localizer)
     {
-        Guard.NotNull(ex, nameof(ex));
-        Guard.NotNull(localizer, nameof(localizer));
-
         return ex switch
         {
             NotFoundException notFoundException => new ErrorRes(404, localizer[notFoundException.MessageKey]),

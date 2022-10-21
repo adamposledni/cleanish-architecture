@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Onion.App.Data.Database.Entities;
+using Onion.App.Data.Database.Exceptions;
 using Onion.Shared.Clock;
 using System.Reflection;
 using System.Threading;
 
 namespace Onion.Impl.App.Data.Database;
 
-internal class SqlDbContext : DbContext
+public class SqlDbContext : DbContext
 {
     private readonly IClockProvider _clockProvider;
 
@@ -26,7 +27,7 @@ internal class SqlDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
@@ -44,6 +45,13 @@ internal class SqlDbContext : DbContext
             }
         }
 
-        return base.SaveChangesAsync(cancellationToken);
+        try
+        {
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new DataUpdateConcurrencyException();
+        }    
     }
 }
