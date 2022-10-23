@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Onion.Pres.WebApi.Atributes;
 using Onion.Shared.Exceptions;
+using System.Threading;
 
 namespace Onion.Pres.WebApi.Controllers;
 
@@ -16,11 +17,16 @@ namespace Onion.Pres.WebApi.Controllers;
 public abstract class BaseController : ControllerBase
 {
     private ISender _mediator = null!;
-
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
+    
     protected ObjectResult Created(object value)
     {
         return StatusCode(201, value);
+    }
+
+    protected async Task<TResponse> Mediate<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+    {
+        var mediator = _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
+        return await mediator.Send(request, cancellationToken);
     }
 
     protected void ValidateEquals(object o1, object o2)

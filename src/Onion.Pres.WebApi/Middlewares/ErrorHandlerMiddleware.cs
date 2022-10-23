@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Onion.App.Data.Localization;
 using Onion.Pres.WebApi.Models.Common;
 using Onion.Shared.Exceptions;
-using Onion.Shared.Helpers;
 
 namespace Onion.Pres.WebApi.Middlewares;
 

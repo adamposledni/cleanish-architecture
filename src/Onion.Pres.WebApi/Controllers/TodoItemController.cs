@@ -13,14 +13,14 @@ public class TodoItemController : BaseController
     [HttpGet("{todoListId}/items/{todoItemId}")]
     public async Task<ActionResult<TodoItemRes>> Get([FromRoute] Guid todoListId, [FromRoute] Guid todoItemId)
     {
-        return Ok(await Mediator.Send(new GetTodoItemRequest(todoListId, todoItemId)));
+        return Ok(await Mediate(new GetTodoItemRequest(todoListId, todoItemId)));
     }
 
     [ProducesResponseType(200)]
     [HttpGet("{todoListId}/items")]
     public async Task<ActionResult<IEnumerable<TodoItemRes>>> List(Guid todoListId)
     {
-        return Ok(await Mediator.Send(new ListTodoItemsRequest(todoListId)));
+        return Ok(await Mediate(new ListTodoItemsRequest(todoListId)));
     }
 
     [ProducesResponseType(201)]
@@ -29,7 +29,7 @@ public class TodoItemController : BaseController
     {
         ValidateEquals(todoListId, body.TodoListId);
 
-        return Created(await Mediator.Send(new CreateTodoItemRequest()));
+        return Created(await Mediate(new CreateTodoItemRequest()));
     }
 
     [ProducesResponseType(200)]
@@ -42,6 +42,6 @@ public class TodoItemController : BaseController
         ValidateEquals(todoListId, body.TodoListId);
         ValidateEquals(todoItemId, body.Id);
 
-        return Ok(await Mediator.Send(body));
+        return Ok(await Mediate(body));
     }
 }

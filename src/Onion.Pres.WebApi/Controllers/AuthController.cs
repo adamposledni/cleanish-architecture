@@ -12,7 +12,7 @@ public class AuthController : BaseController
     [HttpPost("login")]
     public async Task<ActionResult<AuthRes>> Login(UserBasicLoginRequest body)
     {
-        return Ok(await Mediator.Send(body));
+        return Ok(await Mediate(body));
     }
 
     [ProducesResponseType(200)]
@@ -20,7 +20,7 @@ public class AuthController : BaseController
     [HttpPost("revoke-refresh-token")]
     public async Task<ActionResult<RefreshTokenRes>> RevokeRefreshToken(RevokeRefreshTokenRequest body)
     {
-        return Ok(await Mediator.Send(body));
+        return Ok(await Mediate(body));
     }
 
     [ProducesResponseType(200)]
@@ -28,6 +28,6 @@ public class AuthController : BaseController
     [HttpPost("refresh-access-token")]
     public async Task<ActionResult<AuthRes>> RefreshAccessToken(RefreshAccessTokenRequest body)
     {
-        return Ok(await Mediator.Send(body));
+        return Ok(await Mediate(body));
     }
 }
