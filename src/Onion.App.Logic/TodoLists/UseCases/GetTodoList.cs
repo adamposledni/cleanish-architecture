@@ -7,7 +7,6 @@ using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.TodoLists.Exceptions;
 using Onion.App.Logic.TodoLists.Models;
 using Onion.Shared.Exceptions;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.TodoLists.UseCases;
@@ -34,16 +33,13 @@ internal class GetTodoListRequestValidator : AbstractValidator<GetTodoListReques
 public class GetTodoListRequestHandler : IRequestHandler<GetTodoListRequest, TodoListRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
-    private readonly IObjectMapper _mapper;
     private readonly ITodoListRepository _cachedTodoListRepository;
 
     public GetTodoListRequestHandler(
         ISecurityContextProvider securityContextProvider,
-        Cached<ITodoListRepository> cachedTodoListRepository,
-        IObjectMapper mapper)
+        Cached<ITodoListRepository> cachedTodoListRepository)
     {
         _securityContextProvider = securityContextProvider;
-        _mapper = mapper;
         _cachedTodoListRepository = cachedTodoListRepository.Value;
     }
 
@@ -55,6 +51,6 @@ public class GetTodoListRequestHandler : IRequestHandler<GetTodoListRequest, Tod
         if (todoList == null) throw new TodoListNotFoundException();
         if (todoList.UserId != subjectId) throw new NotAuthorizedException();
 
-        return _mapper.Map<TodoListRes>(todoList);
+        return todoList.Adapt<TodoListRes>();
     }
 }

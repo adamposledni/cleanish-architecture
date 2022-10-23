@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
+using Mapster;
 using MediatR;
 using Onion.App.Data.Cache;
+using Onion.App.Data.Database.Entities.Fields;
 using Onion.App.Data.Database.Repositories;
 using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Users.Exceptions;
 using Onion.App.Logic.Users.Models;
-using Onion.Shared.Mapper;
-using System.Threading;
 
 namespace Onion.App.Logic.Users.UseCases;
 
-[Authorize]
+[Authorize(Roles = new[] { UserRole.Admin })]
 public class GetUserRequest : IRequest<UserRes>
 {
     public Guid UserId { get; set; }
@@ -32,12 +32,10 @@ internal class GetUserRequestValidator : AbstractValidator<GetUserRequest>
 public class GetUserRequestHandler : IRequestHandler<GetUserRequest, UserRes>
 {
     private readonly IUserRepository _userRepository;
-    private readonly IObjectMapper _mapper;
 
-    public GetUserRequestHandler(Cached<IUserRepository> userRepository, IObjectMapper mapper)
+    public GetUserRequestHandler(Cached<IUserRepository> userRepository)
     {
         _userRepository = userRepository.Value;
-        _mapper = mapper;
     }
 
     public async Task<UserRes> Handle(GetUserRequest request, CancellationToken cancellationToken)
@@ -45,6 +43,6 @@ public class GetUserRequestHandler : IRequestHandler<GetUserRequest, UserRes>
         var user = await _userRepository.GetByIdAsync(request.UserId);
         if (user == null) throw new UserNotFoundException();
 
-        return _mapper.Map<UserRes>(user);
+        return user.Adapt<UserRes>();
     }
 }

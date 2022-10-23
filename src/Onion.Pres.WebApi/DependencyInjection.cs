@@ -92,7 +92,7 @@ public static class DependencyInjection
             //c.IncludeXmlComments(string.Format(@"{0}\Onion.WebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory));
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = Assembly.GetAssembly(typeof(DependencyInjection)).GetName().Name,
+                Title = "Onion architecture API",
                 Version = "v1"
             });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

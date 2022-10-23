@@ -6,7 +6,6 @@ using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.TodoItems.Exceptions;
 using Onion.App.Logic.TodoLists.Models;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.TodoItems.UseCases;
@@ -37,18 +36,15 @@ public class GetTodoItemRequestHandler : IRequestHandler<GetTodoItemRequest, Tod
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoListRepository _todoListRepository;
-    private readonly IObjectMapper _mapper;
     private readonly ITodoItemRepository _cachedTodoItemRepository;
 
     public GetTodoItemRequestHandler(
         ISecurityContextProvider securityContextProvider,
         ITodoListRepository todoListRepository,
-        Cached<ITodoItemRepository> cachedTodoItemRepository,
-        IObjectMapper mapper)
+        Cached<ITodoItemRepository> cachedTodoItemRepository)
     {
         _securityContextProvider = securityContextProvider;
         _todoListRepository = todoListRepository;
-        _mapper = mapper;
         _cachedTodoItemRepository = cachedTodoItemRepository.Value;
     }
 
@@ -60,6 +56,6 @@ public class GetTodoItemRequestHandler : IRequestHandler<GetTodoItemRequest, Tod
         var todoItem = await _cachedTodoItemRepository.GetByIdAsync(request.TodoItemId);
         if (todoItem == null) throw new TodoItemNotFoundException();
 
-        return _mapper.Map<TodoItemRes>(todoItem);
+        return todoItem.Adapt<TodoItemRes>();
     }
 }

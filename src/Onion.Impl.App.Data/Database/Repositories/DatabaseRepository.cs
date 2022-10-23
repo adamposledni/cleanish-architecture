@@ -15,11 +15,11 @@ namespace Onion.Impl.App.Data.Database.Repositories;
 public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
 {
     private readonly SqlDbContext _dbContext;
-    private readonly ICacheService _cacheService;
+    private readonly ICacheService<TEntity> _cacheService;
     private readonly DbSet<TEntity> _dbSet;
     public CacheStrategy CacheStrategy { get; init; }
 
-    public DatabaseRepository(SqlDbContext dbContext, ICacheService cacheService, CacheStrategy cacheStrategy)
+    public DatabaseRepository(SqlDbContext dbContext, ICacheService<TEntity> cacheService, CacheStrategy cacheStrategy)
     {
         _dbContext = dbContext;
         _cacheService = cacheService;
@@ -33,6 +33,7 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
 
         TEntity createdEntity = _dbSet.Add(entity).Entity;
         await CommitIfTrueAsync(commitAfter);
+        _cacheService.Clear();
         return createdEntity;
     }
 
@@ -42,6 +43,7 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
 
         entity = _dbSet.Update(entity).Entity;
         await CommitIfTrueAsync(commitAfter);
+        _cacheService.Clear();
         return entity;
     }
 
@@ -51,6 +53,7 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
 
         entity = _dbSet.Remove(entity).Entity;
         await CommitIfTrueAsync(commitAfter);
+        _cacheService.Clear();
         return entity;
     }
 
@@ -82,6 +85,13 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
         var data = await ReadDataAsync(specification, q => q.ToListAsync(), callerMethodName);
 
         return new PaginableList<TEntity>(data, countOfItems, pageSize, page, countOfPages);
+    }
+
+    protected async Task<TResult> ReadDataAsync<TResult>(
+        Func<IQueryable<TEntity>, Task<TResult>> queryOperation,
+        [CallerMemberName] string callerMethodName = "")
+    {
+        return await ReadDataAsync(Specification().Build(), queryOperation, CacheStrategy, callerMethodName);
     }
 
     protected async Task<TResult> ReadDataAsync<TResult>(

@@ -7,7 +7,6 @@ using Onion.App.Logic.Auth.Exceptions;
 using Onion.App.Logic.Auth.Models;
 using Onion.App.Logic.Common;
 using Onion.Shared.Clock;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.Auth.UseCases;
@@ -39,7 +38,6 @@ public class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Auth
     private readonly IWebTokenService _webTokenService;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ApplicationSettings _applicationSettings;
-    private readonly IObjectMapper _mapper;
 
     public UserBasicLoginHandler(
         IUserRepository userRepository,
@@ -47,8 +45,7 @@ public class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Auth
         IClockProvider clockProvider,
         IWebTokenService webTokenService,
         IRefreshTokenRepository refreshTokenRepository,
-        IOptions<ApplicationSettings> applicationSettings,
-        IObjectMapper mapper)
+        IOptions<ApplicationSettings> applicationSettings)
     {
         _userRepository = userRepository;
         _cryptographyService = cryptographyService;
@@ -56,7 +53,6 @@ public class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Auth
         _webTokenService = webTokenService;
         _refreshTokenRepository = refreshTokenRepository;
         _applicationSettings = applicationSettings.Value;
-        _mapper = mapper;
     }
 
     public async Task<AuthRes> Handle(UserBasicLoginRequest request, CancellationToken cancellationToken)
@@ -72,7 +68,6 @@ public class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Auth
             _webTokenService,
             _cryptographyService,
             _clockProvider,
-            _mapper,
             user,
             _applicationSettings.AccessTokenLifetime,
             _applicationSettings.RefreshTokenLifetime);

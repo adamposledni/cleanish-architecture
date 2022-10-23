@@ -8,7 +8,7 @@ namespace Onion.Impl.App.Data.Database.Repositories;
 
 public class UserRepository : DatabaseRepository<User>, IUserRepository
 {
-    public UserRepository(SqlDbContext dbContext, ICacheService cacheService, CacheStrategy cacheStrategy)
+    public UserRepository(SqlDbContext dbContext, ICacheService<User> cacheService, CacheStrategy cacheStrategy)
         : base(dbContext, cacheService, cacheStrategy)
     { }
 
@@ -53,7 +53,6 @@ public class UserRepository : DatabaseRepository<User>, IUserRepository
     public async Task<IEnumerable<User>> ListAsync()
     {
         return await ReadDataAsync(
-            Specification().Build(),
             q => q.ToListAsync()
         );
     }

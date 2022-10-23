@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Onion.App.Data\Onion.App.Data.csproj" />
     <ProjectReference Include="..\Onion.App.Logic\Onion.App.Logic.csproj" />
     <ProjectReference Include="..\Onion.Impl.App.Data\Onion.Impl.App.Data.csproj" />
     <ProjectReference Include="..\Onion.Impl.Shared\Onion.Impl.Shared.csproj" />

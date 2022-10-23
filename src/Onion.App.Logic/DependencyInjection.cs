@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Mapster;
+using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationLogic(this IServiceCollection services, IConfiguration configuration)
     {
+        var mapperConfig = TypeAdapterConfig.GlobalSettings;
+        mapperConfig.Scan(Assembly.GetExecutingAssembly());
+        services.AddSingleton(mapperConfig);
+        services.AddScoped<IMapper, ServiceMapper>();
+
         services.Configure<ApplicationSettings>(configuration.GetSection(ApplicationSettings.CONFIG_KEY));
 
         ValidatorOptions.Global.LanguageManager.Enabled = false;

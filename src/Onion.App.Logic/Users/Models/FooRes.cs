@@ -7,6 +7,7 @@ public class Foo1Res
     public Guid Id { get; set; }
     public string Email { get; set; }
     public int Foo { get; set; }
+    public string FooString { get; set; }
     public IEnumerable<Foo2Res> TodoLists { get; set; }
 }
 

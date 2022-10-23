@@ -7,7 +7,7 @@ namespace Onion.Impl.App.Data.Database.Repositories;
 
 public class RefreshTokenRepository : DatabaseRepository<RefreshToken>, IRefreshTokenRepository
 {
-    public RefreshTokenRepository(SqlDbContext dbContext, ICacheService cacheService, CacheStrategy cacheStrategy)
+    public RefreshTokenRepository(SqlDbContext dbContext, ICacheService<RefreshToken> cacheService, CacheStrategy cacheStrategy)
     : base(dbContext, cacheService, cacheStrategy)
     { }
 

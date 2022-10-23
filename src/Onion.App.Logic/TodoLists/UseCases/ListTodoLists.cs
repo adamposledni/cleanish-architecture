@@ -4,7 +4,7 @@ using Onion.App.Data.Database.Repositories;
 using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.TodoLists.Models;
-using Onion.Shared.Mapper;
+using System.Linq;
 using System.Threading;
 
 namespace Onion.App.Logic.TodoLists.UseCases;
@@ -17,16 +17,13 @@ public class ListTodoListsRequest : IRequest<IEnumerable<TodoListBriefRes>>
 public class ListTodoListsRequestHandler : IRequestHandler<ListTodoListsRequest, IEnumerable<TodoListBriefRes>>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
-    private readonly IObjectMapper _mapper;
     private readonly ITodoListRepository _cachedTodoListRepository;
 
     public ListTodoListsRequestHandler(
         ISecurityContextProvider securityContextProvider,
-        Cached<ITodoListRepository> cachedTodoListRepository,
-        IObjectMapper mapper)
+        Cached<ITodoListRepository> cachedTodoListRepository)
     {
         _securityContextProvider = securityContextProvider;
-        _mapper = mapper;
         _cachedTodoListRepository = cachedTodoListRepository.Value;
     }
 
@@ -34,6 +31,6 @@ public class ListTodoListsRequestHandler : IRequestHandler<ListTodoListsRequest,
     {
         var subjectId = _securityContextProvider.GetSubjectId();
         var todoLists = await _cachedTodoListRepository.ListAsync(subjectId);
-        return _mapper.MapCollection<TodoListBriefRes>(todoLists);
+        return todoLists.Select(tl => tl.Adapt<TodoListBriefRes>());
     }
 }

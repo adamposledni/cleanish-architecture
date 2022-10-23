@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
+using Mapster;
 using MediatR;
 using Onion.App.Data.Database.Entities;
 using Onion.App.Data.Database.Repositories;
 using Onion.App.Data.Security;
 using Onion.App.Logic.Users.Exceptions;
 using Onion.App.Logic.Users.Models;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.Users.UseCases;
@@ -29,13 +29,11 @@ public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, UserR
 {
     private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;
-    private readonly IObjectMapper _mapper;
 
-    public CreateUserRequestHandler(IUserRepository userRepository, ICryptographyService passwordProvider, IObjectMapper mapper)
+    public CreateUserRequestHandler(IUserRepository userRepository, ICryptographyService passwordProvider)
     {
         _userRepository = userRepository;
         _cryptographyService = passwordProvider;
-        _mapper = mapper;
     }
 
     public async Task<UserRes> Handle(CreateUserRequest request, CancellationToken cancellationToken)
@@ -46,13 +44,14 @@ public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, UserR
         }
 
         (byte[] hash, byte[] salt) = _cryptographyService.GetStringHash(request.Password);
-        var newUser = _mapper.Map<User>(request, u =>
+        var newUser = request.Adapt<User>(u =>
         {
             u.PasswordHash = hash;
             u.PasswordSalt = salt;
         });
+       
         var user = await _userRepository.CreateAsync(newUser);
 
-        return _mapper.Map<UserRes>(user);
+        return user.Adapt<UserRes>();
     }
 }

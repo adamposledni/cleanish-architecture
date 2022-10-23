@@ -5,7 +5,6 @@ using Onion.App.Data.Database.Repositories;
 using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.TodoLists.Models;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.TodoItems.UseCases;
@@ -29,18 +28,15 @@ internal class CreateTodoItemRequestValidator : AbstractValidator<CreateTodoItem
 public class CreateTodoItemRequestHandler : IRequestHandler<CreateTodoItemRequest, TodoItemRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
-    private readonly IObjectMapper _mapper;
     private readonly ITodoItemRepository _todoItemRepository;
     private readonly ITodoListRepository _todoListRepository;
 
     public CreateTodoItemRequestHandler(
         ISecurityContextProvider securityContextProvider,
-        IObjectMapper mapper,
         ITodoItemRepository todoItemRepository,
         ITodoListRepository todoListRepository)
     {
         _securityContextProvider = securityContextProvider;
-        _mapper = mapper;
         _todoItemRepository = todoItemRepository;
         _todoListRepository = todoListRepository;
     }
@@ -50,8 +46,8 @@ public class CreateTodoItemRequestHandler : IRequestHandler<CreateTodoItemReques
         var subjectId = _securityContextProvider.GetSubjectId();
         await TodoItemCommonLogic.ValidateTodoListOwnership(_todoListRepository, request.TodoListId, subjectId);
 
-        var newTodoItem = _mapper.Map<TodoItem>(request);
+        var newTodoItem = request.Adapt<TodoItem>();
         newTodoItem = await _todoItemRepository.CreateAsync(newTodoItem);
-        return _mapper.Map<TodoItemRes>(newTodoItem);
+        return newTodoItem.Adapt<TodoItemRes>();
     }
 }

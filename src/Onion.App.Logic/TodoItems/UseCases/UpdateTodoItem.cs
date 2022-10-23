@@ -7,7 +7,6 @@ using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.TodoItems.Exceptions;
 using Onion.App.Logic.TodoLists.Models;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.TodoItems.UseCases;
@@ -39,18 +38,15 @@ public class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemReques
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoItemRepository _todoItemRepository;
     private readonly ITodoListRepository _todoListRepository;
-    private readonly IObjectMapper _mapper;
 
     public UpdateTodoItemRequestHandler(
         ISecurityContextProvider securityContextProvider,
         ITodoItemRepository todoItemRepository,
-        ITodoListRepository todoListRepository,
-        IObjectMapper mapper)
+        ITodoListRepository todoListRepository)
     {
         _securityContextProvider = securityContextProvider;
         _todoItemRepository = todoItemRepository;
         _todoListRepository = todoListRepository;
-        _mapper = mapper;
     }
 
     public async Task<TodoItemRes> Handle(UpdateTodoItemRequest request, CancellationToken cancellationToken)
@@ -65,7 +61,7 @@ public class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemReques
         UpdateFields(todoItem, request);
         todoItem = await _todoItemRepository.UpdateAsync(todoItem);
 
-        return _mapper.Map<TodoItemRes>(todoItem);
+        return todoItem.Adapt<TodoItemRes>();
     }
 
     private void UpdateFields(TodoItem entity, UpdateTodoItemRequest request)

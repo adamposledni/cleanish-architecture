@@ -5,7 +5,6 @@ using Onion.App.Data.Database.Repositories;
 using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.TodoLists.Models;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.TodoLists.UseCases;
@@ -27,16 +26,13 @@ internal class CreateTodoListRequestValidator : AbstractValidator<CreateTodoList
 public class CreateTodoListRequestHandler : IRequestHandler<CreateTodoListRequest, TodoListRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
-    private readonly IObjectMapper _mapper;
     private readonly ITodoListRepository _todoListRepository;
 
     public CreateTodoListRequestHandler(
         ISecurityContextProvider securityContextProvider,
-        ITodoListRepository todoListRepository,
-        IObjectMapper mapper)
+        ITodoListRepository todoListRepository)
     {
         _securityContextProvider = securityContextProvider;
-        _mapper = mapper;
         _todoListRepository = todoListRepository;
     }
 
@@ -44,9 +40,13 @@ public class CreateTodoListRequestHandler : IRequestHandler<CreateTodoListReques
     {
         var subjectId = _securityContextProvider.GetSubjectId();
 
-        var newTodoList = _mapper.Map<TodoList>(request, tl => tl.UserId = subjectId);
-        newTodoList = await _todoListRepository.CreateAsync(newTodoList);
+        var newTodoList = request.Adapt<TodoList>(tl =>
+        {
+            tl.UserId = subjectId;
+        });
 
-        return _mapper.Map<TodoListRes>(newTodoList);
+        newTodoList = await _todoListRepository.CreateAsync(newTodoList);
+     
+        return newTodoList.Adapt<TodoListRes>();
     }
 }

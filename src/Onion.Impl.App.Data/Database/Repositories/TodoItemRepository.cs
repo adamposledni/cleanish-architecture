@@ -7,7 +7,7 @@ namespace Onion.Impl.App.Data.Database.Repositories;
 
 public class TodoItemRepository : DatabaseRepository<TodoItem>, ITodoItemRepository
 {
-    public TodoItemRepository(SqlDbContext dbContext, ICacheService cacheService, CacheStrategy cacheStrategy)
+    public TodoItemRepository(SqlDbContext dbContext, ICacheService<TodoItem> cacheService, CacheStrategy cacheStrategy)
         : base(dbContext, cacheService, cacheStrategy)
     { }
 

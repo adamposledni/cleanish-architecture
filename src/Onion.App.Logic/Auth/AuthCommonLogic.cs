@@ -1,11 +1,12 @@
-﻿using Onion.App.Data.Database.Entities;
+﻿using Mapster;
+using Onion.App.Data.Database.Entities;
 using Onion.App.Data.Database.Repositories;
 using Onion.App.Data.Security;
 using Onion.App.Logic.Auth.Models;
 using Onion.Shared.Clock;
-using Onion.Shared.Mapper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Onion.App.Logic.Common.Mapper;
 
 namespace Onion.App.Logic.Auth;
 
@@ -16,7 +17,6 @@ public static class AuthCommonLogic
         IWebTokenService tokenProvider,
         ICryptographyService cryptographyService,
         IClockProvider clockProvider,
-        IObjectMapper mapper,
         User user,
         int accessTokenLifetime,
         int refreshTokenLifetime)
@@ -26,12 +26,11 @@ public static class AuthCommonLogic
 
         refreshToken = await refreshTokenRepository.CreateAsync(refreshToken);
 
-        return mapper.Map<AuthRes>(user,
-            a =>
-            {
-                a.AccessToken = accessToken;
-                a.RefreshToken = refreshToken.Token;
-            });
+        return user.Adapt<AuthRes>(a =>
+        {
+            a.AccessToken = accessToken;
+            a.RefreshToken = refreshToken.Token;
+        });
     }
 
     private static string GenerateAccessToken(IWebTokenService webTokenService, User user, int tokenLifetime)

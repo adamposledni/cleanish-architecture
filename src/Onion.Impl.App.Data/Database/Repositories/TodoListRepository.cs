@@ -7,7 +7,7 @@ namespace Onion.Impl.App.Data.Database.Repositories;
 
 public class TodoListRepository : DatabaseRepository<TodoList>, ITodoListRepository
 {
-    public TodoListRepository(SqlDbContext dbContext, ICacheService cacheService, CacheStrategy cacheStrategy)
+    public TodoListRepository(SqlDbContext dbContext, ICacheService<TodoList> cacheService, CacheStrategy cacheStrategy)
         : base(dbContext, cacheService, cacheStrategy)
     { }
 

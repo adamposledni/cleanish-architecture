@@ -23,7 +23,6 @@ public static class SpecificationEvaluator
 
         query = specification.Includes.Aggregate(query, (current, include) => include(current));
 
-
         return query;
     }
 }

@@ -7,7 +7,6 @@ using Onion.App.Logic.Auth.Exceptions;
 using Onion.App.Logic.Auth.Models;
 using Onion.App.Logic.Common;
 using Onion.Shared.Clock;
-using Onion.Shared.Mapper;
 using System.Threading;
 
 namespace Onion.App.Logic.Auth.UseCases;
@@ -32,22 +31,19 @@ public class RefreshAccessTokenHandler : IRequestHandler<RefreshAccessTokenReque
     private readonly IWebTokenService _webTokenService;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ApplicationSettings _applicationSettings;
-    private readonly IObjectMapper _mapper;
 
     public RefreshAccessTokenHandler(
         ICryptographyService cryptographyService,
         IClockProvider clockProvider,
         IWebTokenService webTokenService,
         IRefreshTokenRepository refreshTokenRepository,
-        IOptions<ApplicationSettings> applicationSettings,
-        IObjectMapper mapper)
+        IOptions<ApplicationSettings> applicationSettings)
     {
         _cryptographyService = cryptographyService;
         _clockProvider = clockProvider;
         _webTokenService = webTokenService;
         _refreshTokenRepository = refreshTokenRepository;
         _applicationSettings = applicationSettings.Value;
-        _mapper = mapper;
     }
 
     public async Task<AuthRes> Handle(RefreshAccessTokenRequest request, CancellationToken cancellationToken)
@@ -63,7 +59,6 @@ public class RefreshAccessTokenHandler : IRequestHandler<RefreshAccessTokenReque
             _webTokenService,
             _cryptographyService,
             _clockProvider,
-            _mapper,
             refreshTokenEntity.User,
             _applicationSettings.AccessTokenLifetime,
             _applicationSettings.RefreshTokenLifetime);
