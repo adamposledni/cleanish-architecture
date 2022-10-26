@@ -3,7 +3,7 @@ using Onion.Pres.WebApi.Middlewares;
 
 namespace Onion.Pres.WebApi.Extensions;
 
-public static class ApplicationBuilderExtensions
+internal static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder UseHttpRequesLogging(this IApplicationBuilder applicationBuilder)
     {

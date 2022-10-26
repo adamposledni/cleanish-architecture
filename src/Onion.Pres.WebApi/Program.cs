@@ -48,7 +48,10 @@ app.UseRequestLocalization(localizationOptions.Value);
 
 app.UseErrorHandler();
 
-if (!env.IsDevelopment()) app.UseHsts();
+if (!env.IsDevelopment())
+{
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 

@@ -1,6 +1,6 @@
 ﻿namespace Onion.App.Logic.Common;
 
-public class ApplicationSettings
+internal class ApplicationSettings
 {
     public const string CONFIG_KEY = "Application";
 

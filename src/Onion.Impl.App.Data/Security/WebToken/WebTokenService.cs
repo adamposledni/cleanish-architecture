@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Onion.Impl.App.Data.Security.WebToken;
 
-public class WebTokenService : IWebTokenService
+internal class WebTokenService : IWebTokenService
 {
     private readonly WebTokenSettings _tokenSettings;
     private readonly IClockProvider _clockProvider;

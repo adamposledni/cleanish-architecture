@@ -13,8 +13,6 @@ using Onion.Impl.App.Data.Security.WebToken;
 
 namespace Onion.Impl.App.Data;
 
-public delegate object DatabaseRepositoryProvider(Type entityType, Type repositoryType, CacheStrategy cacheStrategy);
-
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationData(this IServiceCollection services, IConfiguration configuration)

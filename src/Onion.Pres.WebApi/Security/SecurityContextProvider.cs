@@ -2,12 +2,10 @@
 using Onion.App.Data.Database.Entities.Fields;
 using Onion.App.Logic.Common.Security;
 using Onion.Shared.Helpers;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace Onion.Pres.WebApi.Security;
 
-public class SecurityContextProvider : ISecurityContextProvider
+internal class SecurityContextProvider : ISecurityContextProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 

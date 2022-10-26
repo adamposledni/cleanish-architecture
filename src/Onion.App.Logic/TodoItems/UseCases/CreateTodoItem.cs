@@ -25,7 +25,7 @@ internal class CreateTodoItemRequestValidator : AbstractValidator<CreateTodoItem
     }
 }
 
-public class CreateTodoItemRequestHandler : IRequestHandler<CreateTodoItemRequest, TodoItemRes>
+internal class CreateTodoItemRequestHandler : IRequestHandler<CreateTodoItemRequest, TodoItemRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoItemRepository _todoItemRepository;

@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.Auth.Exceptions;
 
-public class RefreshTokenAlreadyRevokedException : BadLogicException
+internal class RefreshTokenAlreadyRevokedException : BadLogicException
 {
     public RefreshTokenAlreadyRevokedException() : base("RefreshTokenAlreadyRevoked")
     {

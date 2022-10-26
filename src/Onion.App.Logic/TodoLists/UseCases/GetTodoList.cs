@@ -30,7 +30,7 @@ internal class GetTodoListRequestValidator : AbstractValidator<GetTodoListReques
     }
 }
 
-public class GetTodoListRequestHandler : IRequestHandler<GetTodoListRequest, TodoListRes>
+internal class GetTodoListRequestHandler : IRequestHandler<GetTodoListRequest, TodoListRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoListRepository _cachedTodoListRepository;

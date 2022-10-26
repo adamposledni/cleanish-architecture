@@ -5,7 +5,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Database.EntityConfigurations;
 
-public abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
+internal abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
 {
     public virtual void Configure(EntityTypeBuilder<T> builder)
     {

@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Onion.Impl.App.Data.Cache;
 
-public class CacheService<TEntity> : ICacheService<TEntity>
+internal class CacheService<TEntity> : ICacheService<TEntity>
 {
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheOptions;

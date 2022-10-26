@@ -4,7 +4,7 @@ namespace Onion.App.Data.Cache;
 
 public class CacheKey
 {
-    public string Key { get; set; }
+    public string Key { get; init; }
 
     public CacheKey(string entityName, string methodName, params string[] parameters)
     {

@@ -33,7 +33,7 @@ internal class UpdateTodoItemRequestValidator : AbstractValidator<UpdateTodoItem
     }
 }
 
-public class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemRequest, TodoItemRes>
+internal class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemRequest, TodoItemRes>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoItemRepository _todoItemRepository;

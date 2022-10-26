@@ -1,7 +1,15 @@
 ﻿namespace Onion.Pres.WebApi.Models.Common;
 
-public class ErrorRes
+internal class ErrorRes
 {
+    public int StatusCode { get; set; }
+    public string Message { get; set; }
+    public string Details { get; set; }
+
+    public ErrorRes()
+    {
+    }
+
     public ErrorRes(int statusCode, string message, string details = null)
     {
         StatusCode = statusCode;
@@ -9,11 +17,4 @@ public class ErrorRes
         Details = details;
     }
 
-    public ErrorRes()
-    {
-    }
-
-    public int StatusCode { get; set; }
-    public string Message { get; set; }
-    public string Details { get; set; }
 }

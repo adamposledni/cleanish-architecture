@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Onion.App.Data.Cache;
 using Onion.App.Data.Database.Entities;
-using Onion.App.Data.Database.Exceptions;
 using Onion.App.Data.Database.Repositories;
 using Onion.Impl.App.Data.Database.Specifications;
 using Onion.Shared.Exceptions;
@@ -12,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace Onion.Impl.App.Data.Database.Repositories;
 
-public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
+internal abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : BaseEntity
 {
     private readonly SqlDbContext _dbContext;
     private readonly ICacheService<TEntity> _cacheService;
@@ -66,6 +65,14 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
     protected SpecificationBuilder<TEntity> Specification() => new();
 
     protected async Task<PaginableList<TEntity>> ReadPaginatedData(
+        int pageSize,
+        int page,
+        [CallerMemberName] string callerMethodName = "")
+    {
+        return await ReadPaginatedData(pageSize, page, callerMethodName);
+    }
+
+    protected async Task<PaginableList<TEntity>> ReadPaginatedData(
         ISpecification<TEntity> specification,
         int pageSize,
         int page,
@@ -74,7 +81,7 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
         Guard.Min(pageSize, 1, nameof(pageSize));
         Guard.Min(page, 1, nameof(page));
 
-        int countOfItems = await ReadDataAsync(specification, q => q.CountAsync(), CacheStrategy.Bypass);
+        int countOfItems = await ReadDataAsync(specification, q => q.CountAsync(), CacheStrategy.Bypass, callerMethodName);
         int countOfPages = (int)Math.Ceiling((double)countOfItems / pageSize);
 
         if (page > countOfPages) throw new ValidationException("Page is out of bounds");
@@ -121,7 +128,9 @@ public abstract class DatabaseRepository<TEntity> : IDatabaseRepository<TEntity>
             callerMethodName,
             specification.Filter?.ToEvaluatedString(),
             specification.OrderBy?.ToEvaluatedString(),
-            specification.OrderByDesc?.ToEvaluatedString()
+            specification.OrderByDesc?.ToEvaluatedString(),
+            specification.Skip?.ToString(),
+            specification.Take?.ToString()
         );
 
         return await _cacheService.UseCacheAsync(cacheKey, valueProvider);

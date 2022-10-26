@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Onion.App.Logic.Common.Mediator.Behaviors;
 
-public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
 

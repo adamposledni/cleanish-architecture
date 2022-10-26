@@ -4,7 +4,7 @@ using Onion.App.Logic.Users.Models;
 
 namespace Onion.App.Logic.Common.Mapper;
 
-public class UserMappingRegistration : IRegister
+internal class UserMappingRegistration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {

@@ -2,7 +2,7 @@
 
 namespace Onion.Impl.App.Data.Database.Specifications;
 
-public static class SpecificationEvaluator
+internal static class SpecificationEvaluator
 {
     public static IQueryable<TEntity> Evaluate<TEntity>(IQueryable<TEntity> query, ISpecification<TEntity> specification) where TEntity : BaseEntity
     {
@@ -19,6 +19,14 @@ public static class SpecificationEvaluator
         if (specification.OrderBy == null && specification.OrderByDesc != null)
         {
             query = query.OrderByDescending(specification.OrderByDesc);
+        }
+        if (specification.Skip != null)
+        {
+            query = query.Skip(specification.Skip.Value);
+        }
+        if (specification.Take != null)
+        {
+            query = query.Take(specification.Skip.Value);
         }
 
         query = specification.Includes.Aggregate(query, (current, include) => include(current));

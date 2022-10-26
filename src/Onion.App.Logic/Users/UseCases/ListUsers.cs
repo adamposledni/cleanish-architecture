@@ -14,7 +14,7 @@ public class ListUsersRequest : IRequest<IEnumerable<UserRes>>
 {
 }
 
-public class ListUsersRequestHandler : IRequestHandler<ListUsersRequest, IEnumerable<UserRes>>
+internal class ListUsersRequestHandler : IRequestHandler<ListUsersRequest, IEnumerable<UserRes>>
 {
     private readonly IUserRepository _userRepository;
 

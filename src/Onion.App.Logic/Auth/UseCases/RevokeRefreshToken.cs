@@ -7,7 +7,6 @@ using Onion.App.Logic.Auth.Models;
 using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Common.Security;
 using Onion.Shared.Clock;
-using System.Threading;
 
 namespace Onion.App.Logic.Auth.UseCases;
 
@@ -25,7 +24,7 @@ internal class RevokeRefreshTokenRequestValidator : AbstractValidator<RevokeRefr
     }
 }
 
-public class RevokeRefreshTokenHandler : IRequestHandler<RevokeRefreshTokenRequest, RefreshTokenRes>
+internal class RevokeRefreshTokenHandler : IRequestHandler<RevokeRefreshTokenRequest, RefreshTokenRes>
 {
     private readonly IClockProvider _clockProvider;
     private readonly IRefreshTokenRepository _refreshTokenRepository;

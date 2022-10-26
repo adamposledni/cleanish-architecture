@@ -3,7 +3,7 @@ using Onion.Shared.Exceptions;
 
 namespace Onion.App.Logic.TodoItems;
 
-public static class TodoItemCommonLogic
+internal static class TodoItemCommonLogic
 {
     public static async Task ValidateTodoListOwnership(ITodoListRepository todoListRepository, Guid todoListId, Guid subjectId)
     {

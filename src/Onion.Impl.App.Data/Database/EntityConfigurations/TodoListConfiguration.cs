@@ -4,7 +4,7 @@ using Onion.Shared.Helpers;
 
 namespace Onion.Impl.App.Data.Database.EntityConfigurations;
 
-public class TodoListConfiguration : BaseEntityConfiguration<TodoList>
+internal class TodoListConfiguration : BaseEntityConfiguration<TodoList>
 {
     public override void Configure(EntityTypeBuilder<TodoList> builder)
     {

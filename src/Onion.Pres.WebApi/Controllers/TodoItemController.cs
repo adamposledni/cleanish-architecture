@@ -6,7 +6,7 @@ using Onion.Pres.WebApi.Atributes;
 namespace Onion.Pres.WebApi.Controllers;
 
 [ApiRoute("todo-lists")]
-public class TodoItemController : BaseController
+internal class TodoItemController : BaseController
 {
     [ProducesResponseType(200)]
     [ProducesErrorResponse(404)]

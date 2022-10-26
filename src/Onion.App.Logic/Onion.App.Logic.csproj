@@ -1,32 +1,34 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Auth\UseCases\UserBasicLogin\**" />
-    <EmbeddedResource Remove="Auth\UseCases\UserBasicLogin\**" />
-    <None Remove="Auth\UseCases\UserBasicLogin\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Auth\UseCases\UserBasicLogin\**" />
+		<EmbeddedResource Remove="Auth\UseCases\UserBasicLogin\**" />
+		<None Remove="Auth\UseCases\UserBasicLogin\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
-    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
+		<PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Onion.App.Data\Onion.App.Data.csproj" />
-    <ProjectReference Include="..\Onion.Shared\Onion.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Onion.App.Data\Onion.App.Data.csproj" />
+		<ProjectReference Include="..\Onion.Shared\Onion.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\Models\" />
-  </ItemGroup>
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Onion.App.Logic.UnitTest</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
 </Project>

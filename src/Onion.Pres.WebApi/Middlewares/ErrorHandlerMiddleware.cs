@@ -7,7 +7,7 @@ using Onion.Shared.Exceptions;
 
 namespace Onion.Pres.WebApi.Middlewares;
 
-public class ErrorHandlerMiddleware
+internal class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;
 
@@ -16,7 +16,6 @@ public class ErrorHandlerMiddleware
         _next = next;
     }
 
-    // no need for guard clause - DI method
     public async Task InvokeAsync(HttpContext httpContext, IStringLocalizer<Strings> localizer, ILogger<ErrorHandlerMiddleware> logger)
     {
         try
@@ -26,7 +25,10 @@ public class ErrorHandlerMiddleware
         catch (Exception ex)
         {
             var error = HandleException(ex, localizer);
-            if (error.StatusCode == 500) logger.LogError("{ex}", ex);
+            if (error.StatusCode == 500)
+            {
+                logger.LogError("{ex}", ex);
+            }
             httpContext.Response.StatusCode = error.StatusCode;
             httpContext.Response.ContentType = "application/json";
             await httpContext.Response.WriteAsJsonAsync(error);

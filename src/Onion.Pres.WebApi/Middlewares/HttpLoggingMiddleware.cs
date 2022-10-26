@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Onion.Pres.WebApi.Middlewares;
 
-public class HttpLoggingMiddleware
+internal class HttpLoggingMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<HttpLoggingMiddleware> _logger;

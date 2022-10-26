@@ -14,7 +14,7 @@ public class ListTodoListsRequest : IRequest<IEnumerable<TodoListBriefRes>>
 {
 }
 
-public class ListTodoListsRequestHandler : IRequestHandler<ListTodoListsRequest, IEnumerable<TodoListBriefRes>>
+internal class ListTodoListsRequestHandler : IRequestHandler<ListTodoListsRequest, IEnumerable<TodoListBriefRes>>
 {
     private readonly ISecurityContextProvider _securityContextProvider;
     private readonly ITodoListRepository _cachedTodoListRepository;

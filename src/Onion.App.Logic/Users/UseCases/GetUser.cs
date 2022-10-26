@@ -29,7 +29,7 @@ internal class GetUserRequestValidator : AbstractValidator<GetUserRequest>
     }
 }
 
-public class GetUserRequestHandler : IRequestHandler<GetUserRequest, UserRes>
+internal class GetUserRequestHandler : IRequestHandler<GetUserRequest, UserRes>
 {
     private readonly IUserRepository _userRepository;
 

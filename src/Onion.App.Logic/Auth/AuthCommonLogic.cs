@@ -10,7 +10,7 @@ using Onion.App.Logic.Common.Mapper;
 
 namespace Onion.App.Logic.Auth;
 
-public static class AuthCommonLogic
+internal static class AuthCommonLogic
 {
     public async static Task<AuthRes> IssueAccessAsync(
         IRefreshTokenRepository refreshTokenRepository,

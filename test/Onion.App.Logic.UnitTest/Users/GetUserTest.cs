@@ -18,7 +18,7 @@ public class GetUserTest
     }
 
     [Fact]
-    public async Task GetUser_Found()
+    public async Task Handle_UserFound()
     {
         // Arrange
         var mockUserRepository = SetupCachedUserRepositoryWithGetById(GetRandomUser());
@@ -33,18 +33,21 @@ public class GetUserTest
     }
 
     [Fact]
-    public async Task GetUser_NotFound()
+    public async Task Handle_UserNotFound()
     {
         // Arrange
         var mockUserRepository = SetupCachedUserRepositoryWithGetById(null);
         GetUserRequestHandler handler = new GetUserRequestHandler(mockUserRepository);
 
         // Act
-        GetUserRequest request = new GetUserRequest(Guid.NewGuid());
-        var userTask = handler.Handle(request, CancellationToken.None);
+        async Task act()
+        {
+            GetUserRequest request = new GetUserRequest(Guid.NewGuid());
+            var user = await handler.Handle(request, CancellationToken.None);
+        }
 
         // Assert
-        await Assert.ThrowsAsync<UserNotFoundException>(async () => await userTask);
+        await Assert.ThrowsAsync<UserNotFoundException>(act);
     }
 
     private User GetRandomUser()

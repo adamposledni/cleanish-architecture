@@ -2,7 +2,7 @@
 
 namespace Onion.App.Logic.Auth.Exceptions;
 
-public class InvalidRefreshTokenException : BadLogicException
+internal class InvalidRefreshTokenException : BadLogicException
 {
     public InvalidRefreshTokenException() : base("InvalidRefreshToken")
     {
