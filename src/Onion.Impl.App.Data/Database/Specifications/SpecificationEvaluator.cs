@@ -12,18 +12,21 @@ internal static class SpecificationEvaluator
         {
             query = query.Where(specification.Filter);
         }
+
         if (specification.OrderBy != null)
         {
             query = query.OrderBy(specification.OrderBy);
         }
-        if (specification.OrderBy == null && specification.OrderByDesc != null)
+        else if (specification.OrderByDesc != null)
         {
             query = query.OrderByDescending(specification.OrderByDesc);
         }
+
         if (specification.Skip != null)
         {
             query = query.Skip(specification.Skip.Value);
         }
+
         if (specification.Take != null)
         {
             query = query.Take(specification.Skip.Value);

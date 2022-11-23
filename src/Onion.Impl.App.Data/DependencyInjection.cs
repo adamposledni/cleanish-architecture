@@ -39,7 +39,10 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddDatabaseRepository<TEntity, TService, TImplementation>(this IServiceCollection services) where TImplementation : TService where TService : ICachable
+    private static IServiceCollection AddDatabaseRepository<TEntity, TService, TImplementation>(this IServiceCollection services) 
+        where TEntity: BaseEntity
+        where TImplementation : TService 
+        where TService : ICachable
     {
         services.AddSingleton<ICacheService<TEntity>, CacheService<TEntity>>();
 

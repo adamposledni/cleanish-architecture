@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Impl.App.Data", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onion.Impl.Shared", "src\Onion.Impl.Shared\Onion.Impl.Shared.csproj", "{47FBAF32-6FE5-4A1A-A6B6-4E35D61DAC0C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61204C7F-E27B-4026-9A43-B92402D1C6D2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{61204C7F-E27B-4026-9A43-B92402D1C6D2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		README.md = README.md

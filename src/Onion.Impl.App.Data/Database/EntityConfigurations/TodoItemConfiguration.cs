@@ -12,6 +12,8 @@ internal class TodoItemConfiguration : BaseEntityConfiguration<TodoItem>
 
         base.Configure(builder);
 
-        builder.Property(i => i.Title).IsRequired();
+        builder.Property(i => i.Title)
+            .IsRequired()
+            .HasMaxLength(50);
     }
 }

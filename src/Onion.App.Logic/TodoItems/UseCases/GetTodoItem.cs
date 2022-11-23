@@ -6,7 +6,6 @@ using Onion.App.Logic.Common.Attributes;
 using Onion.App.Logic.Common.Security;
 using Onion.App.Logic.TodoItems.Exceptions;
 using Onion.App.Logic.TodoLists.Models;
-using System.Threading;
 
 namespace Onion.App.Logic.TodoItems.UseCases;
 

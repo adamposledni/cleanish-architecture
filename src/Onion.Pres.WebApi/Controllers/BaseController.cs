@@ -16,11 +16,16 @@ namespace Onion.Pres.WebApi.Controllers;
 [Consumes("application/json")]
 internal abstract class BaseController : ControllerBase
 {
-    private ISender _mediator = null!;
+    private ISender _mediator = null;
     
     protected ObjectResult Created(object value)
     {
         return StatusCode(201, value);
+    }
+
+    protected NoContentResult NoContent(object value)
+    {
+        return NoContent();
     }
 
     protected async Task<TResponse> Mediate<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)

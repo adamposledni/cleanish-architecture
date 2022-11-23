@@ -7,7 +7,6 @@ using Onion.App.Logic.Auth.Exceptions;
 using Onion.App.Logic.Auth.Models;
 using Onion.App.Logic.Common;
 using Onion.Shared.Clock;
-using System.Threading;
 
 namespace Onion.App.Logic.Auth.UseCases;
 

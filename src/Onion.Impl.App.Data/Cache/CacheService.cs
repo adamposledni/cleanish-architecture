@@ -2,16 +2,19 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Onion.App.Data.Cache;
+using Onion.App.Data.Database.Entities;
 using Onion.Shared.Helpers;
 using System.Threading;
 
 namespace Onion.Impl.App.Data.Cache;
 
-internal class CacheService<TEntity> : ICacheService<TEntity>
+internal sealed class CacheService<TEntity> : ICacheService<TEntity>, IDisposable where TEntity: BaseEntity
 {
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheOptions;
-    private CancellationTokenSource _resetCacheToken = new(TimeSpan.FromMilliseconds(100));
+    private CancellationTokenSource _resetCacheToken = new();
+    //private CancellationTokenSource _resetCacheToken = new(TimeSpan.FromMilliseconds(50));
+    private bool _disposed = false;
 
     public CacheService(IMemoryCache memoryCache, IOptions<CacheSettings> cacheSettings)
     {
@@ -48,5 +51,16 @@ internal class CacheService<TEntity> : ICacheService<TEntity>
         _resetCacheToken.Cancel();
         _resetCacheToken.Dispose();
         _resetCacheToken = new();
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        if (_resetCacheToken != null)
+        {
+            _resetCacheToken.Dispose();
+            _resetCacheToken = null;
+        }
+        _disposed = true;
     }
 }

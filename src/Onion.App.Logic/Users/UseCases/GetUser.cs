@@ -13,11 +13,11 @@ namespace Onion.App.Logic.Users.UseCases;
 [Authorize(Roles = new[] { UserRole.Admin })]
 public class GetUserRequest : IRequest<UserRes>
 {
-    public Guid UserId { get; set; }
+    public Guid Id { get; set; }
 
     public GetUserRequest(Guid userId)
     {
-        UserId = userId;
+        Id = userId;
     }
 }
 
@@ -25,7 +25,7 @@ internal class GetUserRequestValidator : AbstractValidator<GetUserRequest>
 {
     public GetUserRequestValidator()
     {
-        RuleFor(x => x.UserId).NotEmpty();
+        RuleFor(x => x.Id).NotEmpty();
     }
 }
 
@@ -40,7 +40,7 @@ internal class GetUserRequestHandler : IRequestHandler<GetUserRequest, UserRes>
 
     public async Task<UserRes> Handle(GetUserRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.UserId);
+        var user = await _userRepository.GetByIdAsync(request.Id);
         if (user == null) throw new UserNotFoundException();
 
         return user.Adapt<UserRes>();
