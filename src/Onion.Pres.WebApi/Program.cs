@@ -75,7 +75,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-//app.UseSpa(c => c.Options.SourcePath = "wwwroot");
+app.UseSpa(c => c.Options.SourcePath = "wwwroot");
 
 logger.LogInformation("Web application was successfully created");
 app.Run();

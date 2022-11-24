@@ -6,7 +6,7 @@ using Onion.Pres.WebApi.Atributes;
 namespace Onion.Pres.WebApi.Controllers;
 
 [ApiRoute("auth")]
-internal class AuthController : BaseController
+public class AuthController : BaseController
 {
     [ProducesResponseType(200)]
     [HttpPost("login")]

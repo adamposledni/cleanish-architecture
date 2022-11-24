@@ -6,7 +6,7 @@ using Onion.Pres.WebApi.Atributes;
 namespace Onion.Pres.WebApi.Controllers;
 
 [ApiRoute("users")]
-internal class UserController : BaseController
+public class UserController : BaseController
 {
     [ProducesResponseType(200)]
     [ProducesErrorResponse(404)]

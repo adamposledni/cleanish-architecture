@@ -14,7 +14,7 @@ namespace Onion.Pres.WebApi.Controllers;
 [ProducesErrorResponse(500)]
 [Produces("application/json")]
 [Consumes("application/json")]
-internal abstract class BaseController : ControllerBase
+public abstract class BaseController : ControllerBase
 {
     private ISender _mediator = null;
     
