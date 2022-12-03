@@ -1,10 +1,10 @@
 {
     "$schema": "http://json.schemastore.org/template",
-    "identity": "Hroudaadam.OnionArchitecture.WebApi",
-    "shortName": "onion",
-    "name": "Onion architecture - Web API",
+    "identity": "Hroudaadam.CleanishArchitecture.WebApi",
+    "shortName": "Cleanish",
+    "name": "Cleanish architecture - Web API",
     "description": "Web API solution.",
-    "sourceName": "Onion",
+    "sourceName": "Cleanish",
     "author": "Adam Hrouda",
     "classifications": [
         "Common",
@@ -29,7 +29,7 @@
                 { 
                     "condition": "(!enableGoogleAuth)", 
                     "exclude": [ 
-                        "src/Onion.Application.DataAccess/Exceptions/Auth/GoogleLinkMissingException.cs"
+                        "src/Cleanish.Application.DataAccess/Exceptions/Auth/GoogleLinkMissingException.cs"
                     ] 
                 },
                 {

@@ -1,39 +1,39 @@
-## Onion architecture
+## Cleanish architecture
 
-**Tasks:** [https://github.com/hroudaadam/onion-architecture/projects/1](https://github.com/hroudaadam/onion-architecture/projects/1)
+**Tasks:** [https://github.com/hroudaadam/Cleanish-architecture/projects/1](https://github.com/hroudaadam/Cleanish-architecture/projects/1)
 
 
 **TODOS**
 - merge Infrastructure.DataAccess a Infrastructure.Core
 - layers
     - Presentation
-        - Onion.Pres.WebApi
+        - Cleanish.Pres.WebApi
             - Controllers
             - Middlewares
             - Models
             - Exceptions
     - Job
-        - Onion.Job.Common
-        - Onion.Job.DailyNotifications
+        - Cleanish.Job.Common
+        - Cleanish.Job.DailyNotifications
     - Application
-        - Onion.App.Logic   
+        - Cleanish.App.Logic   
             - UseCases
             - Models
             - Validations
             - Exceptions
-        - Onion.App.Data
+        - Cleanish.App.Data
             - Cache
             - OAuth,Password,Token providers
             - Localization
             - Repositories
             - Entities
     - Shared
-        - Onion.Shared
+        - Cleanish.Shared
             - Clock
             - Extensions
             - Helpers
             - Structures
             - Exceptions
     - Implementation
-        - Onion.Impl.App.Data   
-        - Onion.Impl.Shared
+        - Cleanish.Impl.App.Data   
+        - Cleanish.Impl.Shared
