@@ -29,7 +29,9 @@ internal class WebTokenService : IWebTokenService
         {
             Subject = new ClaimsIdentity(claims),
             Expires = _clockProvider.Now.AddMinutes(expiresIn),
-            SigningCredentials = new SigningCredentials(_tokenSettings.GetSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(_tokenSettings.GetSecurityKey(), SecurityAlgorithms.HmacSha256Signature),
+            Issuer = _tokenSettings.Issuer,
+            Audience = _tokenSettings.Audience
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);

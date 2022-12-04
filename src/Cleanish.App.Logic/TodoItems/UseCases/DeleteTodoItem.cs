@@ -43,7 +43,7 @@ internal class DeleteTodoItemRequestHandler : IRequestHandler<DeleteTodoItemRequ
 
     public async Task<TodoItemRes> Handle(DeleteTodoItemRequest request, CancellationToken cancellationToken)
     {
-        var subjectId = _securityContextProvider.GetSubjectId();
+        Guid subjectId = _securityContextProvider.GetSubjectId();
 
         TodoItem todoItem = await _todoItemRepository.GetByIdAsync(request.Id);
         if (todoItem == null)

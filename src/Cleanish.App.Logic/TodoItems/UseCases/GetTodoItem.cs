@@ -6,6 +6,7 @@ using Cleanish.App.Logic.Common.Attributes;
 using Cleanish.App.Logic.Common.Security;
 using Cleanish.App.Logic.TodoItems.Exceptions;
 using Cleanish.App.Logic.TodoLists.Models;
+using Cleanish.App.Data.Database.Entities;
 
 namespace Cleanish.App.Logic.TodoItems.UseCases;
 
@@ -43,8 +44,8 @@ internal class GetTodoItemRequestHandler : IRequestHandler<GetTodoItemRequest, T
 
     public async Task<TodoItemRes> Handle(GetTodoItemRequest request, CancellationToken cancellationToken)
     {
-        var subjectId = _securityContextProvider.GetSubjectId();
-        var todoItem = await _cachedTodoItemRepository.GetByIdAsync(request.TodoItemId);
+        Guid subjectId = _securityContextProvider.GetSubjectId();
+        TodoItem todoItem = await _cachedTodoItemRepository.GetByIdAsync(request.TodoItemId);
         if (todoItem == null) throw new TodoItemNotFoundException();
         TodoItemCommonLogic.ValidateTodoItemOwnership(todoItem, subjectId);
 

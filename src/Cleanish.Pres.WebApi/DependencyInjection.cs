@@ -10,7 +10,6 @@ using Cleanish.Impl.App.Data.Security.WebToken;
 using Cleanish.Pres.WebApi.Security;
 using Cleanish.Shared.Exceptions;
 using System.Globalization;
-using System.Reflection;
 
 namespace Cleanish.Pres.WebApi;
 
@@ -77,9 +76,12 @@ public static class DependencyInjection
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
                     IssuerSigningKey = webTokenSettings.GetSecurityKey(),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidIssuer = webTokenSettings.Issuer,
+                    ValidAudience = webTokenSettings.Audience,
                     ClockSkew = TimeSpan.Zero
                 };
             });

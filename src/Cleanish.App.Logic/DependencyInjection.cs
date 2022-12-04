@@ -16,8 +16,6 @@ public static class DependencyInjection
     {
         var mapperConfig = TypeAdapterConfig.GlobalSettings;
         mapperConfig.Scan(Assembly.GetExecutingAssembly());
-        services.AddSingleton(mapperConfig);
-        services.AddScoped<IMapper, ServiceMapper>();
 
         services.Configure<ApplicationSettings>(configuration.GetSection(ApplicationSettings.CONFIG_KEY));
 

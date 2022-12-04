@@ -43,9 +43,9 @@ internal class UpdateTodoItemRequestHandler : IRequestHandler<UpdateTodoItemRequ
 
     public async Task<TodoItemRes> Handle(UpdateTodoItemRequest request, CancellationToken cancellationToken)
     {
-        var subjectId = _securityContextProvider.GetSubjectId();
+        Guid subjectId = _securityContextProvider.GetSubjectId();
 
-        var todoItem = await _todoItemRepository.GetByIdAsync(request.Id);
+        TodoItem todoItem = await _todoItemRepository.GetByIdAsync(request.Id);
         if (todoItem == null) throw new TodoItemNotFoundException();
         TodoItemCommonLogic.ValidateTodoItemOwnership(todoItem, subjectId);
         UpdateFields(todoItem, request);

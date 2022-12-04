@@ -69,11 +69,8 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHealthChecks("/health");
-    endpoints.MapControllers();
-});
+app.MapHealthChecks("/health");
+app.MapControllers();
 
 app.UseSpa(c => c.Options.SourcePath = "wwwroot");
 

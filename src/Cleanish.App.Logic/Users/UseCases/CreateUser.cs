@@ -44,14 +44,14 @@ internal class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, Use
         }
 
         (byte[] hash, byte[] salt) = _cryptographyService.GetStringHash(request.Password);
-        var newUser = request.Adapt<User>(u =>
+        User newUser = request.Adapt<User>(u =>
         {
             u.PasswordHash = hash;
             u.PasswordSalt = salt;
         });
        
-        var user = await _userRepository.CreateAsync(newUser);
+        newUser = await _userRepository.CreateAsync(newUser);
 
-        return user.Adapt<UserRes>();
+        return newUser.Adapt<UserRes>();
     }
 }

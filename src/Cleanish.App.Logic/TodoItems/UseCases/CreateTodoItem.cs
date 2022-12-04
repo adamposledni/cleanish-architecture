@@ -37,8 +37,8 @@ internal class CreateTodoItemRequestHandler : IRequestHandler<CreateTodoItemRequ
 
     public async Task<TodoItemRes> Handle(CreateTodoItemRequest request, CancellationToken cancellationToken)
     {
-        var subjectId = _securityContextProvider.GetSubjectId();
-        var newTodoItem = request.Adapt<TodoItem>(ti => ti.UserId = subjectId);
+        Guid subjectId = _securityContextProvider.GetSubjectId();
+        TodoItem newTodoItem = request.Adapt<TodoItem>(ti => ti.UserId = subjectId);
         newTodoItem = await _todoItemRepository.CreateAsync(newTodoItem);
 
         return newTodoItem.Adapt<TodoItemRes>();

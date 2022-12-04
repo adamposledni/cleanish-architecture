@@ -8,14 +8,13 @@ namespace Cleanish.Pres.WebApi.Security;
 internal class SecurityContextProvider : ISecurityContextProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-
     private readonly Lazy<SecurityContext> _securityContext;
     public SecurityContext SecurityContext => _securityContext.Value;
 
     public SecurityContextProvider(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-        _securityContext = new Lazy<SecurityContext>(() => BuildSecurityContext());
+        _securityContext = new Lazy<SecurityContext>(BuildSecurityContext);
     }
 
     private SecurityContext BuildSecurityContext()
@@ -27,9 +26,9 @@ internal class SecurityContextProvider : ISecurityContextProvider
         var roleClaim = claims.FirstOrDefault(c => c.Type == "role")?.Value;
 
         if (string.IsNullOrWhiteSpace(subClaim) || 
-            !Guid.TryParse(subClaim, out var subjectId) ||
+            !Guid.TryParse(subClaim, out Guid subjectId) ||
             string.IsNullOrWhiteSpace(roleClaim) ||
-            !Enum.TryParse<UserRole>(roleClaim, out var userRole))
+            !Enum.TryParse<UserRole>(roleClaim, out UserRole userRole))
         {
             return null;
         }

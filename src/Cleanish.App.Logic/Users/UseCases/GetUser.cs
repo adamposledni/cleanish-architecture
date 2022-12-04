@@ -7,6 +7,7 @@ using Cleanish.App.Data.Database.Repositories;
 using Cleanish.App.Logic.Common.Attributes;
 using Cleanish.App.Logic.Users.Exceptions;
 using Cleanish.App.Logic.Users.Models;
+using Cleanish.App.Data.Database.Entities;
 
 namespace Cleanish.App.Logic.Users.UseCases;
 
@@ -40,7 +41,7 @@ internal class GetUserRequestHandler : IRequestHandler<GetUserRequest, UserRes>
 
     public async Task<UserRes> Handle(GetUserRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.Id);
+        User user = await _userRepository.GetByIdAsync(request.Id);
         if (user == null) throw new UserNotFoundException();
 
         return user.Adapt<UserRes>();
