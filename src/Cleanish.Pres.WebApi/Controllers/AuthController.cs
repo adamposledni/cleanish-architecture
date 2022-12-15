@@ -14,20 +14,4 @@ public class AuthController : BaseController
     {
         return Ok(await Mediate(body));
     }
-
-    [ProducesResponseType(200)]
-    [ProducesErrorResponse(404)]
-    [HttpPost("revoke-refresh-token")]
-    public async Task<ActionResult<RefreshTokenRes>> RevokeRefreshToken(RevokeRefreshTokenRequest body)
-    {
-        return Ok(await Mediate(body));
-    }
-
-    [ProducesResponseType(200)]
-    [ProducesErrorResponse(404)]
-    [HttpPost("refresh-access-token")]
-    public async Task<ActionResult<AuthRes>> RefreshAccessToken(RefreshAccessTokenRequest body)
-    {
-        return Ok(await Mediate(body));
-    }
 }

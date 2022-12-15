@@ -8,7 +8,6 @@ public class AuthRes
     public string Email { get; set; }
     public UserRole Role { get; set; }
     public string AccessToken { get; set; }
-    public string RefreshToken { get; set; }
 }
 
 

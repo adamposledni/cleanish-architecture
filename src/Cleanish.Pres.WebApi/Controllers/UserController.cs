@@ -10,10 +10,10 @@ public class UserController : BaseController
 {
     [ProducesResponseType(200)]
     [ProducesErrorResponse(404)]
-    [HttpGet("{userId}")]
-    public async Task<ActionResult<UserRes>> Get([FromRoute] Guid userId)
+    [HttpGet("me")]
+    public async Task<ActionResult<UserRes>> GetCurrentUser()
     {
-        return Ok(await Mediate(new GetUserRequest(userId)));
+        return Ok(await Mediate(new GetCurrentUserRequest()));
     }
 
     [ProducesResponseType(200)]

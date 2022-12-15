@@ -50,8 +50,10 @@ internal class WebTokenService : IWebTokenService
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = _tokenSettings.GetSecurityKey(),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidIssuer = _tokenSettings.Issuer,
+                    ValidAudience = _tokenSettings.Audience,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
                     ClockSkew = TimeSpan.Zero
                 },
                 out _);

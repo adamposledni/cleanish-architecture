@@ -82,7 +82,7 @@ public static class DependencyInjection
                     IssuerSigningKey = webTokenSettings.GetSecurityKey(),
                     ValidIssuer = webTokenSettings.Issuer,
                     ValidAudience = webTokenSettings.Audience,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
                 };
             });
         #endregion

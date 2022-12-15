@@ -26,8 +26,7 @@ public static class DependencyInjection
 
         services
             .AddDatabaseRepository<User, IUserRepository, UserRepository>()
-            .AddDatabaseRepository<TodoItem, ITodoItemRepository, TodoItemRepository>()
-            .AddDatabaseRepository<RefreshToken, IRefreshTokenRepository, RefreshTokenRepository>();
+            .AddDatabaseRepository<TodoItem, ITodoItemRepository, TodoItemRepository>();
 
         services
             .Configure<WebTokenSettings>(configuration.GetSection(WebTokenSettings.CONFIG_KEY))

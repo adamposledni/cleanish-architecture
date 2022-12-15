@@ -4,15 +4,16 @@ using Cleanish.App.Data.Cache;
 using Cleanish.App.Data.Database.Entities;
 using Cleanish.App.Data.Database.Entities.Fields;
 using Cleanish.App.Data.Database.Repositories;
-using Cleanish.App.Logic.Users.Exceptions;
 using Cleanish.App.Logic.Users.UseCases;
 using System.Reflection;
+using Cleanish.App.Logic.Common.Security;
+using Cleanish.App.Logic.Users.Exceptions;
 
 namespace Cleanish.App.Logic.Test.Users;
 
-public class GetUserTest
+public class GetCurrentUserTest
 {
-    public GetUserTest()
+    public GetCurrentUserTest()
     {
         SetupMapper();
     }
@@ -21,40 +22,46 @@ public class GetUserTest
     public async Task Handle_UserFound()
     {
         // Arrange
-        var mockUserRepository = SetupCachedUserRepositoryWithGetById(GetRandomUser());
-        GetUserRequestHandler handler = new GetUserRequestHandler(mockUserRepository);
+        Guid requestedUserId = Guid.NewGuid();
+        var returnedUser = GetRandomUser(requestedUserId);
+        var mockUserRepository = SetupCachedUserRepositoryWithGetById(requestedUserId, returnedUser);
+        var mockSecurityContextProvider = SetupSecurityContextProviderWithGetSubjectId(requestedUserId);
+        GetCurrentUserRequestHandler handler = new(mockUserRepository, mockSecurityContextProvider);
 
         // Act
-        GetUserRequest request = new GetUserRequest(Guid.NewGuid());
+        GetCurrentUserRequest request = new();
         var user = await handler.Handle(request, CancellationToken.None);
 
         // Assert
         Assert.True(user != null);
+        Assert.True(user.Id == requestedUserId);
     }
 
     [Fact]
     public async Task Handle_UserNotFound()
     {
         // Arrange
-        var mockUserRepository = SetupCachedUserRepositoryWithGetById(null);
-        GetUserRequestHandler handler = new GetUserRequestHandler(mockUserRepository);
+        Guid requestedUserId = Guid.NewGuid();
+        var mockUserRepository = SetupCachedUserRepositoryWithGetById(requestedUserId, null);
+        var mockSecurityContextProvider = SetupSecurityContextProviderWithGetSubjectId(requestedUserId);
+        GetCurrentUserRequestHandler handler = new(mockUserRepository, mockSecurityContextProvider);
 
         // Act
-        async Task act()
+        async Task act() 
         {
-            GetUserRequest request = new GetUserRequest(Guid.NewGuid());
-            var user = await handler.Handle(request, CancellationToken.None);
+            GetCurrentUserRequest request = new();
+            _ = await handler.Handle(request, CancellationToken.None);
         }
 
         // Assert
         await Assert.ThrowsAsync<UserNotFoundException>(act);
     }
 
-    private User GetRandomUser()
+    private User GetRandomUser(Guid id)
     {
         return new User()
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             Created = DateTime.UtcNow,
             Email = "admin@abc.com",
             Role = UserRole.Admin,
@@ -71,10 +78,22 @@ public class GetUserTest
         mapperConfig.Scan(Assembly.GetAssembly(typeof(DependencyInjection)));
     }
 
-    private Cached<IUserRepository> SetupCachedUserRepositoryWithGetById(User returnValue)
+    private Cached<IUserRepository> SetupCachedUserRepositoryWithGetById(Guid requestedId, User returnValue)
     {
         var mockUserRepository = new Mock<IUserRepository>();
-        mockUserRepository.Setup(m => m.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(() => returnValue);
+        mockUserRepository
+            .Setup(m => m.GetByIdAsync(It.Is<Guid>(p => p == requestedId)))
+                .ReturnsAsync(() => returnValue);
         return new Cached<IUserRepository>(mockUserRepository.Object);
+    }
+
+    private ISecurityContextProvider SetupSecurityContextProviderWithGetSubjectId(Guid returnValue)
+    {
+        var mockSecurityContextProvider = new Mock<ISecurityContextProvider>();
+        mockSecurityContextProvider
+            .Setup(m => m.GetSubjectId())
+                .Returns(returnValue);
+
+        return mockSecurityContextProvider.Object;
     }
 }

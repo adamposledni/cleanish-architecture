@@ -8,6 +8,8 @@ using Cleanish.App.Logic.Auth.Models;
 using Cleanish.App.Logic.Common;
 using Cleanish.Shared.Clock;
 using System.Threading;
+using System.Security.Claims;
+using Cleanish.App.Data.Database.Entities;
 
 namespace Cleanish.App.Logic.Auth.UseCases;
 
@@ -34,24 +36,18 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
 {
     private readonly IUserRepository _userRepository;
     private readonly ICryptographyService _cryptographyService;
-    private readonly IClockProvider _clockProvider;
     private readonly IWebTokenService _webTokenService;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ApplicationSettings _applicationSettings;
 
     public UserBasicLoginHandler(
         IUserRepository userRepository,
         ICryptographyService cryptographyService,
-        IClockProvider clockProvider,
         IWebTokenService webTokenService,
-        IRefreshTokenRepository refreshTokenRepository,
         IOptions<ApplicationSettings> applicationSettings)
     {
         _userRepository = userRepository;
         _cryptographyService = cryptographyService;
-        _clockProvider = clockProvider;
         _webTokenService = webTokenService;
-        _refreshTokenRepository = refreshTokenRepository;
         _applicationSettings = applicationSettings.Value;
     }
 
@@ -63,13 +59,22 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
             throw new InvalidEmailPasswordException();
         }
 
-        return await AuthCommonLogic.IssueAccessAsync(
-            _refreshTokenRepository,
-            _webTokenService,
-            _cryptographyService,
-            _clockProvider,
-            user,
-            _applicationSettings.AccessTokenLifetime,
-            _applicationSettings.RefreshTokenLifetime);
+        string accessToken = GenerateAccessToken(user);
+
+        return user.Adapt<AuthRes>(a =>
+        {
+            a.AccessToken = accessToken;
+        });
+    }
+
+    private string GenerateAccessToken(User user)
+    {
+        List<Claim> claims = new()
+        {
+            new Claim("sub", user.Id.ToString()),
+            new Claim("email", user.Email),
+            new Claim("role", user.Role.ToString())
+        };
+        return _webTokenService.CreateWebToken(claims, _applicationSettings.AccessTokenLifetime);
     }
 }

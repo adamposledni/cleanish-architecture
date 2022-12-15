@@ -8,7 +8,6 @@ public class User : BaseEntity
     public byte[] PasswordHash { get; set; }
     public byte[] PasswordSalt { get; set; }
     public UserRole Role { get; set; }
-    public IEnumerable<RefreshToken> RefreshTokens { get; set; }
 
     public IEnumerable<TodoItem> TodoItems { get; set; }
 }

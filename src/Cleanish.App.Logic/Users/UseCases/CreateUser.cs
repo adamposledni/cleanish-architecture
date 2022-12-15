@@ -6,7 +6,6 @@ using Cleanish.App.Data.Database.Repositories;
 using Cleanish.App.Data.Security;
 using Cleanish.App.Logic.Users.Exceptions;
 using Cleanish.App.Logic.Users.Models;
-using System.Threading;
 
 namespace Cleanish.App.Logic.Users.UseCases;
 
@@ -20,8 +19,8 @@ internal class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
 {
     public CreateUserRequestValidator()
     {
-        RuleFor(x => x.Email).EmailAddress().NotEmpty();
-        RuleFor(x => x.Password).NotEmpty();
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Password).NotEmpty().MinimumLength(8);
     }
 }
 

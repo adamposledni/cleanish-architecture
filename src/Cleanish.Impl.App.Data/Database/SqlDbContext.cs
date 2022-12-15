@@ -12,7 +12,6 @@ internal class SqlDbContext : DbContext
     private readonly IClockProvider _clockProvider;
 
     public DbSet<User> Users { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<TodoItem> TodoItems { get; set; }
 
     public SqlDbContext(DbContextOptions<SqlDbContext> options, IClockProvider clockProvider) : base(options)
