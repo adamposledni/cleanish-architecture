@@ -6,7 +6,7 @@ using Cleanish.Pres.WebApi.Atributes;
 namespace Cleanish.Pres.WebApi.Controllers;
 
 [ApiRoute("todo-items")]
-public class TodoItemController : BaseController
+public class TodoItemController : BaseApiController
 {
     [ProducesResponseType(200)]
     [ProducesErrorResponse(404)]
@@ -37,7 +37,6 @@ public class TodoItemController : BaseController
         UpdateTodoItemRequest body)
     {
         ValidateEquals(todoItemId, body.Id);
-
         return Ok(await Mediate(body));
     }
 

@@ -2,14 +2,11 @@
 using MediatR;
 using Microsoft.Extensions.Options;
 using Cleanish.App.Data.Database.Repositories;
-using Cleanish.App.Data.Security;
 using Cleanish.App.Logic.Auth.Exceptions;
 using Cleanish.App.Logic.Auth.Models;
 using Cleanish.App.Logic.Common;
-using Cleanish.Shared.Clock;
-using System.Threading;
 using System.Security.Claims;
-using Cleanish.App.Data.Database.Entities;
+using Cleanish.Shared.Security;
 
 namespace Cleanish.App.Logic.Auth.UseCases;
 
@@ -54,27 +51,22 @@ internal class UserBasicLoginHandler : IRequestHandler<UserBasicLoginRequest, Au
     public async Task<AuthRes> Handle(UserBasicLoginRequest request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email);
-        if (user == null || !_cryptographyService.VerifyStringHash(request.Password, user.PasswordHash, user.PasswordSalt))
+        if (user == null || !_cryptographyService.VerifyHashAndSalt(request.Password, user.PasswordHash, user.PasswordSalt))
         {
             throw new InvalidEmailPasswordException();
         }
 
-        string accessToken = GenerateAccessToken(user);
-
-        return user.Adapt<AuthRes>(a =>
-        {
-            a.AccessToken = accessToken;
-        });
-    }
-
-    private string GenerateAccessToken(User user)
-    {
         List<Claim> claims = new()
         {
             new Claim("sub", user.Id.ToString()),
             new Claim("email", user.Email),
             new Claim("role", user.Role.ToString())
         };
-        return _webTokenService.CreateWebToken(claims, _applicationSettings.AccessTokenLifetime);
+        string accessToken = _webTokenService.CreateWebToken(claims, _applicationSettings.AccessTokenLifetime);
+
+        return user.Adapt<AuthRes>(a =>
+        {
+            a.AccessToken = accessToken;
+        });
     }
 }

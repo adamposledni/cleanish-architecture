@@ -6,7 +6,7 @@ using Cleanish.Pres.WebApi.Atributes;
 namespace Cleanish.Pres.WebApi.Controllers;
 
 [ApiRoute("users")]
-public class UserController : BaseController
+public class UserController : BaseApiController
 {
     [ProducesResponseType(200)]
     [ProducesErrorResponse(404)]

@@ -1,11 +1,6 @@
 ﻿namespace Cleanish.Shared.Exceptions;
 
-public abstract class BadLogicException : Exception
+public abstract class BadLogicException : BaseApplicationException
 {
-    public string MessageKey { get; private set; }
-
-    public BadLogicException(string messageKey) : base()
-    {
-        MessageKey = messageKey;
-    }
+    public BadLogicException(string messageKey) : base(messageKey) { }
 }

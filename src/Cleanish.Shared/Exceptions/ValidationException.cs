@@ -1,11 +1,10 @@
 ﻿namespace Cleanish.Shared.Exceptions;
 
-public class ValidationException : Exception
+public class ValidationException : BaseApplicationException
 {
-    public string MessageKey { get; init; } = "FailedValidation";
-    public string Details { get; set; }
+    public string Details { get; init; }
 
-    public ValidationException(string details) : base()
+    public ValidationException(string details) : base("FailedValidation")
     {
         Details = details;
     }

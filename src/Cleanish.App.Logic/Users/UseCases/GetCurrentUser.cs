@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Mapster;
+﻿using Mapster;
 using MediatR;
 using Cleanish.App.Data.Cache;
 using Cleanish.App.Data.Database.Repositories;
@@ -12,9 +11,7 @@ using Cleanish.App.Logic.Common.Security;
 namespace Cleanish.App.Logic.Users.UseCases;
 
 [Authorize]
-public class GetCurrentUserRequest : IRequest<UserRes>
-{
-}
+public class GetCurrentUserRequest : IRequest<UserRes> { }
 
 internal class GetCurrentUserRequestHandler : IRequestHandler<GetCurrentUserRequest, UserRes>
 {

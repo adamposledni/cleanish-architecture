@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Cleanish.App.Data.Security;
 using Cleanish.Shared.Clock;
 using Cleanish.Shared.Helpers;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Cleanish.Shared.Security;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Cleanish.Impl.App.Data.Security.WebToken;
+namespace Cleanish.Impl.Shared.Security.WebToken;
 
 internal class WebTokenService : IWebTokenService
 {

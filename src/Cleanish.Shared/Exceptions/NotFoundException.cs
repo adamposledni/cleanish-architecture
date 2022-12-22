@@ -1,11 +1,6 @@
 ﻿namespace Cleanish.Shared.Exceptions;
 
-public abstract class NotFoundException : Exception
+public abstract class NotFoundException : BaseApplicationException
 {
-    public string MessageKey { get; private set; }
-
-    public NotFoundException(string messageKey) : base()
-    {
-        MessageKey = messageKey;
-    }
+    public NotFoundException(string messageKey) : base(messageKey) { }
 }

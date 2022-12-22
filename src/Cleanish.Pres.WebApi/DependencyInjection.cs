@@ -6,10 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Cleanish.App.Logic.Common.Security;
-using Cleanish.Impl.App.Data.Security.WebToken;
 using Cleanish.Pres.WebApi.Security;
 using Cleanish.Shared.Exceptions;
 using System.Globalization;
+using Cleanish.Impl.Shared.Security.WebToken;
 
 namespace Cleanish.Pres.WebApi;
 

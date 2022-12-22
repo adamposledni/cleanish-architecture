@@ -28,7 +28,7 @@ internal class SecurityContextProvider : ISecurityContextProvider
         if (string.IsNullOrWhiteSpace(subClaim) || 
             !Guid.TryParse(subClaim, out Guid subjectId) ||
             string.IsNullOrWhiteSpace(roleClaim) ||
-            !Enum.TryParse<UserRole>(roleClaim, out UserRole userRole))
+            !Enum.TryParse(roleClaim, out UserRole userRole))
         {
             return null;
         }

@@ -28,7 +28,8 @@
                         "**/*.filelist",
                         "**/*.user",
                         "**/*.lock.json",
-                        ".git"
+                        ".git",
+                        "**/appsettings.*.json"
                     ]
                 } 
 

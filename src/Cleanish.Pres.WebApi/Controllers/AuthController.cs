@@ -6,7 +6,7 @@ using Cleanish.Pres.WebApi.Atributes;
 namespace Cleanish.Pres.WebApi.Controllers;
 
 [ApiRoute("auth")]
-public class AuthController : BaseController
+public class AuthController : BaseApiController
 {
     [ProducesResponseType(200)]
     [HttpPost("login")]

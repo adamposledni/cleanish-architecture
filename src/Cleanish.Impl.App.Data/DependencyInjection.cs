@@ -4,12 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Cleanish.App.Data.Cache;
 using Cleanish.App.Data.Database.Entities;
 using Cleanish.App.Data.Database.Repositories;
-using Cleanish.App.Data.Security;
 using Cleanish.Impl.App.Data.Cache;
 using Cleanish.Impl.App.Data.Database;
 using Cleanish.Impl.App.Data.Database.Repositories;
-using Cleanish.Impl.App.Data.Security.Crypto;
-using Cleanish.Impl.App.Data.Security.WebToken;
 
 namespace Cleanish.Impl.App.Data;
 
@@ -27,12 +24,6 @@ public static class DependencyInjection
         services
             .AddDatabaseRepository<User, IUserRepository, UserRepository>()
             .AddDatabaseRepository<TodoItem, ITodoItemRepository, TodoItemRepository>();
-
-        services
-            .Configure<WebTokenSettings>(configuration.GetSection(WebTokenSettings.CONFIG_KEY))
-            .AddTransient<IWebTokenService, WebTokenService>();
-
-        services.AddTransient<ICryptographyService, CryptographyService>();
 
         return services;
     }

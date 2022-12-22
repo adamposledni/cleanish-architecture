@@ -1,7 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Cleanish.Shared.Helpers;
+﻿using Cleanish.Shared.Helpers;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Cleanish.Impl.App.Data.Security.WebToken;
+namespace Cleanish.Impl.Shared.Security.WebToken;
 
 public class WebTokenSettings
 {

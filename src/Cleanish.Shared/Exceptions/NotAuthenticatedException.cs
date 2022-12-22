@@ -1,10 +1,6 @@
 ﻿namespace Cleanish.Shared.Exceptions;
 
-public class NotAuthenticatedException : Exception
+public class NotAuthenticatedException : BaseApplicationException
 {
-    public string MessageKey { get; init; } = "NotAuthenticated";
-
-    public NotAuthenticatedException() : base()
-    {
-    }
+    public NotAuthenticatedException() : base("NotAuthenticated") { }
 }

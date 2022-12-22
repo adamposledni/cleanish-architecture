@@ -3,9 +3,9 @@ using Mapster;
 using MediatR;
 using Cleanish.App.Data.Database.Entities;
 using Cleanish.App.Data.Database.Repositories;
-using Cleanish.App.Data.Security;
 using Cleanish.App.Logic.Users.Exceptions;
 using Cleanish.App.Logic.Users.Models;
+using Cleanish.Shared.Security;
 
 namespace Cleanish.App.Logic.Users.UseCases;
 
@@ -42,7 +42,7 @@ internal class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, Use
             throw new EmailAlreadyTakenException();
         }
 
-        (byte[] hash, byte[] salt) = _cryptographyService.GetStringHash(request.Password);
+        (byte[] hash, byte[] salt) = _cryptographyService.GetHashAndSalt(request.Password);
         User newUser = request.Adapt<User>(u =>
         {
             u.PasswordHash = hash;

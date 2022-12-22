@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Cleanish.App.Data.Security;
+namespace Cleanish.Shared.Security;
 
 public interface IWebTokenService
 {

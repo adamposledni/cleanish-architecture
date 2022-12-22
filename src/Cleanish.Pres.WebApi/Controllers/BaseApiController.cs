@@ -14,7 +14,7 @@ namespace Cleanish.Pres.WebApi.Controllers;
 [ProducesErrorResponse(500)]
 [Produces("application/json")]
 [Consumes("application/json")]
-public abstract class BaseController : ControllerBase
+public abstract class BaseApiController : ControllerBase
 {
     private ISender _mediator = null;
     
@@ -23,7 +23,7 @@ public abstract class BaseController : ControllerBase
         return StatusCode(201, value);
     }
 
-    protected NoContentResult NoContent(object value)
+    protected NoContentResult NoContent(object _)
     {
         return NoContent();
     }

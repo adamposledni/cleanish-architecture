@@ -14,12 +14,13 @@ internal class HttpLoggingMiddleware
         _logger = logger;
     }
 
-    public async Task Invoke(HttpContext httpContext)
-    {
-        await _next(httpContext);
-        var request = httpContext.Request;
-        var response = httpContext.Response;
-        string message = $"HTTP {request.Method} {request.Path.Value} responded with {response.StatusCode}";
-        _logger.LogInformation("{message}", message);
-    }
+public async Task Invoke(HttpContext httpContext)
+{
+    await _next(httpContext);
+    string method = httpContext.Request.Method;
+    string path = httpContext.Request.Path.Value;
+    int statusCode = httpContext.Response.StatusCode;
+    string message = $"HTTP {method} {path} responded with {statusCode}";
+    _logger.LogInformation("{message}", message);
+}
 }
