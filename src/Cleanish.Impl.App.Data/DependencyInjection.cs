@@ -35,7 +35,7 @@ public static class DependencyInjection
     {
         services.AddSingleton<ICacheService<TEntity>, CacheService<TEntity>>();
 
-        services.AddTransient(typeof(TService), sp =>
+        services.AddScoped(typeof(TService), sp =>
         {
             return Activator.CreateInstance(
                 typeof(TImplementation),
@@ -44,7 +44,7 @@ public static class DependencyInjection
                 CacheStrategy.Bypass);
         });
 
-        services.AddTransient(typeof(Cached<TService>), sp =>
+        services.AddScoped(typeof(Cached<TService>), sp =>
         {
             var repository = (TService)Activator.CreateInstance(
                 typeof(TImplementation),

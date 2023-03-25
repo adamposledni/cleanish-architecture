@@ -29,7 +29,7 @@ internal static class SpecificationEvaluator
 
         if (specification.Take != null)
         {
-            query = query.Take(specification.Skip.Value);
+            query = query.Take(specification.Take.Value);
         }
 
         query = specification.Includes.Aggregate(query, (current, include) => include(current));

@@ -9,8 +9,14 @@ using System.Reflection;
 using Cleanish.App.Logic.Common.Security;
 using Cleanish.App.Logic.Users.Exceptions;
 
-namespace Cleanish.App.Logic.Test.Users;
+namespace Cleanish.App.Logic.UnitTest.Users;
 
+// unit test class for use case: GetCurrentUser
+// author: Adam Hrouda
+// date: 22-12-26
+// test cases:
+// - found
+// - not found
 public class GetCurrentUserTest
 {
     public GetCurrentUserTest()

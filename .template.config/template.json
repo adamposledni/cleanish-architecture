@@ -1,7 +1,7 @@
 {
     "$schema": "http://json.schemastore.org/template",
     "identity": "Hroudaadam.CleanishArchitecture.WebApi",
-    "shortName": "Cleanish architecture",
+    "shortName": "cleanish-architecture",
     "name": "Cleanish architecture - Web API",
     "description": "Web API solution.",
     "sourceName": "Cleanish",
@@ -24,12 +24,15 @@
                     "exclude": [
                         "**/[Bb]in/**",
                         "**/[Oo]bj/**",
-                        ".template.config/**/*",
+                        "**/.template.config/**",
                         "**/*.filelist",
                         "**/*.user",
                         "**/*.lock.json",
-                        ".git",
-                        "**/appsettings.*.json"
+                        "**/.git/**",
+                        "**/.gitignore",
+                        "**/README.md",
+                        "**/appsettings.*.json",
+                        "**/other/**"
                     ]
                 } 
 
