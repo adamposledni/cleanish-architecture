@@ -1,8 +1,6 @@
 appsettings.local.json
 appsettings.Development.json
 
-.editorconfig
-
 node_modules
 package-lock.json
 /dist
@@ -384,5 +382,4 @@ pnpm-debug.log*
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
